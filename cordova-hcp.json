@@ -1,0 +1,8 @@
+{
+  "name": "etv",
+  "ios_identifier": "etv.com",
+  "android_identifier": "etv.com",
+  "update": "resume",
+  "content_url": "http://res.ssss.so/hotfix/etv/www",
+  "min_native_interface": 1
+}
