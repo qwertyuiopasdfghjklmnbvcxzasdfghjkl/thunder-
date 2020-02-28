@@ -1,8 +1,11 @@
 <template>
     <div class="page" style="background-color: #0e1a28;">
         <top-back :backPage="'exchange'" :params="{market:this.business.market}" :dark="true">
-            <div class="market-select" v-tap="{methods:toggleMarketList}">
-                <span class="">{{symbol_display}}</span><i class="icon_select"></i>
+            <div class="market-select">
+                <span class="left_nav" v-tap="{methods:toggleMarketList}">
+                    <img src="../../assets/img/tc_meus@2x.png"/>
+                </span>
+                <span class="">{{symbol_display}}</span>
             </div>
             <!-- <i slot="right" class="icon_favorite" :class="{active:curMarket && curMarket.collection}" v-tap="{methods:keep}"></i> -->
         </top-back>
@@ -34,7 +37,7 @@
             <ul class="tabs">
                 <li :class="{active:isKline}">
                     <a v-tap="{methods:toggleDepth, type:true}">{{$t('exchange.exchange_candlesticks')}}<!--K线--></a>
-                    
+
                 </li>
                 <li :class="{active:!isKline}">
                     <a v-tap="{methods:toggleDepth, type:false}">
@@ -115,14 +118,15 @@
             </div>
         </div>
         <mask-layer :show="showMarkets" @hide="hideMarketList" :isgray="true">
-            <transition enter-active-class="animated short slideInRight">
+            <transition enter-active-class="animated short slideInLeft">
                 <div class="wallet-list-container" v-show="showMarketsSlide">
 
-                    <div class="title">
-                        <span v-tap="{methods:toggleMarketList}"></span>
-                        {{$t('home.select-market')}}
-                    </div>
-                    <market :form="'kline'" class></market>
+                    <!--<div class="title">-->
+                        <!--<span v-tap="{methods:toggleMarketList}"></span>-->
+                        <!--{{$t('home.select-market')}}-->
+                    <!--</div>-->
+                    <!--<market :form="'kline'" class></market>-->
+                    <market-list @changeBank="changeMarket"/>
 
                 </div>
             </transition>
@@ -151,10 +155,12 @@
     import market from '../market/index'
     import Lastdeal from "./market/lastdeal"
     import Config from "@/api/config"
+    import MarketList from "./marketList";
 
     export default {
         name: 'kline',
         components: {
+            MarketList,
             Lastdeal,
             valuation,
             market,
@@ -440,6 +446,7 @@
                     })
                 }
             },
+            changeMarket(){}
         }
     }
 </script>
@@ -460,6 +467,15 @@
     }
 
     .market-select {
+        text-align: left;
+        .left_nav{
+            img{
+                width: 0.3rem;
+            }
+            margin-left: 0.5rem;
+            border-left: 0.01rem solid #4B5875;
+            padding: 0 0.3rem;
+        }
         .icon_select {
             width: 0.36rem;
             height: 0.32rem;
@@ -470,7 +486,7 @@
 
     .wallet-list-container {
         position: relative;
-        width: 100vw;
+        width: 70vw;
         height: 100vh;
 
         .title {
@@ -557,7 +573,7 @@
         &.full_screen{
             flex: 1;
             text-align: right;
-            
+
         }
     }
 
@@ -614,7 +630,7 @@
     .tabs li img {
         width: 0.24rem;
         vertical-align: middle;
-        
+
     }
 
     .acpanel {
@@ -887,6 +903,6 @@
     /deep/ .latest-deal .deal-list li.buy span:nth-of-type(2) {
         color: #F43148;
     }
-    
-    
+
+
 </style>

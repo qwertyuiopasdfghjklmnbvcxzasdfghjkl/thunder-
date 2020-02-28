@@ -36,7 +36,7 @@
         margin: 1rem auto;
     }
     .no-data img{
-        width: 3.45rem;
+        width: 1.7rem;
     }
 
     .no-data span {
@@ -44,7 +44,8 @@
         height: 1.2rem;
         font-size: .28rem;
         line-height: .6rem;
-        color: #A7ACB9;
+        margin-top: 0.2rem;
+        color: #4B5875;
         text-align: center;
     }
 </style>

@@ -19,28 +19,28 @@
         </div>
         <cp-adjust v-model="formData.price" v-if="!isMarket" :accuracy="accuracy.fixedNumber" class="mt30" @keyDown="showPercent=false"></cp-adjust>
         <p class="price-placeholder mt30" v-if="isMarket">{{$t('exchange.exchange_market_price')}}</p>
-        <!-- <p class="c_light mt20">
+        <p class="mt20">
             ≈
             <valuation :lastPrice="formData.price" :baseSymbol="baseSymbol"/>
-        </p> -->
-        <div class="amount mt40">
+        </p>
+        <div class=" mt20">
             <!-- <numberbox v-model="formData.amount" :accuracy="accuracy.quantityAccu" :placeholder="$t('exchange.exchange_amount')" v-focus></numberbox>
             <span>{{isBuy ? baseSymbol : currentSymbol}}</span> -->
             <cp-adjust v-model="formData.amount" :accuracy="accuracy.quantityAccu" class=""
                        :tip="$t('home.home40')+'('+(isMarket ? (isBuy ?baseSymbol:currentSymbol):currentSymbol)+')'" @keyDown="showPercent=false"></cp-adjust>
         </div>
 
-        <div class="range-percent mt20">
-            <div slot="start" class="dots"
-                 :class="{d2:percent===25,d3:percent===50,d4:percent===75,d5:percent===100, active:showPercent}">
-                <span @click="percent=25, showPercent = true">25%</span>
-                <span @click="percent=50, showPercent = true">50%</span>
-                <span @click="percent=75, showPercent = true">75%</span>
-                <span @click="percent=100, showPercent = true">100%</span>
-            </div>
-        </div>
+        <!--<div class="range-percent mt20">-->
+            <!--<div slot="start" class="dots"-->
+                 <!--:class="{d2:percent===25,d3:percent===50,d4:percent===75,d5:percent===100, active:showPercent}">-->
+                <!--<span @click="percent=25, showPercent = true">25%</span>-->
+                <!--<span @click="percent=50, showPercent = true">50%</span>-->
+                <!--<span @click="percent=75, showPercent = true">75%</span>-->
+                <!--<span @click="percent=100, showPercent = true">100%</span>-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="total-input" v-if="!isMarket">
-            
+
             <numberbox v-model="formData.total" :accuracy="accuracy.amountAccu" :placeholder="`${$t('exchange.exchange_total')}(${baseSymbol})`"></numberbox>
         </div>
         <div class="ac-area mt50">
@@ -482,7 +482,7 @@
                         this.$parent.$refs.historydeal.getList()
                         this.getToUnlock()
                         this.getStatisticsTodayTrade()
-                    } 
+                    }
                     setTimeout(callBack,1000)
                     setTimeout(callBack,2000)
                     setTimeout(callBack,3000)
@@ -505,9 +505,9 @@
 </script>
 
 <style lang="less" scoped>
-    @c_gray: #eee;
-    @c_buy: #FF2B5D;
-    @c_sell: #1FB674;
+    @c_white: #ffffff;
+    @c_buy: #0EB574;
+    @c_sell: #E01C37;
     @c_light: #666;
     @c_board: #B9D0CF;
     .c_light {
@@ -533,7 +533,7 @@
         font-size: 0.34rem;
         border: none;
         color: #91A4A3;
-        background-color: @c_gray;
+        background-color: @c_white;
         border-radius: 3px;
     }
 
@@ -554,9 +554,11 @@
     .left .trust-type-choice {
         font-size: 0.24rem;
         position: relative;
-        color: @c_light;
+        margin-top: 0.2rem;
     }
-
+    .left .trust-type-choice > span{
+        color: @c_white;
+    }
     .left .trust-type-choice > span:after {
         display: inline-block;
         content: '';
@@ -573,27 +575,28 @@
         left: 0;
         width: 2.2rem;
         z-index: 100;
-        border: 1px solid #dadada;
+        box-shadow: 0 0.1rem 0.2rem #1A2233;
+        border-radius: 0.08rem;
+        overflow: hidden;
     }
 
     .left .trust-type-choice .choices li {
         line-height: 0.8rem;
         text-align: center;
-        background-color: #eee;
+        background-color: #1A2233;
     }
 
     .left .trust-type-choice .choices li:first-of-type {
-        border-bottom: 1px solid #dadada;
     }
 
     .left .trust-type-choice .choices li.active {
-        background-color: #eee;
-        color: #3B48C8;
+        background-color: #2e3749;
+        color: #ffffff;
     }
 
     .left .price-placeholder {
         height: 0.64rem;
-        background-color: @c_gray;
+        background-color: @c_white;
         line-height: 0.64rem;
         text-align: center;
         color: #666;
@@ -704,6 +707,7 @@
         color: #fff;
         border: none;
         font-size: 0.34rem;
+        border-radius: 0.08rem
     }
 
     .left .buyBtn {
@@ -723,7 +727,6 @@
         text-align: center;
         margin-top: 0.5rem;
         input{
-            border: none;
             outline: none;
             height: 0.9rem;
             line-height: 0.9rem;
@@ -732,7 +735,10 @@
             position: relative;
             font-size: 0.3rem;
             width: 100%;
-            background-color:#EEEEEE;
+            border: 0.01rem solid #4B5875;
+            background: none;
+            border-radius:0.08rem;
+            color: #ffffff;
         }
     }
     .tip_color{
@@ -757,7 +763,6 @@
     }
     .tip-panel {
         line-height: 1.7;
-        color: #666;
         font-size: 0.24rem;
         &.tiptxt {
             word-break: break-all;

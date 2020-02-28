@@ -17,8 +17,11 @@
             </ul>
         </div>
         <div class="numb_text">
-            <p class="ui-flex ui-flex-justify"><span class="ui-flex-1 tc" :class="{sell:(getLast24h.direction!=1)}">{{Number(toFixed(getLast24h.close))}}</span><small class="f24 pt8 ft-c-gray">{{baseSymbol}}</small></p>
-            <!--<p class="mt10">≈ <valuation :lastPrice="getLast24h.close" :baseSymbol="baseSymbol"/></p>-->
+            <p class="">
+                <span class="" :class="{sell:(getLast24h.direction!=1)}">{{Number(toFixed(getLast24h.close))}}</span>
+                <small class="f24 pt8 ft-c-dark">≈ <valuation :lastPrice="getLast24h.close" :baseSymbol="baseSymbol"/></small>
+            </p>
+            <p class="f24" :class="{sell:(getLast24h.direction!=1)}">{{baseSymbol}}</p>
         </div>
         <div class="mt35" v-if="sellBuy!==1">
             <ul class="buy-list f24" ref="parentListBid">
@@ -31,29 +34,6 @@
                     <span>--</span>
                 </li>
             </ul>
-        </div>
-        <div class="check">
-            <label>
-                <p v-tap="{methods:()=>{show=!show,showSellBuy=false}}">
-                    <span v-show="accuracy.fixedNumber === n" v-for="n in 4">{{$t('home.ndecimal').format(n)}}</span>
-                    <span v-show="accuracy.fixedNumber>4">{{$t('home.ndecimal').format(4)}}</span>
-                </p>
-                <ul v-if="show">
-                    <li v-tap="{methods:()=>{accuracy.fixedNumber = n,show=false}}" v-for="n in 4">{{$t('home.ndecimal').format(n)}}</li>
-                </ul>
-            </label>
-            <label>
-                <p v-tap="{methods:()=>{showSellBuy=!showSellBuy,show=false}}">
-                    <span v-if="sellBuy===0">{{$t('home.default')}}</span>
-                    <span v-if="sellBuy===1">{{$t('home.show-sell')}}</span>
-                    <span v-if="sellBuy===2">{{$t('home.show-buy')}}</span>
-                </p>
-                <ul v-if="showSellBuy">
-                    <li v-tap="{methods:()=>{sellBuy = 0,showSellBuy=false}}">{{$t('home.default')}}</li>
-                    <li v-tap="{methods:()=>{sellBuy = 1,showSellBuy=false}}">{{$t('home.show-sell')}}</li>
-                    <li v-tap="{methods:()=>{sellBuy = 2,showSellBuy=false}}">{{$t('home.show-buy')}}</li>
-                </ul>
-            </label>
         </div>
     </div>
 </template>
@@ -303,10 +283,10 @@
 
 <style lang="less" scoped>
     @c_gray: #F4F5FA;
-    @c_buy: #F07180;
-    @c_sell: #01C89F;
-    @c_light: #999;
-    @c_board: #666;
+    @c_buy: #E01C37;
+    @c_sell: #0EB574;
+    @c_light: #4B5875;
+    @c_board: #4B5875;
     .order-book {
         position: relative;
     }
@@ -397,12 +377,18 @@
     }
 
     .numb_text {
-        text-align: center;
-        font-size: .32rem;
-        padding: 0.2rem 0;
-        margin: 0.24rem 0;
-        border: 0.02rem solid #eee;
+        border: 0.02rem solid #1D273C;
         border-width: 1px 0 1px 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0.1rem 0;
+        p{
+            span{
+                display: block;
+                font-size: 0.32rem;
+            }
+        }
     }
 
     .check {

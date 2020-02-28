@@ -1,16 +1,16 @@
 <template>
     <div class="page">
-        <top-back :back="false" :logo="true"></top-back>
-        <div class="mt90 pt0" >
+        <top/>
+        <div class="page-main" >
             <banner/>
-            <label class="flex">
-                <i class="ico"><img src="../../assets/img/notice.png"></i>
-                <notice/>
-                <router-link :to="{name: 'notice'}" class="ft-c-lightGray">{{$t('public0.more')}}</router-link>
-            </label>
-        </div>
-        <div class="page-main">
-            <vote/>
+            <div class="box">
+                <label class="flex">
+                    <i class="ico"><img src="../../assets/img/svg/notice.svg"></i>
+                    <notice/>
+                    <router-link :to="{name: 'notice'}" class="ft-c-lightGray">{{$t('public0.more')}}</router-link>
+                </label>
+                <data_box/>
+            </div>
             <data-list/>
         </div>
     </div>
@@ -24,11 +24,15 @@
     import Utils from "../../assets/js/utils"
     import KLineWebSocket from '@/assets/js/websocket'
     import vote from './index/vote'
-    
+    import top from "./index/top";
+    import Data_box from "./index/data_box";
+
 
     export default {
         name: 'home',
         components: {
+            Data_box,
+            top,
             banner,
             notice,
             dataList,
@@ -44,6 +48,7 @@
                   item.iconBase64 = window.marketIcon[item.market]
                   item.collection = window.marketCollection[item.market]
                 })
+                  console.log(res.data)
                 window.setMarketList(res.data)
               }
             }
@@ -52,33 +57,34 @@
         beforeDestroy () {
           this.socket && this.socket.close()
         },
-        
+
     }
 </script>
 
 <style lang="less" scoped="">
-.page-main {top: 5.6rem;}
+.page-main {padding: 0}
 .flex{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0.25rem 0.3rem;
+    border-bottom: 0.02rem solid #1D273C;
     padding: 0.18rem 0.24rem;
-    background-color: #fff;
-    border-radius:0.45rem;
     & > div{
         flex-shrink: 1;
         flex-grow: 1;
     }
     .ico{
-        width: 0.74rem;
-        height: 0.54rem;
-        padding-right: 0.2rem;
+        width: 0.36rem;
+        height: 0.36rem;
+        margin-right: 0.2rem;
         img{
             width: 100%;
             height: 100%;
         }
     }
 }
+    .box{
+
+    }
 
 </style>

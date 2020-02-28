@@ -1,11 +1,11 @@
 <template>
     <section class="entrust-container">
-        <div class="mt40 pl30">{{$t('account.current_select')}}<!-- 当前选择 -->:{{`${currentSymbol}/${baseSymbol}`}}</div>
+        <!--<div class="mt40 pl30">{{$t('account.current_select')}}&lt;!&ndash; 当前选择 &ndash;&gt;:{{`${currentSymbol}/${baseSymbol}`}}</div>-->
         <div class="navbar">
-            <div class="hideOther">
-                <mt-switch v-model="hideOtherTrust"></mt-switch>
-                <span class="ml15 f30" v-tap="{methods:()=>{this.hideOtherTrust = !this.hideOtherTrust}}">{{$t('exchange.exchange_hide_trade_pair')}}<!--隐藏其他交易对--></span>
-            </div>
+            <!--<div class="hideOther">-->
+                <!--<mt-switch v-model="hideOtherTrust"></mt-switch>-->
+                <!--<span class="ml15 f30" v-tap="{methods:()=>{this.hideOtherTrust = !this.hideOtherTrust}}">{{$t('exchange.exchange_hide_trade_pair')}}&lt;!&ndash;隐藏其他交易对&ndash;&gt;</span>-->
+            <!--</div>-->
             <div>
                 <p v-show="fcdatas.length" class="all_repeal" v-tap="{methods:cancalAll}">{{$t('home.all-repeal')}}</p>
             </div>
@@ -47,6 +47,9 @@
             mul: {
                 type: Function
             },
+            hideOtherTrust:{
+                type: false
+            }
         },
         components: {
             Column,
@@ -55,7 +58,6 @@
         data() {
             return {
                 cdatas: [],
-                hideOtherTrust: false,
             }
         },
         computed: {

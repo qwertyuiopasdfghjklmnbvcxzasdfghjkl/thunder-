@@ -1,7 +1,5 @@
-// let domain = process.env.NODE_ENV === 'development' ? 'dev.koall.io' : location.host.split(':')[0]
-let domain = process.env.NODE_ENV === 'development' ? 'linton-test.lab.ssss.so' : location.host.split(':')[0]
-// let domain = process.env.NODE_ENV === 'development' ? 'etvcoins.com' : location.host.split(':')[0]
-// let domain = process.env.NODE_ENV === 'development' ? 'ws-exchange.gcox.com' : location.host.split(':')[0]
+let domain = process.env.NODE_ENV === 'development' ? 'thunder-test.lab.ssss.so' : location.host.split(':')[0]
+
 if (process.env.VUE_APP_BASEURL) {
   domain = process.env.VUE_APP_BASEURL
 }

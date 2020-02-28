@@ -88,13 +88,13 @@
                 }
               }
             })*/
-            
+
 
             if(!window['cordova']){
                 this.system = 0
                 this.phone = utils.getPhonePlatform()
             }
-            
+
         },
         mounted() {
             $('#app').on('click', 'input', (e) => {
@@ -154,7 +154,7 @@
                 } else {
                     fun(data)
                 }
-                
+
             },
             loadLoginInfo() {
                 // console.log('getApiToken===', this.getApiToken)
@@ -220,7 +220,7 @@
                                 Tip({type:'error', message:'failed to start server: '+ error});
                             });
                         }
-                        
+
                     },()=>{});
                 }
             },

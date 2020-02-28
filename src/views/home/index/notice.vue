@@ -70,12 +70,12 @@ export default {
             bottom: 0;
         }
         p{
-            color: #333;
-            font-size: .30rem;
+            font-size: .28rem;
             line-height: 0.54rem;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+            color: #ffffff;
         }
     }
 

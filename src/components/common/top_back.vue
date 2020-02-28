@@ -1,5 +1,8 @@
 <template>
     <div class="page-top" :class="{dark:dark, logo:logo}">
+        <div class="btn-left">
+            <slot name="left"></slot>
+        </div>
         <span class="btn-back" v-tap="{methods:goBack}" v-if="back"></span>
         <span class="btn-home" v-tap="{methods:goHome}" v-if="home"></span>
         <strong><slot></slot></strong>
@@ -64,8 +67,8 @@
         text-align: center;
         line-height: 0.5rem;
         font-size: .34rem;
-        color: #222;
-        background: #fff;
+        color: #ffffff;
+        background: none;
         &.logo {background: url('../../assets/img/logo_top.png') #fff no-repeat center; background-size: auto 0.6rem;}
 
         &.line {
@@ -74,13 +77,21 @@
 
         .btn-back {
             position: absolute;
-            width: 15vw;
+            width: 0.8rem;
             height: 0.5rem;
             left: 0;
             background: url('../../assets/img/icon_back_b@3x.png') no-repeat 0.3rem center;
             background-size: 0.2rem auto;
+            z-index: 9;
         }
 
+        .btn-left{
+            position: absolute;
+            top: 0.2rem;
+            line-height: 0.5rem;
+            left: 0.3rem;
+            font-size: 0.32rem;
+        }
         .btn-home {
             position: absolute;
             width: 0.4rem;

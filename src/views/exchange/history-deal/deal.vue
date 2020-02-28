@@ -1,11 +1,7 @@
 <template>
     <section class="entrust-container">
-        <div class="mt40 pl30">{{$t('account.current_select')}}<!-- 当前选择 -->:{{`${currentSymbol}/${baseSymbol}`}}</div>
+        <!--<div class="mt40 pl30">{{$t('account.current_select')}}&lt;!&ndash; 当前选择 &ndash;&gt;:{{`${currentSymbol}/${baseSymbol}`}}</div>-->
         <div class="navbar">
-            <div class="hideOther">
-                <mt-switch v-model="hideOtherTrust"></mt-switch>
-                <span class="ml15 f30" v-tap="{methods:()=>{this.hideOtherTrust = !this.hideOtherTrust}}">{{$t('exchange.exchange_hide_trade_pair')}}<!--隐藏其他交易对--></span>
-            </div>
             <div class="ui-flex ui-flex-column ui-flex-center">
                 <label class="f30"><input class="hide" type="checkbox" v-model="hideHistoryTrustCanceled"/><i :class="[hideHistoryTrustCanceled?'icon-checkbox-checked ft-c-yellow':'icon-checkbox-unchecked ft-c-lightGray']"></i> {{$t('account.userConcealmentHasBeenRevoked')}}<!--隐藏已撤销--></label>
             </div>
@@ -55,7 +51,6 @@
         data() {
             return {
                 cdatas: [],
-                hideOtherTrust: false,
                 hideHistoryTrustCanceled: false,
                 form: {
                     current: 0,
@@ -71,9 +66,7 @@
             fcdatas(){
                 return this.cdatas.filter(item=>{
                     let rst = true
-                    if(this.hideOtherTrust){
-                        rst = item.market === this.symbol
-                    }
+
                     if(!rst){
                         return false
                     } else if(this.hideHistoryTrustCanceled){

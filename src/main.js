@@ -26,7 +26,7 @@ import Config from '@/api/config'
 
 import {
   Indicator, Button, Tabbar, TabItem, Loadmore, InfiniteScroll, Popup,
-    Picker, Range, Navbar, TabContainer, TabContainerItem, Switch, Radio, Progress 
+    Picker, Range, Navbar, TabContainer, TabContainerItem, Switch, Radio, Progress
 } from 'mint-ui'
 
 import uiInpu from './components/uiInput'
@@ -145,7 +145,9 @@ let init = ()=>{
           i18n.setLocaleMessage(lang, res)
           window.localStorage[lang] = JSON.stringify(res)
       }, msg=>{
-        setTimeout(window.getServeLang, 100)
+        //setTimeout(window.getServeLang, 500)
+
+          i18n.setLocaleMessage(lang, LangZhCN)
       })
     }
     window.getServeLang()
@@ -158,7 +160,7 @@ setTimeout(()=>{ //接口请求失败补偿机制
 },6000)
 
 
-  
+
 
 
 

@@ -1,77 +1,52 @@
 <template>
-    <div class="page bg-c-white">
+    <div class="page">
         <top-back :back="false" v-tap="{methods: showC}">
-            <span class="off" v-tap="{methods:goBack}">
-                <img src="../assets/img/off.png">
-            </span>
-            <span class="right" v-tap="{methods:goSet}">
-                <img src="../assets/img/ic_sz@3x.png">
+            <span class="right" v-tap="{methods:goBack}">
+                {{$t('account.user_cancel')}}
             </span>
         </top-back>
         <div class="page-main">
-            <!--<h3 class="login-title">{{$t('public0.login')}}</h3>-->
             <p class="login_logo">
                 <img src="../assets/img/logo.png">
             </p>
             <div class="login-form">
-                <div>
-                    <ui-input
-                            :label="`${$t('otc_exchange.otc_exchange_Email')}`"
-                            v-model="formData.username"
-                            :title="`${$t('otc_exchange.otc_exchange_Email')}`"
-                    ></ui-input>
+
+                <div class="mt_navbar">
+                    <label :class="{'active':active==='mail'}"
+                           v-tap="{methods:()=>{this.active='mail'}}">{{$t('market.email_login')}}</label>
+                    <label :class="{'active':active==='phone'}"
+                           v-tap="{methods:()=>{this.active='phone'}}">{{$t('market.phone_login')}}</label>
                 </div>
-                <div class="login-content-input">
-                    <ui-input
-                            :label="$t('account.user_center_login_password')"
-                            :title="$t('account.user_center_login_password')"
-                            :type="showpwd? 'text':'password'"
-                            v-model="formData.password"
-                            :maxlength="32"></ui-input>
-                    <i class="icon_showpwd" :class="{active:showpwd}"
-                       v-tap="{methods: ()=>{showpwd = !showpwd}}"></i>
+                <div>
+                    <e-mail-login v-show="active==='mail'"/>
+                    <phone-login v-show="active==='phone'"/>
                 </div>
 
-                <div class="login-content-button mt120">
-                    <mt-button type="primary" class="circle" :disabled="!gtLocked"
-                               size="large" v-tap="{methods:login}">{{$t('public0.login')}}<!--登录--></mt-button>
-                </div>
-                <div class="ui-flex ui-flex-justify mt60 pb30">
-                    <router-link tag="span" :to="{name:'findpwd'}">{{$t('login_register.forget_password')}} <!--忘记密码--></router-link>
-                    <router-link class="ft-c-main" :to="{name:'register'}">{{$t('login_register.register')}}</router-link>
-                </div>
-                
+                    <router-link tag="span" class="forget mt60" :to="{name:'findpwd'}">{{$t('login_register.forget_password')}} <!--忘记密码--></router-link>
+                    <router-link class="register" :to="{name:'register'}">{{$t('login_register.register')}}</router-link>
+
+
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import {mapActions} from 'vuex'
-    import utils from '@/assets/js/utils'
-    import userApi from '@/api/user'
-    import myAPi from '@/api/individual'
+
     import config from '@/api/config'
-    import UiInput from "../components/uiInput";
     import VConsole from 'vconsole'
+    import EMailLogin from "./login/eMailLogin";
+    import PhoneLogin from "./login/phoneLogin";
 
     export default {
         name: 'login',
-        components: {UiInput},
+        components: {PhoneLogin, EMailLogin},
         data() {
             return {
                 brand: config.brand.toUpperCase(),
                 curl: '', //登录回调地址
-                showpwd: false,
-                locked: true, // 锁
-                // gtLocked: false,
-                formData: {
-                    username: '',
-                    password: ''
-                },
-                account: '',
-                password: '',
-                vi: 0
+                vi: 0,
+                active: 'mail'
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -79,82 +54,12 @@
                 vm.curl = to.query.curl || '/ucenter'
             })
         },
-        computed: {
-            gtLocked() {
-                return this.formData.username && this.formData.password
-            }
-        },
+
         created() {
 
         },
         methods: {
-            ...mapActions(['setApiToken', 'setUserInfo']),
-            login(args) {
-                $('input').blur()
-                if (this.locked && this.gtLocked) {
-                    this.locked = false
-                    utils.gtValidate((gtParams) => {
-                        let formData = {}
-                        for (let i in this.formData) {
-                            formData[i] = this.formData[i]
-                        }
-                        for (let i in gtParams) {
-                            formData[i] = gtParams[i]
-                        }
-                        userApi.getRsaPublicKey((rsaPublicKey) => {
-                            formData.password = utils.encryptPwd(rsaPublicKey, formData.password)
-                            formData.rsaPublicKey = rsaPublicKey
-                            console.log(new Date().getTime())
-                            userApi.login(formData, (apiToken, res) => {
-                                this.locked = true
-                                if (apiToken) {
-                                    this.setApiToken(apiToken)
-                                    myAPi.addLoginHistory()
-                                    this.getInfo()
-                                    Tip({type: 'success', message: this.$t(`user.loginSuccess`)})
-                                    if (this.curl) {
-                                        this.$router.replace({path: this.curl})
-                                    } else {
-                                        this.$router.replace({path: '/'})
-                                    }
-                                } else {
-                                    // 二次验证
-                                    this.$router.push({
-                                      name: 'twoverify',
-                                      params: {
-                                        username: this.formData.username,
-                                        type: res.type,
-                                        countryCode: res.countryCode,
-                                        mobile: res.mobile
-                                      },
-                                      query:{
-                                        curl:this.curl
-                                      }
-                                    })
-                                }
-                            }, (msg, rst) => {
-                                this.locked = true
-                                Tip({type: 'danger', message: this.$t(`error_code.${typeof msg === 'string' ? msg : msg[0]}`)})
-                                if (rst === 300) {
-                                  this.$router.push({name: 'sendemail', params: {email: this.formData.username}})
-                                  console.log(this.formData.username)
-                                }
-                            })
-                        }, () => {
-                            this.locked = true
-                        })
-                    }, () => {
-                        this.locked = true
-                    })
-                }
-            },
-            getInfo() {
-                userApi.getUserInfo(res => {
-                    this.setUserInfo(res);
-                }, msg => {
-                    Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
-                })
-            },
+
             goBack(){
                 this.$router.back();
             },
@@ -177,16 +82,22 @@
 </script>
 
 <style lang="less" scoped>
+    .page{
+        background: #101722;
+    }
     .right{
         position: absolute;
         top: 0;
-        right:0;
+        right:0.3rem;
         z-index: 99;
         height: 0.8rem;
         width: 0.8rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 0.3rem;
+        font-weight: 400;
+        color: #4B5875;
         img{
             width: 0.4rem;
         }
@@ -195,34 +106,6 @@
         margin-top: 0.5rem;
         color: #9DAAAA;
         font-size: 0.52rem;
-    }
-
-    .login-content-input {
-        margin-top: 0.55rem;
-        position: relative;
-
-        input {
-            height: 0.5rem;
-            width: 100%;
-            font-size: 0.32rem;
-            color: #ffffff;
-            border: none;
-            background-color: transparent;
-        }
-
-        .icon_showpwd {
-            position: absolute;
-            right: 0.3rem;
-            bottom: 0.14rem;
-            margin-top: -0.18rem;
-            width: 0.36rem;
-            height: 0.36rem;
-            background-image: url('../assets/img/eye_closed@2x.png');
-
-            &.active {
-                background-image: url('../assets/img/eye_open@2x.png');
-            }
-        }
     }
 
     .no-account {
@@ -240,7 +123,7 @@
         align-items: center;
 
         img {
-            width: 1.8rem;
+            width: 1.5rem;
         }
     }
 
@@ -271,4 +154,36 @@
         }
     }
 
+    .mt_navbar{
+        background: none;
+        color: #4B5875;
+        border-bottom: 0.02rem solid #364463;
+        height: 0.6rem;
+        display: flex;
+        align-items: center;
+
+        label{
+            margin: 0 0.2rem;
+            height: 0.6rem;
+            border-bottom: 0.04rem solid transparent;
+            &.active{
+                border-bottom: 0.04rem solid #0C6AC9;
+            }
+        }
+    }
+    .forget{
+        display: block;
+        text-align: center;
+        color: #0C6AC9;
+    }
+    .register{
+        position: absolute;
+        width: 100%;
+        display: block;
+        left: 0;
+        bottom: 0.6rem;
+        text-align: center;
+        color: #ffffff;
+        font-size: 0.26rem;
+    }
 </style>

@@ -3,11 +3,12 @@
  */
 import api from '@/api'
 
-let domain = process.env.NODE_ENV === 'development' ?'https://linton.tech/':''
+let domain = process.env.NODE_ENV === 'development' ?'https://gcox.com/':''
+// let domain =null
 let language = {}
 
 const getLanguage = function (lang, success, error) {
-  api.get(`${domain}api/v2/language/${lang}?domain=etv`, (res) => {
+  api.get(`${domain}api/v2/language/${lang}?domain=gcox`, (res) => {
     if (res.rst === 1) {
       success && success(res.data)
     } else {

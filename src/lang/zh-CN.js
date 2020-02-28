@@ -1620,7 +1620,15 @@ export default {
 			"buy": "买盘",
 			"sell": "卖盘",
 			"volume_24h": "24H",
-			"kline": "K线图"
+			"kline": "K线图",
+
+
+			"main_board": "主板",
+			"new_board": "创新板",
+			"select_symbol": "切换币种",
+			"email_login": '邮箱登录',
+			"phone_login": "手机登录",
+			"register_p":"致富，从成为Thunder用户开始"
 		},
 		"referral": {
 			"date": "日期",

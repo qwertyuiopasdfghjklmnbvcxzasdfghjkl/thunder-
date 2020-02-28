@@ -103,8 +103,10 @@
             color: #333;
             position: relative;
             height: 0.8rem;
-            border-bottom: 0.02rem solid #ddd;
+            background: #151C2C;
             transition: border 0.3s;
+            border-radius: 0.1rem;
+            overflow: hidden;
 
             &:hover {
                 border-bottom-color: #5CACCF;
@@ -115,13 +117,14 @@
                 width: 100%;
                 border: none;
                 outline: none;
-                height: 0.5rem;
+                height: 0.8rem;
                 position: absolute;
                 left: 0;
                 bottom: 0;
                 background: none;
-                font-size: 0.26rem;
-                color: #333;
+                font-size: 0.32rem;
+                color: #ffffff;
+                padding: 0 0.2rem;
             }
 
             span {

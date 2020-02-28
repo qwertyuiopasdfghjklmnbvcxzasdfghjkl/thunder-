@@ -67,9 +67,9 @@
     @c_board: #B9D0CF;
     .price-adjust {
         display: flex;
-        height: 0.66rem;
-        background: #fff;;
-        border: 1px solid #eee;
+        height: 0.8rem;
+        border-radius: 0.08rem;
+        border: 0.01rem solid #4B5875;
 
         > div {
             display: flex;
@@ -80,21 +80,21 @@
         }
 
         > div:nth-of-type(1) {
-            width: 0.64rem;
-            height: 0.64rem;
-            background: #eee;
+            width: 0.78rem;
+            height: 0.78rem;
+            border-right: 0.01rem solid #4B5875;
         }
 
         > div:nth-of-type(3) {
-            width: 0.64rem;
-            height: 0.64rem;
-            background: #eee;
+            width: 0.78rem;
+            height: 0.78rem;
+            border-left: 0.01rem solid #4B5875;
+            color: #0EB574;
         }
 
         i {
             font-size: 0.36rem;
-            color: #666;
-            line-height: 0.64rem;
+            line-height: 0.78rem;
             text-align: center;
             flex: 1;
             position: relative;
@@ -108,6 +108,7 @@
             border: none;
             position: relative;
             z-index: 6;
+            color: #ffffff;
         }
     }
 </style>

@@ -1,31 +1,16 @@
 <template>
-    <div class="data_cont mt10">
-        <div class="tokens-filter full">
-            <input type="search" name="" v-model="key" placeholder="请输入搜索的币种">
-        </div>
-        <ul class="data_header ui-flex ui-flex-justify">
-            <li class="ui-flex-4">
-                {{$t('nav.market')}}<!--市场-->
+    <div class="data_cont mt20 box">
+        <ul class="list_nav">
+            <li :class="{active: sort==='desc'}" v-tap="{methods:sortMarket,name:'desc'}">
+                {{$t('home.home01')}}<!--涨幅榜-->
             </li>
-            <li class="ui-flex-3" v-tap="{methods:sortMarket, name: 'price'}">
-                {{$t('home.home_last_price')}}<!--最新价-->
-                <div v-if="type=='price'">
-                    <i class="icon-arrow-up2" :class="{active:sort=='desc'}"></i>
-                    <i class="icon-arrow-down3" :class="{active:sort=='asc'}"></i>
-                </div>
-            </li>
-            <li class="ui-flex-3 tr" v-tap="{methods:sortMarket, name: 'asc'}">
-                {{$t('exchange.up_and_down')}}<!--跌幅榜-->
-                <div v-if="type=='asc'">
-                    <span>
-                        <i class="icon-arrow-up2" :class="{active:sort=='desc'}"></i>
-                        <i class="icon-arrow-down3" :class="{active:sort=='asc'}"></i>
-                    </span>
-                </div>
+            <li :class="{active: sort==='asc'}" v-tap="{methods:sortMarket,name: 'asc'}">
+                {{$t('home.home02')}}<!--跌幅榜-->
             </li>
         </ul>
         <section class="data_cont_list">
-            <ul class="item" v-for="(item, index) in sortMarketDatas" v-show="item.market.includes(key.toUpperCase())" :key="index"
+            <ul class="item" v-for="(item, index) in sortMarketDatas" v-show="item.market.includes(key.toUpperCase())"
+                :key="index"
                 v-tap="{methods:goToExchangePage, item: item}">
                 <li class="ui-flex-4">
                     <!-- <img :src="getMarketImg(item.iconBase64)"> -->
@@ -37,7 +22,7 @@
                     <p class="f34" :class="[percent(item).css]">{{toFixed(item.lastPrice, item.accuracy)|number}}</p>
                     <!--<p class="ft-c-lightGray mt15">≈<span><valuation :lastPrice="item.lastPrice" :baseSymbol="item.baseSymbol"/></span></p>-->
                 </li>
-                <li  class="ui-flex-3 tr">
+                <li class="ui-flex-3 tr">
                     <span class="percent f26" :class="[percent(item).css]">{{percent(item).percent}}%</span>
                 </li>
             </ul>
@@ -51,6 +36,7 @@
     import marketApi from '@/api/market'
     import valuation from '@/components/valuation'
     import utils from '@/assets/js/utils'
+
     export default {
         name: 'market-index',
         components: {
@@ -58,9 +44,9 @@
         },
         data() {
             return {
-                key:'',
-                sortActive: null,
+                key: '',
                 sort: 'desc',
+                sortType: 'type',
                 type: '',
                 scroll: false,
                 token: 'USDS',
@@ -68,46 +54,31 @@
         },
         computed: {
             ...mapGetters(['getApiToken', 'getMarketList']),
-            sortMarketDatas() {
+            sortMarketDatas(){
                 let datas = (this.getMarketList || []).sort((item1, item2) => {
-                    if (this.type === 'asc') {
+                    if (this.sortType === 'type') {
                         let m1 = numUtils.BN(item1.openingPrice).equals(0) ? numUtils.BN(0) : numUtils.BN(item1.change24h).div(item1.openingPrice)
                         let m2 = numUtils.BN(item2.openingPrice).equals(0) ? numUtils.BN(0) : numUtils.BN(item2.change24h).div(item2.openingPrice)
                         if (m1.equals(m2)) {
                             return 0
                         }
                         return this.sort === 'asc' ? (m1.lt(m2) ? -1 : 1) : (m1.gt(m2) ? -1 : 1)
-                    } else if (this.type === 'price') {
-                        let m1 = numUtils.BN(item1.lastPrice)
-                        let m2 = numUtils.BN(item2.lastPrice)
-                        return this.sort === 'asc' ? (m1.lt(m2) ? -1 : 1) : (m1.gt(m2) ? -1 : 1)
-                    } else {
-                        let m1 = numUtils.BN(item1.idx)
-                        let m2 = numUtils.BN(item2.idx)
-                        return m1.gt(m2) ? -1 : 1
                     }
-                })
-                datas = datas.filter(item=>{
-                    return item.visible == 1
                 })
                 return datas
             }
         },
         methods: {
             ...mapActions(['setLast24h']),
-            humanNum(num){
+            humanNum(num) {
                 return utils.humanNum(num)
             },
-            getMarketImg(base64){
+            getMarketImg(base64) {
                 return `data:image/png;base64,${base64}`
             },
             sortMarket(args) {
-                if(this.type === args.name){
-                    this.sort =  this.sort==='desc'?'asc':'desc'
-                } else {
-                    this.type = args.name
-                    this.sort = 'desc'
-                }
+                this.sort = args.name
+                console.log(args)
             },
             goToExchangePage(args) {
                 Indicator.open('loading...')
@@ -141,72 +112,116 @@
 </script>
 
 <style lang="less" scoped>
-.data_cont {background-color: #fff; padding: 0 0.3rem; border-radius: 0.16rem; margin-bottom: 0.3rem;}
-.tokens-filter {
-    padding: 0.15rem 0.3rem;
-    border-bottom: 1px solid #EAEAEA;
-    input {
-        width: 100%;
-        height: 0.6rem;
-        background: url('../../../assets/img/search.png') #F9F9F9 no-repeat 0.25rem center;
-        background-size: 0.2rem;
-        border:none;
-        border-radius:0.3rem;
-        padding-left: 0.6rem;
-        padding-right: 0.15rem;
+    .data_cont {
+        padding: 0 0.3rem;
+        margin-bottom: 0.3rem;
     }
-}
-.data_header {
-    line-height: 0.9rem;
-    li > div {
-        height: 0.38rem;
-        width: 0.15rem;
-        display: inline-block;
-        vertical-align: middle;
-        position: relative;
-        margin-left: 0.05rem;
-        i {
-            position: absolute; 
-            left: 0;
-            font-size: 0.24rem;
-            transform: scale(0.7);
-            &:last-of-type {bottom: 0;}
-            &.active {color: #999;}
+
+    .tokens-filter {
+        padding: 0.15rem 0.3rem;
+        border-bottom: 1px solid #EAEAEA;
+
+        input {
+            width: 100%;
+            height: 0.6rem;
+            background: url('../../../assets/img/search.png') #F9F9F9 no-repeat 0.25rem center;
+            background-size: 0.2rem;
+            border: none;
+            border-radius: 0.3rem;
+            padding-left: 0.6rem;
+            padding-right: 0.15rem;
         }
     }
-}
-.data_cont_list {
-    ul {
-        display: flex;
-        padding: 0.3rem 0;
-        justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid #eee;
-        img {vertical-align: middle; width: 0.6rem; height: 0.6rem; object-fit: cover; object-position: center; margin-right: 0.2rem;}
-        .percent {
-            min-width: 1.3rem;
-            line-height: 0.6rem;
-            text-align: center;
-            padding:0 0.1rem;
+
+    .data_header {
+        line-height: 0.9rem;
+
+        li > div {
+            height: 0.38rem;
+            width: 0.15rem;
             display: inline-block;
             vertical-align: middle;
-            border-radius: 4px;
-            &.c-green {
-                color: #fff;
-                background-color: #42BCA0;
-            }
-            &.c-orange {
-                color: #fff;
-                background-color: #F43148;
-            }
-        }
-        .c-green {
-            color: #42BCA0;
-        }
+            position: relative;
+            margin-left: 0.05rem;
 
-        .c-orange {
-            color: #F43148;
+            i {
+                position: absolute;
+                left: 0;
+                font-size: 0.24rem;
+                transform: scale(0.7);
+
+                &:last-of-type {
+                    bottom: 0;
+                }
+
+                &.active {
+                    color: #999;
+                }
+            }
         }
     }
-}
+
+    .data_cont_list {
+        ul {
+            display: flex;
+            padding: 0.3rem 0;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #1D273C;
+            color: #ffffff;
+
+            img {
+                vertical-align: middle;
+                width: 0.6rem;
+                height: 0.6rem;
+                object-fit: cover;
+                object-position: center;
+                margin-right: 0.2rem;
+            }
+
+            .percent {
+                min-width: 1.3rem;
+                line-height: 0.7rem;
+                text-align: center;
+                padding: 0 0.1rem;
+                display: inline-block;
+                vertical-align: middle;
+                border-radius: 4px;
+
+                &.c-green {
+                    color: #fff;
+                    background-color: #42BCA0;
+                }
+
+                &.c-orange {
+                    color: #fff;
+                    background-color: #F43148;
+                }
+            }
+
+            .c-green {
+                color: #42BCA0;
+            }
+
+            .c-orange {
+                color: #F43148;
+            }
+        }
+    }
+    .list_nav{
+        display: flex;
+        height: 0.9rem;
+        align-items: center;
+        li{
+            flex: 1;
+            text-align: center;
+            height: 0.9rem;
+            line-height: 0.9rem;
+            color: #4B5875;
+            font-size: 0.32rem;
+            &.active{
+                color: #ffffff;
+            }
+        }
+    }
 </style>

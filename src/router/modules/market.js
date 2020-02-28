@@ -1,5 +1,11 @@
 export default [
     {
+        path: '/market',
+        name: 'market',
+        component: () => import('@/views/market/index'),
+        meta: {nav: true}
+    },
+    {
         path: '/market/kline/:market?',
         name: 'kline',
         component: () => import('@/views/exchange/kline'),
@@ -31,5 +37,10 @@ export default [
         path: '/market/last-deal/:symbol',
         name: 'lastDeal',
         component: () => import('@/views/exchange/last-deal')
+    },
+    {
+        path: '/market/deal-list',
+        name: 'exchangeDealList',
+        component: () => import('@/views/exchange/deal-list/dealList'),
     },
 ]
