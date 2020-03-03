@@ -72,11 +72,11 @@ export default {
   font-size: 0.4rem;
   line-height: 0.6rem;
   span {
-    color: #01C89F;
+    color: #0EB574;
     display: block;
   }
   span.sell {
-    color: #F07180;
+    color: #CD3F46;
   }
 }
 .detail {padding: 0.5rem; margin-top: 0.3rem;}
@@ -85,6 +85,6 @@ export default {
   display: flex;
   justify-content: space-between;
   line-height: 0.6rem;
-  span:first-of-type {color: #999;}
+  span:first-of-type {color: #4B5875;}
 }
 </style>

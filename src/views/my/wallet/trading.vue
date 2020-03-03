@@ -134,7 +134,7 @@
         },
         created() {
             this.showMoney = JSON.parse(localStorage.getItem('showAssets') || 'true')
-            this.getInfo()
+            // this.getInfo()
             this.getAssets()
             this.gettTotalUSDTAmount()
         },
@@ -165,13 +165,13 @@
                     this.setUserWallets(res)
                 })
             },
-            getInfo() {
-                myApi.getUserInfo(res => {
-                    this.setUserInfo(res);
-                }, msg => {
-                    Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
-                })
-            },
+            // getInfo() {
+            //     myApi.getUserInfo(res => {
+            //         this.setUserInfo(res);
+            //     }, msg => {
+            //         Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+            //     })
+            // },
             withdrawal() { // 前往提现
                 if (this.getUserInfo.kycState !== 1) {
                     MessageBox({

@@ -24,7 +24,7 @@
 
                             <!--</p>-->
                             <p class="f36">{{getUserInfo.username}}</p>
-                            <p class="f28">UID:123465</p>
+                            <p class="f28">UID：{{getUserInfo.uid}}</p>
                         </div>
                         <span>
                             <img src="../../assets/img/i_rig_w@3x.png" style="opacity:0.6;">
@@ -111,7 +111,7 @@
                         name: this.$t('user.safety')
                     },
                     {
-                        route: 'myMapping',
+                        route: 'myMapping', // otc的功能 我的订单
                         icon: require('@/assets/img/icon_wddd.png'),
                         name: this.$t('account.mapping_address'),
                     },
@@ -121,7 +121,7 @@
                         name: this.$t('usercontent.user59'),
                     },
                     {
-                        route: 'exchangeDealList',
+                        route: 'transRecords',
                         icon: require('@/assets/img/icon_yjjl.png'),
                         name: this.$t('trade_record.my_trade_record'),
                     },
