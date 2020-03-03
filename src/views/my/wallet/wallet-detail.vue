@@ -8,10 +8,6 @@
                     <span>{{getSymbol}}</span>
                 </div>
                 <div class="nav_item">
-                    <!--<label>-->
-                    <!--<span>{{$t('home.total')}}</span>-->
-                    <!--<p>{{symbolInfo.totalBalance}}</p>-->
-                    <!--</label>-->
                     <label>
                         <span>{{$t('account.estimated_value_available')}}</span>
                         <p>{{symbolInfo.availableBalance}}</p>
@@ -22,25 +18,19 @@
                     </label>
                 </div>
             </div>
-            <div>
 
-                <!--<label class="top-border">-->
-                    <!--<span>{{$t('account.refund_obtained')}}&lt;!&ndash; 已获得手续费返佣 &ndash;&gt;</span>-->
-                    <!--<p>{{fee}}</p>-->
-                <!--</label>-->
-            </div>
             <div class="market">
                 <p>{{$t('home.go-market')}}</p>
                 <ul>
                     <li v-for="item in dataList" v-tap="{methods: goMarket, data: item}">
                         <label>
                             <p><b>{{getSymbol}}</b><span class="ft-c-gray">/{{item.baseSymbol}}</span></p>
-                            <small>{{(last24h[item.market]||0)|removeEndZero}}</small>
                         </label>
                         <span class="percent c-normal" :class="[percent(item).css]">{{percent(item).percent}}%</span>
-                        <span class="ui-flex-1 rp">
-                            <i class="allow-right"></i>
-                        </span>
+                        <p class="ui-flex-1 right">
+                            <span>{{(last24h[item.market]||0)|removeEndZero}}</span>
+                            <small></small>
+                        </p>
                     </li>
                 </ul>
             </div>
@@ -252,12 +242,16 @@
             margin: 0.5rem auto;
 
             li {
-                padding: .2rem;
-                border-radius: 0.1rem;
-                height: 1.5rem;
+                padding: 0.3rem .2rem;
+                align-items: center;
                 margin-bottom: 0.2rem;
                 display: flex;
                 /*background-color: #fff;*/
+                border-bottom: 0.02rem solid #1D273C;
+                .right{
+                    justify-content: flex-end;
+                    text-align: right;
+                }
 
                 label {
                     p {
@@ -278,6 +272,7 @@
 
                 .percent {
                     margin-left: 0.6rem;
+                    font-size: 0.32rem;
                 }
             }
         }
@@ -301,11 +296,11 @@
             justify-content: center;
             font-size: 0.3rem;
             color: #fff;
-            background: #0EB574;
+            background: #C11623;
             margin: 0 0.1rem;
 
             &.withdrawal {
-                background: #C11623;
+                background: #0EB574;
             }
 
             &.disabled {
@@ -316,10 +311,10 @@
     }
 
     .c-green {
-        color: #42BCA0;
+        color: #C11623;
     }
 
     .c-orange {
-        color: #F43148;
+        color: #0EB574;
     }
 </style>

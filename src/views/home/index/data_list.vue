@@ -190,21 +190,21 @@
 
                 &.c-green {
                     color: #fff;
-                    background-color: #42BCA0;
+                    background-color: #F43148;
                 }
 
                 &.c-orange {
                     color: #fff;
-                    background-color: #F43148;
+                    background-color: #0EB574;
                 }
             }
 
             .c-green {
-                color: #42BCA0;
+                color:#F43148;
             }
 
             .c-orange {
-                color: #F43148;
+                color: #0EB574;
             }
         }
     }

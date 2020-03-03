@@ -93,6 +93,7 @@ LangEn.updateInfo = Config.updateInfo['en']
 
 let i18n = window.$i18n = new VueI18n({
   locale: lang,
+    silentTranslationWarn: true,
   messages: {
     'en': LangEn,
     'zh-CN': LangZhCN,

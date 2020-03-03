@@ -75,7 +75,7 @@
                     }
                     return {
                         css: percent.gt(0) ? 'c-green' : 'c-orange',
-                        percent: percent.gt(0) ? '+' + percent.toFixed(2) : '-' + percent.toFixed(2)
+                        percent: percent.gt(0) ? '+' + percent.toFixed(2) : + percent.toFixed(2)
                     }
                 } else {
                     return {

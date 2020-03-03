@@ -53,11 +53,6 @@
         <mask-layer :show="showMarkets" @hide="hideMarketList" :isgray="true">
             <transition enter-active-class="animated short slideInLeft">
                 <div class="wallet-list-container" v-show="showMarketsSlide">
-                    <!--<div class="title">-->
-                        <!--<span v-tap="{methods:toggleMarketList}"></span>-->
-                        <!--{{$t('home.select-market')}}-->
-                    <!--</div>-->
-                    <!--<market :form="'exchange'" :cSymbol="baseSymbol"></market>-->
                     <market-list @changeMarket="changeMarket"/>
                 </div>
             </transition>
@@ -102,7 +97,8 @@
                 business: {
                     market: ''
                 },
-                inter: null
+                inter: null,
+                market: null
             }
         },
         computed: {
@@ -141,12 +137,12 @@
                 return false
             },
             baseSymbol() {
-                let symbol = this.$route.params.market || localStorage.getItem('market') || this.getInitMarket
+                let symbol = this.market || localStorage.getItem('market') || this.getInitMarket
                 symbol = symbol.split('_')[1]
                 return symbol ? symbol : this.getInitMarket.split('_')[1]
             },
             currentSymbol() {
-                let symbol = this.$route.params.market || localStorage.getItem('market') || this.getInitMarket
+                let symbol = this.market || localStorage.getItem('market') || this.getInitMarket
                 symbol = symbol.split('_')[0]
                 return symbol ? symbol : this.getInitMarket.split('_')[0]
             },
@@ -179,9 +175,12 @@
             symbol() {
                 this.dataSocket && this.dataSocket.switchSymbol(this.symbol)
             },
-            '$route.params.market'() {
+            'market'() {
                 this.showMarkets = false
-                this.dataSocket.switchSymbol(this.symbol)
+                console.log(this.symbol)
+                this.dataSocket.close()
+                this.InitDataSoket()
+                // this.dataSocket.switchSymbol(this.symbol)
             },
             curMarket() {
                 this.checkMarket()
@@ -191,7 +190,6 @@
             this.checkMarket()
             this.tradeType = this.$route.params.action !== false ? 'buy' : 'sell'
             this.InitDataSoket()
-
         },
         mounted() {
             /* this.inter = setInterval(()=>{
@@ -210,7 +208,6 @@
         methods: {
             ...mapActions(['setLast24h', 'tiggerEvents']),
             checkMarket() {
-                // console.log(this.curMarket.market!=='ETVUSDT', this.curMarket.visible)
                 if (this.curMarket && this.curMarket.market !== 'ETVUSDT' && this.curMarket.visible == 0) {
                     if (!this.$route.query.visible) {
                         this.$router.replace({name: 'exchange'})
@@ -249,11 +246,12 @@
             },
             changeMarket(args) {
                 this.showMarkets = false
-                this.$router.replace({
-                    name: 'exchange',
-                    params: {market: `${args.currencySymbol}_${args.baseSymbol}`}
-                })
-                console.log(args)
+                // this.$router.replace({
+                //     name: 'exchange',
+                //     params: {market: `${args.currencySymbol}_${args.baseSymbol}`}
+                // })
+                this.market = `${args.currencySymbol}_${args.baseSymbol}`
+                // localStorage.market = this.market
             },
             getDep() {
                 marketApi.getDepth(this.symbol, res => {
@@ -285,7 +283,7 @@
                 this.dataSocket = DataWebSocket({
                     symbol: this.symbol,
                     period: '1m',
-                    subscribe: ['depth', 'last_price', 'account', 'user_new_orderbook', 'user_history_orderbook', 'new_transaction', 'market'],
+                    subscribe: ['depth', 'last_price', 'account', 'user_new_orderbook', 'new_transaction'],
                     callback: (res) => {
                         if (res.symbol && res.symbol !== this.symbol) {
                             console.log(`市场数据不匹配...`)
@@ -331,16 +329,18 @@
                                     data: res.data
                                 }
                             })
-                        } else if (res.dataType === 'LastHistoryBook') {
-                            // 历史委托
-                            this.tiggerEvents({
-                                name: 'extrustEvent',
-                                params: {
-                                    type: 'history',
-                                    data: res.data
-                                }
-                            })
-                        } else if (res.dataType === 'LastTrades') {
+                        }
+                        // else if (res.dataType === 'LastHistoryBook') {
+                        //     // 历史委托
+                        //     this.tiggerEvents({
+                        //         name: 'extrustEvent',
+                        //         params: {
+                        //             type: 'history',
+                        //             data: res.data
+                        //         }
+                        //     })
+                        // }
+                        else if (res.dataType === 'LastTrades') {
                             // 最新交易记录
                             this.tiggerEvents({
                                 name: 'lastdealEvent',
@@ -349,15 +349,16 @@
                                     data: res.data
                                 }
                             })
-                        } else if (res.dataType === 'markets') {
-                            // 市场信息
-                            res.data.forEach(item => {
-                                item.idx = window.marketOrder[item.market]
-                                item.iconBase64 = window.marketIcon[item.market]
-                                item.collection = window.marketCollection[item.market]
-                            })
-                            window.setMarketList(res.data)
                         }
+                        // else if (res.dataType === 'markets') {
+                        //     // 市场信息
+                        //     res.data.forEach(item => {
+                        //         item.idx = window.marketOrder[item.market]
+                        //         item.iconBase64 = window.marketIcon[item.market]
+                        //         item.collection = window.marketCollection[item.market]
+                        //     })
+                        //     window.setMarketList(res.data)
+                        // }
                     }
                 })
             },
@@ -523,6 +524,7 @@
         padding-right: 0.3rem;
         padding-bottom: 0.5rem;
         position: relative;
+        overflow: auto;
     }
 
     .exchange-container {

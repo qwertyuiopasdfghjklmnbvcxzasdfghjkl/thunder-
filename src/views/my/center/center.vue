@@ -108,7 +108,7 @@ export default {
         },
         getUserLevel() {
             userApi.getUserLevel(res => {
-                this.data4.small = `<span class="ft-c-lightGray">${res==='0B'?'0T':res}</span>`
+                // this.data4.small = `<span class="ft-c-lightGray">${res==='0B'?'0T':res}</span>`
             })
         },
         initData(){
@@ -135,8 +135,8 @@ export default {
         },
         getKYCstate(){
             this.state = this.KYCstate(this.getUserInfo.kycState)
-            this.data3.small = `<span style="color:#999">${this.$t(this.state)}</span>`
-            this.data3.disabled = this.getUserInfo.kycState!==1?false:true
+            // this.data3.small = `<span style="color:#999">${this.$t(this.state)}</span>`
+            // this.data3.disabled = this.getUserInfo.kycState!==1?false:true
             // console.log(this.state, this.getUserInfo)
         },
         KYCstate(i){

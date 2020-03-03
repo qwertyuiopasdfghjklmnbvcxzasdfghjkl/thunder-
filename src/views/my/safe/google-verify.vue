@@ -216,7 +216,7 @@ import UiInput from "@/components/uiInput"
 
         .addres {
             small {
-                border-bottom: 0.02rem solid #eee;
+                /*border-bottom: 0.02rem solid #eee;*/
                 flex-grow: 1;
             }
 
