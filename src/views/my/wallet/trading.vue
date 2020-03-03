@@ -1,60 +1,69 @@
 <template>
     <div class="page">
-        <top-back :back="false">
+        <top-back :back="false" style="background: #0C6AC9;">
             {{$t('home.home45')}}
-            <router-link :to="{name: 'history'}" slot="right" tag="span">
-                {{$t('home.home48')}}
-            </router-link>
         </top-back>
-        <div class="top bg-c-white">
-            <section class="wallet-feature">
-                <p>{{$t('home.home46')}}</p>
-                <div class="wallet-feature-operation">
-                  <span v-tap="{methods: withdrawal}">
+        <div class="top top_total">
+            <!--<section class="wallet-feature">-->
+                <!--<p>{{$t('home.home46')}}</p>-->
+                <!--<div class="wallet-feature-operation">-->
+                  <!---->
+                    <!--<span v-tap="{methods: $root.routeTo, to: 'address-manage'}">-->
+                    <!--<img src="../../../assets/img/i_jy.png">-->
+                    <!--<em>{{$t('home.home51')}}&lt;!&ndash;地址&ndash;&gt;</em>-->
+                  <!--</span>-->
+                <!--</div>-->
+            <!--</section>-->
+
+            <div class="total">
+                <p v-tap="{methods:()=>{ showMoney = !showMoney}}">
+                    <span>({{$t('exchange.exchange_valuation')}}BTC)</span>
+                    <img :src="showMoney ? require('../../../assets/img/assets_eye_open.png'): require('../../../assets/img/assets_eye_closed.png')"/>
+                </p>
+                <h4 class="">{{totalUSDTDisplay}}</h4>
+            </div>
+
+
+            <div class="nav_item">
+                <span v-tap="{methods: withdrawal}">
                       <img src="../../../assets/img/i_tx.png">
                     <em>
                         {{$t('home.home49')}}<!--提现-->
                     </em>
-                  </span>
-                    <span v-tap="{methods: pay}">
+                </span>
+                <span v-tap="{methods: pay}">
                     <img src="../../../assets/img/i_cz.png">
                     <em>
-                        {{$t('home.home50')}}
-                        <!--充值-->
+                        {{$t('home.home50')}}<!--充值-->
                     </em>
                   </span>
-                    <span v-tap="{methods: $root.routeTo, to: 'address-manage'}">
-                    <img src="../../../assets/img/i_jy.png">
-                    <em>{{$t('home.home51')}}<!--地址--></em>
-                  </span>
-                </div>
-            </section>
-
-            <div class="total">
-                <p v-tap="{methods:()=>{ showMoney = !showMoney}}">
-                    <span>({{$t('exchange.exchange_valuation')}}USDT)</span>
-                    <img :src="showMoney ? require('../../../assets/img/assets_eye_open.png'): require('../../../assets/img/assets_eye_closed.png')"/>
-                </p>
-                <h4 class="ft-c-yellow">{{totalUSDTDisplay}} USDT</h4>
-            </div>
-
-            <div class="list_title">
-                <p>{{$t('home.home53')}}</p>
-                <label :class="{active:showZero}">
-                    <span>
-                        <img :src="showZero ? require('../../../assets/img/check@3x.png'): require('../../../assets/img/no-check.png')">
-                        <input type="checkbox" v-model="showZero">
-                    </span>
-                    <span>{{$t('home.home52')}}</span>
-                </label>
+                <span>
+                    <router-link :to="{name: 'history'}" slot="right" tag="span">
+                        <img src="../../../assets/img/i_txjl.png">
+                        <em>{{$t('home.home48')}}</em>
+                    </router-link>
+                </span>
             </div>
         </div>
 
         <div class="page-main">
-            <div class="cont_list full">
-                <ul>
+            <div class="cont_list full ">
+                <div class="list_title">
+                    <label :class="{active:showZero}">
+                    <span>
+                        <!--<img :src="showZero ? require('../../../assets/img/check@3x.png'): require('../../../assets/img/no-check.png')">-->
+                        <i>√</i>
+                        <input type="checkbox" v-model="showZero">
+                    </span>
+                        <span>{{$t('home.home52')}}</span>
+                    </label>
+                </div>
+                <ul class="box">
                     <li v-for="data in filterSymboltList" v-tap="{methods: toWallet, item:data}">
-                        <p><strong>{{data.accountName}}</strong></p>
+                        <p>
+                            <img :src="'data:image/png;base64,'+data.iconBase64"/>
+                            <spam>{{data.accountName}}</spam>
+                        </p>
                         <label>
                             <p>{{data.totalBalance | number}}</p>
                             <span><img src="../../../assets/img/i_rig_c@3x.png"/></span>
@@ -84,11 +93,11 @@
             return {
                 showZero: false,
                 showMoney: true,
-                totalUSDT:0
+                totalUSDT: 0
             }
         },
         computed: {
-            ...mapGetters(['getUserInfo', 'getUserWallets', 'getBTCValuation','getUSDTBTC']),
+            ...mapGetters(['getUserInfo', 'getUserWallets', 'getBTCValuation', 'getUSDTBTC']),
             symbolList() { // 获取币种列表
                 return this.getUserWallets.sort((item1, item2) => {
                     if (item1.symbol === item2.symbol) {
@@ -101,7 +110,7 @@
             filterSymboltList() {
                 if (this.showZero) {
                     return this.symbolList.filter(item => {
-                        return Number(item.totalBalance) > 0? true :false
+                        return Number(item.totalBalance) > 0 ? true : false
                     })
 
                 } else {
@@ -115,7 +124,7 @@
                     return '******'
                 }
             },
-            totalUSDTDisplay(){
+            totalUSDTDisplay() {
                 if (this.showMoney) {
                     return utils.removeEndZero(numUtils.BN(this.totalUSDT).toFixed(4))
                 } else {
@@ -130,21 +139,21 @@
             this.gettTotalUSDTAmount()
         },
         watch: {
-            showMoney(_new){
+            showMoney(_new) {
                 localStorage.setItem('showAssets', _new)
             }
         },
         methods: {
-            ...mapActions(['setBTCValuation', 'setSymbol', 'setUserInfo','setUserWallets']),
-            gettTotalUSDTAmount(){
-                walletApi.gettTotalUSDTAmount(res=>{
+            ...mapActions(['setBTCValuation', 'setSymbol', 'setUserInfo', 'setUserWallets']),
+            gettTotalUSDTAmount() {
+                walletApi.gettTotalUSDTAmount(res => {
                     this.totalUSDT = res
                 })
             },
-            getAssets(){
+            getAssets() {
                 walletApi.myAssets({}, (res) => {
-                    if(res.length==0){
-                        setTimeout(this.getAssets,2000)
+                    if (res.length == 0) {
+                        setTimeout(this.getAssets, 2000)
                         return
                     }
                     res = res.filter(item => {
@@ -216,11 +225,39 @@
 
 <style lang="less" scoped>
 
+    .top_total {
+        background: url("../../../assets/img/total_bg.png") no-repeat center #0C6AC9;
+        background-size: cover;
+    }
+
+    .nav_item{
+        background: #151C2C;
+        margin: 0 0.3rem;
+        border-radius:0.16rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 1.6rem;
+        position: relative;
+        bottom: -0.8rem;
+        span{
+            flex: 1;
+            text-align: center;
+            img{
+                width: 0.48rem;
+                height: 0.42rem;
+            }
+            em{
+                font-style: normal;
+            }
+        }
+    }
     .top {
         margin-top: 0.9rem;
     }
+
     .page-main {
-        top: 4.2rem;
+        top: 5rem;
     }
 
     .wallet-feature {
@@ -286,12 +323,15 @@
     }
 
     .total {
-        padding: 0.24rem 0.3rem 0;
+        text-align: center;
+        overflow: auto;
         p {
-            color: #999;
-            font-size: 0.26rem;
+            color: #ffffff;
+            font-size: 0.28rem;
             display: flex;
             align-items: center;
+            justify-content: center;
+            margin-top: 0.3rem;
 
             span {
                 padding-right: 0.2rem;
@@ -305,8 +345,8 @@
 
         h4 {
             margin-top: 0.25rem;
-            font-size: 0.34rem;
-            font-weight: bold;
+            font-size: 0.6rem;
+            font-weight: 400;
         }
     }
 
@@ -315,14 +355,32 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+
         label {
             display: inline-flex;
             align-items: center;
-            &.active span {
-                color: #3B48C8;
+            i{
+                display: inline-block;
+                width: 0.3rem;
+                height: 0.3rem;
+                background: #1D273C;
+                color: #1D273C;
+                font-weight: bold;
+                font-size: 0.2rem;
+                text-align: center;
+                line-height: 0.3rem;
             }
+
+            &.active span {
+                color: #ffffff;
+                i{
+                    color: #0C6AC9;
+                }
+            }
+
             span {
                 line-height: 0.24rem;
+                color: #4B5875;
             }
 
             span:first-child {
@@ -344,16 +402,17 @@
     }
 
     .cont_list {
-        background: #fff;
-        padding: 0 0.3rem;
+        /*background: #fff;*/
+        /*padding: 0 0.3rem;*/
         font-size: 0.3rem;
+
         ul {
             li {
-                height: 0.96rem;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                border-bottom: 0.02rem solid #eee;
+                border-bottom: 0.02rem solid #222938;
+                padding: 0.3rem;
 
                 &:last-child {
                     border-bottom: none;
@@ -366,13 +425,22 @@
 
                     p {
                         padding-right: 0.24rem;
-                        color: #999;
+                        color: #ffffff;
                     }
 
                     img {
                         width: 0.13rem;
                         height: 0.21rem;
                         vertical-align: middle;
+                    }
+                }
+                p{
+                    display: flex;
+                    align-items: center;
+                    img{
+                        width: 0.7rem;
+                        height: 0.7rem;
+                        margin-right: 0.24rem;
                     }
                 }
             }

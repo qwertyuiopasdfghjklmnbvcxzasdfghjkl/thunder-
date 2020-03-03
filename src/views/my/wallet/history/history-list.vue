@@ -9,8 +9,8 @@
                 <mt-tab-item id="tab2"><span>{{$t('home.home55')}}</span></mt-tab-item>
             </mt-navbar>
         </div>
-        
-        <div class="list_box">
+
+        <div class="list_box box mt20">
             <div class="list" :class="{active:active==='tokens'}">
                 <label @click="active= active==='tokens'?'':'tokens'">{{$t('home.home56')}}<i><img src="../../../../assets/img/tc_meus_b@2x.png"/></i></label>
                 <div>
@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <mt-tab-container v-model="selected"  class="mt20">
+        <mt-tab-container v-model="selected"  class="box">
             <mt-tab-container-item id="tab1">
                 <div class="loadmore-wapper">
                     <mt-loadmore
@@ -50,7 +50,7 @@
                             :bottom-loading-text="$t('home.loading-text')"
                             :autoFill="false"
                             ref="loadmore">
-                        <ul class="tab_list bg-c-white">
+                        <ul class="tab_list box">
                             <li v-for="item in list" v-tap="{methods: todetail, params:{data: item, form: 1}}">
                                 <div>
                                     <h4><span><strong>{{item.symbol}}</strong></span><span>{{item.amount}}</span></h4>
@@ -78,7 +78,7 @@
                             :bottom-loading-text="$t('home.loading-text')"
                             :autoFill="false"
                             ref="loadmoreWithdrawal">
-                        <ul class="tab_list bg-c-white">
+                        <ul class="tab_list box">
                             <li v-for="item in listWithdrawal" v-tap="{methods: todetail, params:{data: item, form: 2}}">
                                 <div>
                                     <h4><span><strong>{{item.symbol}}</strong></span><span>{{item.amount}}</span></h4>
@@ -340,11 +340,14 @@
 </script>
 
 <style scoped lang="less">
-    @bgc: #fff;
-    @brc: #999;
+    @bgc: #2f3646;
+    @brc: #4B5875;
+    .mint-navbar{
+        background: none;
+    }
 
     .list_box {
-        background: @bgc;
+        /*//background: @bgc;*/
         display: flex;
         align-items: center;
         line-height: 0.8rem;
@@ -353,6 +356,7 @@
         .list {
             flex:1;
             text-align: center;
+            color: #4B5875;
             & > div {
                 display: none;
                 position: absolute;
@@ -391,16 +395,16 @@
                     line-height: 0.8rem;
                     margin-bottom: 0.3rem;
                     margin-right: 0.3rem;
-                    background-color: #F6F6F6;
+                    /*background-color: #F6F6F6;*/
                     border-radius: 4px;
-                    color: #999;
+                    /*color: #999;*/
 
                     &:nth-child(3n) {
                         margin-right: 0;
                     }
 
                     &.active {
-                        background-color: #3B48C8;
+                        /*background-color: #3B48C8;*/
                         color: #ffffff;
                     }
                 }
@@ -473,7 +477,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.3rem 0;
-            &+li {border-top: 0.02rem solid #eee;}
+            /*&+li {border-top: 0.02rem solid #eee;}*/
 
             div {
                 h4 {
@@ -495,15 +499,15 @@
         margin-top: 0.9rem;
         position: relative;
         z-index: 1;
-        /deep/ .mint-navbar {border-bottom: 1px solid #eee;}
+        /*/deep/ .mint-navbar {border-bottom: 1px solid #eee;}*/
         /deep/ .mint-tab-item {
             height: 0.9rem;
-            color: #999;
+            color: #4B5875;
             padding: 0;
             &.is-selected {
-                color: #3B48C8; border-bottom: none; margin-bottom: 0;
+                color: #0C6AC9; border-bottom: none; margin-bottom: 0;
                 .mint-tab-item-label span{
-                    border-bottom: 2px solid #3B48C8;
+                    border-bottom: 2px solid #0C6AC9;
                     margin-bottom: -2px;
                 }
             }

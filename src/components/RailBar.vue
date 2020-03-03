@@ -39,7 +39,7 @@
 
 <style scoped lang="less">
     .bar {
-        background: #fff;
+        /*background: #fff;*/
         padding: 0.22rem 0.32rem;
         display: flex;
         flex-wrap: nowrap;
@@ -48,6 +48,10 @@
         height: 0.92rem;
         line-height: 0.48rem;
         position: relative;
+        border-bottom: 0.01rem solid #273246;
+        &:last-child{
+            border-bottom: none;
+        }
         p {
             flex-shrink: 1;
             flex-grow: 1;

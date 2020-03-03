@@ -126,7 +126,7 @@
                         <!--{{$t('home.select-market')}}-->
                     <!--</div>-->
                     <!--<market :form="'kline'" class></market>-->
-                    <market-list @changeBank="changeMarket"/>
+                    <market-list @changeMarket="changeMarket"/>
 
                 </div>
             </transition>
@@ -446,7 +446,14 @@
                     })
                 }
             },
-            changeMarket(){}
+            changeMarket(e){
+                this.showMarkets = false
+                this.$router.replace({
+                    name: 'kline',
+                    params: {market: `${e.currencySymbol}_${e.baseSymbol}`}
+                })
+                console.log(args)
+            }
         }
     }
 </script>

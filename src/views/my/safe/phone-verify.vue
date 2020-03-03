@@ -7,7 +7,7 @@
     <div class="page-main">
       <p class="mt20 f24 ft-c-main"  v-if="getUserInfo.mobileAuthEnable === 1">（{{$t('public0.public245')}}）<!--为了您的资产安全，不建议您解除手机短信验证码功能。--></p>
       <!--1、绑定短信认证-->
-      <div class="block mt20">
+      <div class="input_cont mt20">
         <div class="form">
           <div class="form-row countryCode" v-if="getUserInfo.mobileAuthEnable !== 1">
             <select v-model="mobileFormData.countryCode">
@@ -17,13 +17,15 @@
                     :label="$t('account.user_center_phone')"
                     v-model="mobileFormData.phoneNumber"
                     :value="mobileFormData.phoneNumber"
+                      :placeholder="true"
                     :title="$t('account.user_center_phone')"></ui-input><!--手机号-->
           </div>
           <div class="form-row SMSCode">
-            <ui-input 
+            <ui-input
                     :maxlength="6"
                     :label="$t('account.user_center_SMS_code')"
                     v-model="mobileFormData.smsCode"
+                    :placeholder="true"
                     :title="$t('account.user_center_SMS_code')"></ui-input><!--短信验证码-->
             <mt-button type="default" size="small" :disabled="disabled" v-tap="{methods:sendSMSCode}">{{$t('account.user_center_send_SMS')}}<!--发送验证码-->{{disabled ? `（${time}s）` : ''}}</mt-button>
           </div>
@@ -32,6 +34,7 @@
                     :label="$t('account.user_center_login_password')"
                     :title="$t('account.user_center_login_password')"
                     :type="showpwd? 'text':'password'"
+                    :placeholder="true"
                     v-model="mobileFormData.phonepassword"
                     :maxlength="32"></ui-input>
             <i class="icon_showpwd" :class="{active:showpwd}"
@@ -187,6 +190,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  .input_cont{
+    /*background: #314254;*/
+  }
 .form-row {
     position: relative;
     display: flex;
@@ -203,15 +209,15 @@ export default {
         width: 40%;
         height: 0.65rem;
         font-size: .3rem;
-        color: #8089a3;
+        color: #ffffff;
         padding-left:5px;
         background-color: transparent;
         border:none;
-        border-bottom: 0.02rem solid #ddd;
+        /*border-bottom: 0.02rem solid #ddd;*/
       }
     }
     .ui_input {flex: 1;}
-    
+
     .icon_showpwd {
         position: absolute;
         right: 0.3rem;

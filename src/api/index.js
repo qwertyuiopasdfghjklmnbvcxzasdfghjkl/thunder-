@@ -16,7 +16,7 @@ axios.interceptors.request.use(function (config) {
   config.headers.common['uuid'] = userApi.uuid
   config.headers.common['lang'] = lang
   // 在发送请求之前做些什么
- 
+
   return config
 }, function (error) {
   // 对请求错误做些什么

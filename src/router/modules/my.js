@@ -22,7 +22,7 @@ export default [
                 path: 'index',
                 name: 'ucenter',
                 component:() => import('@/views/my/my'),
-                meta:{nav:true, login:true}
+                meta:{login:true}
             },
             {
                 path: 'kyc',

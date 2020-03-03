@@ -1,27 +1,33 @@
 <template>
     <div class="page">
-        <top-back>{{$t('public0.topup')}}</top-back>
+        <top-back style="background: #151C2C;">{{$t('public0.topup')}}</top-back>
 
         <div class="page-main">
-            <div class="symbol">
-                <img :src="`data:image/png;base64,${symbolInfo.iconBase64}`"/>
-                <span>{{symbolInfo.symbol}}</span>
+            <div class="select full">
+                <label :class="{'active':withdrawalType === 1}" v-tap="{methods: ()=>{withdrawalType = 1}}">{{$t('market.def_withdrawal')}}</label>
+                <label :class="{'active':withdrawalType === 2}" v-tap="{methods: ()=>{withdrawalType = 2}}">{{$t('market.inset_withdrawal')}}</label>
             </div>
-            <div class="inner_text">
-                <p>{{$t('home.notice')}}：<!--温馨提示--></p>
-                <ol>
-                    <li>{{$t('public0.text001')}}<!--您可以在充值提现历史记录页面跟踪状态。--></li>
-                </ol>
-            </div>
-            <div class="block mt20">
+            <div class="withdrawal mt20">
                 <ul class="payment-detail">
-                    <li>
-                        <label class="address" v-tap="{methods: getAddress}">{{$t('account.user_Pick_up_address')}}
-                            <img src="../../../../assets/img/tc_meus_b@2x.png"/><!--提现地址--></label>
+                    <li v-show="withdrawalType === 1">
+                        <label>
+                            {{$t('account.user_Pick_up_address')}}
+                        </label>
                         <p class="address mt10">
-                            <input type="text" v-validate="'required'" name="selToAddress" v-model="form.toAddress" :placeholder="$t('public0.public-new-address')" autocomplete="off"/>
+                            <input type="text" v-validate="'required'" name="selToAddress" v-model="form.toAddress"
+                                   :placeholder="$t('public0.public-new-address')" autocomplete="off"/>
                             <i class="scanning" v-tap="{methods: scanQRCode}"></i>
-                            
+                            <i class="address" v-tap="{methods: getAddress}"></i>
+
+                        </p>
+                    </li>
+                    <li v-show="withdrawalType === 2">
+                        <label>
+                            {{$t('account.user_center_account')}}
+                        </label>
+                        <p class="address mt10">
+                            <input type="text" v-validate="'required'" name="selToAddress" v-model="form.toAddress"
+                                   :placeholder="accountPlaceholder()" autocomplete="off"/>
                         </p>
                     </li>
                     <li v-if="symbol==='EOS' || symbol==='XRP'">
@@ -34,22 +40,37 @@
                         <p class="mt10">
                             <input type="number" v-model="form.amount"
                                    name="amount"
-                                   :placeholder="$t('account.user_minimum_number_of_cash').format(`：${symbolInfo.minWithdraw} ${symbol}`)"/>
+                                   :placeholder="$t('account.user_minimum_number_of_cash').format(`：${symbolInfo.minWithdraw}`)"/>{{symbol}}
                             <!--最小提现数量为：{0} {symbol}-->
-                            <a href="javascript:;" @click="setAll">{{$t('trade_record.trade_record_all')}}</a>
+                            <a href="javascript:;" class="set_all" @click="setAll">{{$t('trade_record.trade_record_all')}}</a>
                         </p>
                         <small class="aumont">
-                            <span>{{$t('exchange.advanced_fee')}}<!--手续费-->
-                                {{procedureFee}} {{symbol}}</span>
                             <span>
-                                {{$t('account.estimated_value_available')}}:<!--可用余额-->
-                                <i class="ft-c-main">{{symbolInfo.availableBalance}} {{symbol}}</i>
+                                {{$t('account.estimated_value_available')}}<!--可用余额-->
+                                <i class="">{{symbolInfo.availableBalance}} {{symbol}}</i>
                             </span>
                         </small>
-                    </li>                    
+                    </li>
+                    <li>
+                        <label>{{$t('exchange.advanced_fee')}}<!--手续费--></label>
+                        <p class="mt10">
+                            <input :value="procedureFee" disabled/> {{symbol}}
+                        </p>
+                    </li>
+                    <li>
+                        <div class="inner_text">
+                            <p>{{$t('home.notice')}}：<!--温馨提示--></p>
+                            <ol>
+                                <li>{{$t('public0.text001')}}<!--您可以在充值提现历史记录页面跟踪状态。--></li>
+                            </ol>
+                        </div>
+                    </li>
                     <li class="add-top mt15">
-                        <h4>{{$t('account.user_Actual_arrival')}}：<!--到账数量-->
-                            <span>{{lastAmount}}</span> <span> {{symbol}}</span></h4>
+                        <h4>
+                            <span>{{$t('account.user_Actual_arrival')}}</span><!--到账数量-->
+                            <span>{{lastAmount}}</span>
+                            <span> {{symbol}}</span>
+                        </h4>
                     </li>
                 </ul>
             </div>
@@ -60,7 +81,7 @@
             </div>
         </div>
         <mt-popup class="place_order_popup" v-model="placeOrderVisible" position="bottom">
-          <confirm ref="confirm" :params="params" @removeDialog="removeDialog" @okCallback="okCallback"></confirm>
+            <confirm ref="confirm" :params="params" @removeDialog="removeDialog" @okCallback="okCallback"></confirm>
         </mt-popup>
     </div>
 </template>
@@ -76,14 +97,15 @@
 
     export default {
         name: 'page-withdrawal',
-        components:{
+        components: {
             confirm
         },
         data() {
             return {
                 symbolInfo: {},
                 symbol: null,
-                placeOrderVisible:false,
+                placeOrderVisible: false,
+                withdrawalType: 1,
                 form: {
                     toAddress: '',
                     amount: '',
@@ -94,50 +116,52 @@
             }
         },
         computed: {
-            ...mapGetters(['getUserWallets', 'getSymbol','getUserInfo']),
+            ...mapGetters(['getUserWallets', 'getSymbol', 'getUserInfo']),
             lock() {
                 return (this.form.toAddress && this.form.amount && true) || false
             },
             lastAmount() {
                 if (this.form.amount) {
                     let rst = numUtils.minus(this.form.amount, this.procedureFee)
-                    return rst.gte(numUtils.BN(0))?rst:0
+                    return rst.gte(numUtils.BN(0)) ? rst : 0
                 } else {
                     return 0
                 }
             },
-            params () {
-              return {
-                symbol: this.symbol,
-                symbolType: this.symbolInfo.symbolType,
-                amount: this.form.amount,
-                fromAccount: this.symbolInfo.accountId, // 用户id
-                selToAddress: this.form.toAddress,
-                memo: this.form.memo,
-                phoneNumber: this.getUserInfo.mobile,
-                countryCode: this.getUserInfo.countryCode || '+86',
-                email: this.getUserInfo.email || this.getUserInfo.username
-              }
+            params() {
+                return {
+                    symbol: this.symbol,
+                    symbolType: this.symbolInfo.symbolType,
+                    amount: this.form.amount,
+                    fromAccount: this.symbolInfo.accountId, // 用户id
+                    selToAddress: this.form.toAddress,
+                    memo: this.form.memo,
+                    phoneNumber: this.getUserInfo.mobile,
+                    countryCode: this.getUserInfo.countryCode || '+86',
+                    email: this.getUserInfo.email || this.getUserInfo.username
+                }
             },
-            procedureFee(){
-                if(this.symbolInfo.procedureFeeType==0){
-                    return this.symbolInfo.procedureFee
-                } else {
-                    return !!Number(this.form.amount)?utils.removeEndZero(numUtils.mul(this.symbolInfo.procedureFee, this.form.amount).toFixed(8)):'--'
+            procedureFee() {
+                if(this.withdrawalType === 2){
+                    return this.$t('market.fee')
+                }else{
+                    if (this.symbolInfo.procedureFeeType == 0) {
+                        return this.symbolInfo.procedureFee
+                    } else {
+                        return !!Number(this.form.amount) ? utils.removeEndZero(numUtils.mul(this.symbolInfo.procedureFee, this.form.amount).toFixed(8)) : '--'
+                    }
                 }
             }
         },
-        watch: {
-            
-        },
+        watch: {},
         created() {
             this.symbol = this.getSymbol
             this.form.toAddress = this.$route.params.address || ''
             this.getInfo()
         },
         methods: {
-            setAll(){
-              this.form.amount = this.symbolInfo.availableBalance
+            setAll() {
+                this.form.amount = this.symbolInfo.availableBalance
             },
             getInfo() {
                 this.getUserWallets.filter(res => {
@@ -152,27 +176,35 @@
                     console.log(addr)
                 })
             },
-            getAddress(){
-                this.$router.push({name:'address', params:{from:'withdrawal'}})
+            getAddress() {
+                this.$router.push({name: 'address', params: {from: 'withdrawal'}})
             },
-            walletWithdraw(){
-                if(Number(this.form.amount) > Number(this.symbolInfo.availableBalance)){
+            walletWithdraw() {
+                if (Number(this.form.amount) > Number(this.symbolInfo.availableBalance)) {
                     Tip({type: 'danger', message: this.$t('exchange.exchange_Insufficient_balance')})
                     return
                 } else if (Number(this.form.amount) < Number(this.symbolInfo.minWithdraw)) {
-                    Tip({type: 'danger', message: this.$t('account.user_minimum_number_of_cash').format(`：${this.symbolInfo.minWithdraw} ${this.symbol}`)}) // 最小提币数量为{0}。
+                    Tip({
+                        type: 'danger',
+                        message: this.$t('account.user_minimum_number_of_cash').format(`：${this.symbolInfo.minWithdraw} ${this.symbol}`)
+                    }) // 最小提币数量为{0}。
                     this.form.amount = this.symbolInfo.minWithdraw
                     return
                 }
                 this.placeOrderVisible = true
             },
-            removeDialog () {
-              this.placeOrderVisible = false
+            removeDialog() {
+                this.placeOrderVisible = false
             },
-            okCallback () {
-              this.placeOrderVisible = false
-              this.$router.push({name: 'trading'})
+            okCallback() {
+                this.placeOrderVisible = false
+                this.$router.push({name: 'trading'})
             },
+            accountPlaceholder(){
+                let t = this.$t('otc_exchange.otc_exchange_phone')+'/'+this.$t('usercontent.user02')+'/UID'
+                console.log(t)
+                return t
+            }
         }
     }
 </script>
@@ -180,6 +212,10 @@
 <style lang="less" scoped>
 
     @f_c_2: #999;
+
+    .withdrawal {
+        color: #4B5875;
+    }
 
     .symbol {
         display: flex;
@@ -201,7 +237,6 @@
 
     .inner_text {
         font-size: 0.3rem;
-        color: @f_c_2;
         padding: 0.3rem 0;
 
         p {
@@ -221,27 +256,36 @@
             position: relative;
 
             & > p {
-                margin-top: 0.2rem;
+                margin-top: 0.3rem;
                 display: flex;
                 height: 0.5rem;
                 position: relative;
+                border-bottom: 0.02rem solid #1D273C;
+                padding-bottom: 0.2rem;
+                font-size: 0.32rem;
 
                 input {
                     flex-shrink: 0;
                     flex-grow: 1;
                     background: none;
                     border: none;
-                    border-bottom: 0.02rem solid #ddd;
                     outline: none;
-                    line-height: 0.4rem;
+                    color: #ffffff;
+                    font-size: 0.32rem;
+                    line-height: 0.5rem;
                 }
 
-                .scanning {
-                    width: 0.5rem;
-                    height: 0.5rem;
+                .scanning, .address {
+                    width: 0.44rem;
+                    height: 0.44rem;
                     background: url("../../../../assets/img/scanner.png") no-repeat center;
-                    background-size: 0.5rem;
-                    margin-left: 0.2rem;
+                    background-size: 0.44rem;
+                    margin-left: 0.4rem;
+                }
+
+                .address {
+                    background: url("../../../../assets/img/icon_address.png") no-repeat center;
+                    background-size: 0.44rem;
                 }
 
                 .eye {
@@ -261,7 +305,6 @@
                 display: flex;
                 justify-content: space-between;
                 margin-top: 0.15rem;
-                color: #9da2a9;
 
                 i {
                     font-style: normal;
@@ -276,16 +319,68 @@
                 font-size: 0.2rem;
                 color: #f65416;
             }
-            .address{
-                img{
+
+            .address {
+                img {
                     width: 0.2rem;
                     vertical-align: middle;
                 }
             }
+
+            .set_all {
+                color: #ffffff;
+                padding-left: 0.3rem;
+                line-height: 0.34rem;
+            }
+
+
+        }
+        .add-top {
+              h4 {
+                  font-size: 0.32rem;
+                  display: flex;
+
+                  span:nth-child(2) {
+                      flex: 1;
+                      text-align: right;
+                      color: #ffffff;
+                  }
+
+                  span:nth-of-type(3) {
+                      color: #ffffff;
+                  }
+              }
+
+          }
+    }
+
+    .bottom {
+        margin-top: 0.4rem;
+    }
+
+    .place_order_popup {
+        width: 100%;
+        border-radius: 0.3rem 0.3rem 0 0;
+    }
+    .select{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 0.15rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        label{
+            flex: 1;
+            height: 0.9rem;
+            text-align: center;
+            line-height: 0.9rem;
+            color: #ffffff;
+            background: #0EB574;
+            border-radius: 0.1rem;
+            margin: 0.15rem;
+            &.active{
+                background: #E01C37;
+            }
         }
     }
-.bottom{
-    margin-top: 0.4rem;
-}
-.place_order_popup{width: 100%;}
 </style>

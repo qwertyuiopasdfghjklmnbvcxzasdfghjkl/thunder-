@@ -2,12 +2,13 @@
     <div class="page">
         <top-back>{{$t('user.changePassword')}}</top-back>
         <div class="page-main">
-            <div class="block mt20">
+            <div class=" mt20">
                 <div class="cont">
                     <ui-input
                             :title="$t('exchange.exchange_old_password')"
                             :label="$t('home.oldPW')"
                             :type="showpwd? 'text':'password'"
+                            :placeholder="true"
                             v-model="formData.passwordOld"></ui-input>
                     <i class="icon_showpwd" :class="{active:showpwd}"
                        v-tap="{methods: ()=>{showpwd = !showpwd}}"></i>
@@ -18,6 +19,7 @@
                             :title="$t('account.user_center_new_password')"
                             :label="$t('account.user_center_Please_new_password')"
                             :type="showpwd? 'text':'password'"
+                            :placeholder="true"
                             v-model="formData.password"></ui-input>
                     <p class="error" v-if="!passwordError">{{$t('login_register.lintonPWReg')}}</p>
                 </div>
@@ -26,6 +28,7 @@
                             :title="$t('account.user_center_confirm_password')"
                             :label="$t('account.user_center_Please_confirm_password')"
                             :type="showpwd? 'text':'password'"
+                            :placeholder="true"
                             v-model="formData.passwordConfirm"></ui-input>
                     <p class="error" v-if="!passwordConfirmError">{{$t('home.home23')}}</p>
                 </div>

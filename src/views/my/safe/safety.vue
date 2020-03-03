@@ -3,7 +3,7 @@
         <top-back :backPage="'ucenter'">{{$t('user.safety')}}</top-back>
         <div class="page-main">
             <div class="mt20">
-                <rail-bar v-for="data in data1" :item="data" class="hr"></rail-bar>
+                <rail-bar v-for="data in data1" :item="data"></rail-bar>
             </div>
         </div>
     </div>
@@ -24,10 +24,10 @@
                         route: 'google-verify',
                         name: this.$t('home.home12'),
                     },
-                    /*{
+                    {
                         route: 'phoneVerify',
                         name: this.$t('auth_warning.warning_SMS_auth'),
-                    },*/
+                    },
                     {
                         route: 'resetPW',
                         name: this.$t('account.user_center_change_password'),

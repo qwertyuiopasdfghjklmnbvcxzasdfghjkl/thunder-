@@ -417,3 +417,15 @@ input {
   line-height: 0.5rem;
   font-weight: 400;
 }
+input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
+  color: #4B5875;
+}
+input:-moz-placeholder { /* Mozilla Firefox 4 to 18 适配火狐 */
+  color: #4B5875;
+}
+input::-moz-placeholder { /* Mozilla Firefox 19+ 适配火狐 */
+  color: #4B5875;
+}
+input:-ms-input-placeholder { /* Internet Explorer 10+  适配ie*/
+  color: #4B5875;
+}

@@ -4,7 +4,7 @@
             <span>{{$t('user.center')}}<!--个人中心--></span>
         </top-back>
         <div class="page-main">
-            <div class="mt20 full">
+            <div class="mt20 full box">
                 <rail-bar v-for="data in data1" :item="data" class="hr"></rail-bar>
                 <div class="bar hr">
                     <p>{{$t('account.user_center_avatar')}}<!--头像--><font class="f24 ft-c-lightGray" v-if="!getUserInfo.headerImagePath">（{{$t('account.user_center_change')}}）<!--修改--></font></p>
@@ -14,9 +14,9 @@
                       <input type="file" name="source" title=" " accept="image/*" capture="camera" @change="uploadImage"/>
                     </form>
                 </div>
-                <rail-bar :item="data4" class="hr"></rail-bar>
+                <!--<rail-bar :item="data4" class="hr"></rail-bar>-->
                 <!-- <rail-bar :item="data5" class="hr"></rail-bar> -->
-                <rail-bar :item="data3" class="hr"></rail-bar>
+                <!--<rail-bar :item="data3" class="hr"></rail-bar>-->
             </div>
 
             <div class="out">
@@ -67,18 +67,18 @@ export default {
                     action:null
                 }
             ],
-            data3:{
-                route: 'kyc',
-                name: this.$t('home.home16'),
-                icon: require('@/assets/img/kyc.png'),
-                disabled:true,
-            },
-            data4:{
-                name:this.$t('business.LEVEL'),
-                disabled:true,
-                rightIcon:true,
-                small:''
-            },
+            // data3:{
+            //     route: 'kyc',
+            //     name: this.$t('home.home16'),
+            //     icon: require('@/assets/img/kyc.png'),
+            //     disabled:true,
+            // },
+            // data4:{
+            //     name:this.$t('business.LEVEL'),
+            //     disabled:true,
+            //     rightIcon:true,
+            //     small:''
+            // },
             data5:{
                 route: 'resetPW',
                 name:this.$t('user.changePassword'),
@@ -218,7 +218,7 @@ export default {
         bottom: 0;
         right: 0.3rem;
         left:0.3rem;
-        background: #eee;
+        /*background: #eee;*/
         height: 0.02rem;
     }
 
@@ -240,7 +240,7 @@ export default {
 }
 
 .bar {
-    background: #fff;
+    /*background: #fff;*/
     padding: 0.22rem 0.32rem;
     display: flex;
     flex-wrap: nowrap;

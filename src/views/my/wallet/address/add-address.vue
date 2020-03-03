@@ -8,6 +8,7 @@
                     <ui-input
                             :label="$t('home.input-address')"
                             v-model="form.address"
+                            :placeholder="true"
                             :title="$t('home.address')"
                             style="margin-right: 0.6rem;"
                     ></ui-input>
@@ -18,6 +19,7 @@
                     <ui-input
                             :label="$t('home.input-memo')"
                             v-model="form.memo"
+                            :placeholder="true"
                             :title="$t('account.user_Remark_label')"
                     ></ui-input>
                 </div>

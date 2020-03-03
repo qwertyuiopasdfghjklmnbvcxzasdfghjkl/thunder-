@@ -1,28 +1,33 @@
 <template>
     <div class="page">
-        <top-back>{{$t('exchange.exchange_wallet')}}<!--钱包--></top-back>
+        <top-back style="background: #0C6AC9;">{{$t('exchange.exchange_wallet')}}<!--钱包--></top-back>
         <div class="page-main">
-            <div class="detail">
+            <div class="detail full">
                 <div class="name">
                     <span><img :src="'data:image/png;base64,'+symbolInfo.iconBase64"/></span>
                     <span>{{getSymbol}}</span>
                 </div>
-                <label>
-                    <span>{{$t('home.total')}}</span>
-                    <p>{{symbolInfo.totalBalance}}</p>
-                </label>
-                <label>
-                    <span>{{$t('account.estimated_value_available')}}</span>
-                    <p>{{symbolInfo.availableBalance}}</p>
-                </label>
-                <label>
-                    <span>{{$t('wallet.value_frozen')}}</span>
-                    <p>{{symbolInfo.frozenBalance}}</p>
-                </label>
-                <label class="top-border">
-                    <span>{{$t('account.refund_obtained')}}<!-- 已获得手续费返佣 --></span>
-                    <p>{{fee}}</p>
-                </label>
+                <div class="nav_item">
+                    <!--<label>-->
+                    <!--<span>{{$t('home.total')}}</span>-->
+                    <!--<p>{{symbolInfo.totalBalance}}</p>-->
+                    <!--</label>-->
+                    <label>
+                        <span>{{$t('account.estimated_value_available')}}</span>
+                        <p>{{symbolInfo.availableBalance}}</p>
+                    </label>
+                    <label>
+                        <span>{{$t('wallet.value_frozen')}}</span>
+                        <p>{{symbolInfo.frozenBalance}}</p>
+                    </label>
+                </div>
+            </div>
+            <div>
+
+                <!--<label class="top-border">-->
+                    <!--<span>{{$t('account.refund_obtained')}}&lt;!&ndash; 已获得手续费返佣 &ndash;&gt;</span>-->
+                    <!--<p>{{fee}}</p>-->
+                <!--</label>-->
             </div>
             <div class="market">
                 <p>{{$t('home.go-market')}}</p>
@@ -40,8 +45,10 @@
                 </ul>
             </div>
             <div class="btn">
-                <label class="withdrawal" :class="{disabled: Number(symbolInfo.withdrawFlag) !== 1}" v-tap="{methods: withdrawal}">{{$t('public0.topup')}}</label>
-                <label class="topup" :class="{disabled: Number(symbolInfo.rechargeFlag) !== 1}" v-tap="{methods: topup}">{{$t('home.topup')}}</label>
+                <label class="withdrawal" :class="{disabled: Number(symbolInfo.withdrawFlag) !== 1}"
+                       v-tap="{methods: withdrawal}">{{$t('public0.topup')}}</label>
+                <label class="topup" :class="{disabled: Number(symbolInfo.rechargeFlag) !== 1}"
+                       v-tap="{methods: topup}">{{$t('home.topup')}}</label>
             </div>
         </div>
     </div>
@@ -58,44 +65,44 @@
     export default {
         name: "wallet-detail",
         computed: {
-            ...mapGetters(['getUserWallets', 'getSymbol', 'getMarketList','getUserInfo']),
+            ...mapGetters(['getUserWallets', 'getSymbol', 'getMarketList', 'getUserInfo']),
             dataList() {
                 let _markets = this.getMarketList || []
                 return _markets.filter(res => {
                     return this.getSymbol === res.currencySymbol
                 })
             },
-            symbolInfo(){
+            symbolInfo() {
                 let _temp = this.getUserWallets.filter(res => {
                     return this.getSymbol === res.symbol
                 })
-                return _temp[0]?_temp[0]:{}
+                return _temp[0] ? _temp[0] : {}
             },
         },
         data() {
             return {
-                last24h:{},
-                fee:'--'
+                last24h: {},
+                fee: '--'
             }
         },
-        watch:{
-            dataList(_new){
+        watch: {
+            dataList(_new) {
                 this.getLast24h()
             }
         },
-        created(){
+        created() {
             this.getLast24h()
             this.getUserInvitedFeeCommission()
         },
         methods: {
-            getUserInvitedFeeCommission(){
-                walletApi.getUserInvitedFeeCommission(this.symbolInfo.accountId, (res)=>{
-                    this.fee = res&&res.commissionAmount&&utils.removeEndZero(numUtils.BN(res.commissionAmount).toFixed(8)) || '--'
+            getUserInvitedFeeCommission() {
+                walletApi.getUserInvitedFeeCommission(this.symbolInfo.accountId, (res) => {
+                    this.fee = res && res.commissionAmount && utils.removeEndZero(numUtils.BN(res.commissionAmount).toFixed(8)) || '--'
                 })
             },
-            getLast24h(){
+            getLast24h() {
                 let _last24h = {}
-                this.dataList.forEach(item=>{
+                this.dataList.forEach(item => {
                     marketApi.get24hPrice({symbol: item.market}, (res) => {
                         _last24h[item.market] = res[0][3]
                         this.last24h = _last24h
@@ -124,7 +131,7 @@
                 this.$router.push({name: 'exchange', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
             },
             withdrawal() {
-                if(Number(this.symbolInfo.withdrawFlag) !== 1){
+                if (Number(this.symbolInfo.withdrawFlag) !== 1) {
                     return
                 }
                 if (this.getUserInfo.kycState !== 1) {
@@ -154,7 +161,7 @@
                 this.$router.push({name: 'withdrawal'})
             },
             topup() {
-                if(Number(this.symbolInfo.rechargeFlag) !== 1){
+                if (Number(this.symbolInfo.rechargeFlag) !== 1) {
                     return
                 }
                 // if (this.getUserInfo.googleAuthEnable === 0 && this.getUserInfo.mobileAuthEnable === 0) {
@@ -178,33 +185,50 @@
 
 <style scoped lang="less">
     .detail {
+        background: url("../../../assets/img/total_bg.png") no-repeat center #0C6AC9;
+        background-size: cover;
+        /*overflow: auto;*/
+        height: 3.2rem;
+
         .name {
             text-align: center;
-            margin: 0.7rem auto 0.2rem;
+            padding: 0.4rem 0 0.2rem;
 
             img {
-                width: 0.8rem;
+                width: 1rem;
+                margin-bottom: 0.2rem;
             }
 
             span {
-                line-height: 0.8rem;
-                height: 0.8rem;
-                display: inline-block;
-                vertical-align: top;
-                margin: 0 0.1rem;
-                font-size: 0.4rem;
+                display: block;
+                font-size: 0.28rem;
+            }
+        }
+
+        .nav_item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #151C2C;
+            height: 1.6rem;
+            position: relative;
+            bottom: -0.2rem;
+            margin: 0 0.3rem;
+            border-radius: 0.1rem;
+            z-index: 99;
+            label {
+                flex: 1;
             }
         }
 
         label {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            text-align: center;
             padding: 0.2rem 0;
-            font-size: 0.3rem;
-
+            font-size: 0.36rem;
+            line-height: 0.5rem;
             span {
-                color: #999;
+                color: #4B5875;
+                font-size: 0.24rem;
             }
         }
 
@@ -217,21 +241,23 @@
     .market {
         margin-bottom: 1.2rem;
         padding-top: 0.3rem;
-        border-top: 0.02rem solid #ddd;
+        margin-top: 1rem;
+
         & > p {
             font-size: 0.3rem;
-            color: #999;
+            color: #4B5875;
         }
 
         ul {
             margin: 0.5rem auto;
+
             li {
                 padding: .2rem;
                 border-radius: 0.1rem;
                 height: 1.5rem;
                 margin-bottom: 0.2rem;
                 display: flex;
-                background-color: #fff;
+                /*background-color: #fff;*/
 
                 label {
                     p {
@@ -244,12 +270,15 @@
                     small {
                         font-size: 0.3rem;
                         line-height: 0.4rem;
-                        color: #999;
+                        color: #4B5875;
                         padding-top: 0.2rem;
                         display: block;
                     }
                 }
-                .percent {margin-left: 0.6rem;}
+
+                .percent {
+                    margin-left: 0.6rem;
+                }
             }
         }
     }
@@ -257,23 +286,31 @@
     .btn {
         position: fixed;
         width: 100vw;
-        height: 1.1rem;
+        height: 1.2rem;
         bottom: 0;
         left: 0;
         display: flex;
-        label{
-            width: 50%;
-            height: 1.1rem;
+        padding: 0.15rem;
+        background: #1D2537;
+
+        label {
+            flex: 1;
+            height: 0.9rem;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.3rem;
             color: #fff;
-            background: #1FB674;
-            &.withdrawal{
-                background: #FF2B5D;
+            background: #0EB574;
+            margin: 0 0.1rem;
+
+            &.withdrawal {
+                background: #C11623;
             }
-            &.disabled {opacity: 0.6;}
+
+            &.disabled {
+                opacity: 0.6;
+            }
 
         }
     }

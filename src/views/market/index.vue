@@ -53,6 +53,8 @@
         watch:{
             getMarketList(e){
                 this.selfData = e
+                // this.mainData = e
+                this.newData = e
             }
         },
         created () {

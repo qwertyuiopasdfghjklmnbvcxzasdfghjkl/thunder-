@@ -168,6 +168,7 @@
             border-bottom: 0.04rem solid transparent;
             &.active{
                 border-bottom: 0.04rem solid #0C6AC9;
+                color: #ffffff;
             }
         }
     }

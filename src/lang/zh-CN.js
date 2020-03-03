@@ -1628,7 +1628,12 @@ export default {
 			"select_symbol": "切换币种",
 			"email_login": '邮箱登录',
 			"phone_login": "手机登录",
-			"register_p":"致富，从成为Thunder用户开始"
+			"register_p":"致富，从成为Thunder用户开始",
+			"kyc": "身份认证",
+			"mention_filling_record": "充提记录",
+			"def_withdrawal": "普通提币",
+			"inset_withdrawal": "站内转账",
+			"fee": "免费"
 		},
 		"referral": {
 			"date": "日期",

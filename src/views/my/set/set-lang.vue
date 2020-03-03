@@ -2,7 +2,7 @@
     <div class="page">
         <top-back>{{$t('user.lang')}}</top-back>
         <div class="page-main">
-            <div class="cont">
+            <div class="cont box">
                 <ul>
                     <li v-for="item in options"
                         v-tap="{methods: getAndSetLang, lang:item.value}"
@@ -64,11 +64,11 @@ export default {
     ul{
         display: flex;
         flex-flow: column;
-        background: #fff;
+        /*background: #fff;*/
         padding: 0 0.3rem;
         li{
             padding: 0.3rem 0;
-            border-bottom:  0.02rem solid #eee;
+            border-bottom:  0.02rem solid #273246;
             &:last-child{
                 border-bottom: none;
             }

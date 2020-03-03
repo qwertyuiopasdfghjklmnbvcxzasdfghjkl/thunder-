@@ -30,8 +30,8 @@
         name: "marketList",
         data() {
             return {
-                symbol: null,
-                search: null
+                symbol: 'USDT',
+                search: ''
             }
         },
         computed: {
@@ -47,8 +47,10 @@
                 let list = []
                 let market = this.getMarketList || []
                 market.filter(res=>{
-                    if(this.symbol === res.symbol){
-                        if(res.symbol.indexOf(this.search) !== -1){
+                    if(this.symbol === res.baseSymbol){
+                        let b = res.market.indexOf(this.search.toUpperCase()) !== -1 || res.market.indexOf(this.search.toLowerCase()) !== -1
+                        if(b){
+                            console.log(res)
                             list.push(res)
                         }
                     }
@@ -67,7 +69,8 @@
                 let a = e.item
             },
             change(e){
-                this.$emit('changeBack',e)
+                this.$emit('changeMarket',e.data)
+                console.log(e)
             },
             percent(item) {
                 if (numUtils.BN(item.openingPrice).equals(0)) {
@@ -113,8 +116,8 @@
                 li{
                     color: #4B5875;
                     font-size: 0.3rem;
-                    padding: 0.1rem 0.2rem;
-                    flex: 1;
+                    padding: 0 0.2rem;
+                    line-height: 0.4rem;
                     &.active{
                         background: #0C6AC9;
                         color: #ffffff;

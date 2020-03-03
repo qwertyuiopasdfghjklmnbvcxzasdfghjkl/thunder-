@@ -8,12 +8,12 @@
                     <div ref="qrcode"></div>
                 </div>
             </div>
-            <div class="google-box">
+            <div class="google-box box">
                 <div class="addres" v-if="getUserInfo.googleAuthEnable !== 1">
                     <p class="f30"><strong>{{$t('account.user_center_backup_key')}}</strong></p>
                     <label>
                         <small class="lh54">{{key}}</small>
-                        <mt-button type="primary" class="mini" 
+                        <mt-button type="primary" class="mini"
                         v-clipboard:copy="key"
                         v-clipboard:success="onCopy"
                         v-clipboard:error="onError">{{$t('home.copy')}}</mt-button>
@@ -23,6 +23,7 @@
                     <ui-input
                             :label="$t('account.user_center_login_password')"
                             v-model="formData.password"
+                            :placeholder="true"
                             :title="$t('account.user_center_login_password')"
                     ></ui-input>
                 </div>
@@ -31,10 +32,11 @@
                             :maxlength="6"
                             :label="$t('account.user_center_Google_verification_code')"
                             v-model="formData.verifyCode"
+                            :placeholder="true"
                             :title="$t('account.user_center_Google_verification_code')"
                     ></ui-input>
                 </div>
-                
+
             </div>
             <div class="btn">
                 <mt-button type="primary" size="large" :disabled="!lock"
@@ -197,7 +199,7 @@ import UiInput from "@/components/uiInput"
     }
 
     .google-box {
-        background: #fff;
+        background: #314254;
         padding: 0.3rem;
         border-radius: 4px;
         margin-top: 0.2rem;

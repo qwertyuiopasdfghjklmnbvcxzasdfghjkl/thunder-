@@ -4,7 +4,6 @@
             <div class="inner">
                 <section class="coin_tab">
                     <ul>
-                        <li>eth</li>
                         <li v-for="(item, i) in baseSymbol"
                             :class="{'active':item === symbol}"
                             v-tap="{methods: tab, symbol:item}"><span>{{item}}</span></li>
@@ -161,10 +160,10 @@
             },
             goToExchangePage(item) {
                 // if (this.form === 'kline') {
-                //     this.$router.push({name: 'kline', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
-                // } else {
-                    this.$router.push({name: 'exchange', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
-                // }
+                    this.$router.push({name: 'kline', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
+                // // } else {
+                //     this.$router.push({name: 'exchange', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
+                // // }
                 marketApi.get24hPrice({symbol: `${item.currencySymbol}${item.baseSymbol}`}, (data) => {
                     this.setLast24h(data)
                 })
@@ -195,7 +194,7 @@
     @write: #ffffff;
     @write-20: #cbd4ec;
     @write-374: #ffffff;
-    @write-8e9: #666;
+    @write-8e9: #6F7F8F;
     .page.exchange {top: 0.9rem; height: calc(~"100vh - 0.9rem");}
     .page-main {top: 3rem;}
     .right {
@@ -334,7 +333,7 @@
     }
 
     .coin_content .item {
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid #273246;
     }
 
     .coin_content .item:first-child {
@@ -342,7 +341,7 @@
     }
 
     .coin_content ul {
-        padding: .16rem .3rem;
+        padding: .2rem .3rem;
         display: flex;
         justify-content: space-between;
     }
@@ -370,7 +369,7 @@
 
         h1 span {
             font-size: .34rem;
-            color: #333;
+            color: #ffffff;
         }
 
         h1 i {
@@ -426,18 +425,18 @@
         border-radius: 4px;
         &.c-green {
             color: #fff;
-            background-color: #42BCA0;
+            background-color: #0EB574;
         }
         &.c-orange {
             color: #fff;
-            background-color: #F43148;
+            background-color: #E01C37;
         }
     }
     .c-green {
-        color: #42BCA0;
+        color: #5EBC75;
     }
 
     .c-orange {
-        color: #F43148;
+        color: #E01C37;
     }
 </style>

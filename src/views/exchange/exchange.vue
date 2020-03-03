@@ -58,7 +58,7 @@
                         <!--{{$t('home.select-market')}}-->
                     <!--</div>-->
                     <!--<market :form="'exchange'" :cSymbol="baseSymbol"></market>-->
-                    <market-list @changeBank="changeMarket"/>
+                    <market-list @changeMarket="changeMarket"/>
                 </div>
             </transition>
         </mask-layer>
@@ -181,6 +181,7 @@
             },
             '$route.params.market'() {
                 this.showMarkets = false
+                this.dataSocket.switchSymbol(this.symbol)
             },
             curMarket() {
                 this.checkMarket()
@@ -248,10 +249,11 @@
             },
             changeMarket(args) {
                 this.showMarkets = false
-                // this.$router.replace({
-                //     name: 'exchange',
-                //     params: {market: `${args.market.currencySymbol}_${args.market.baseSymbol}`}
-                // })
+                this.$router.replace({
+                    name: 'exchange',
+                    params: {market: `${args.currencySymbol}_${args.baseSymbol}`}
+                })
+                console.log(args)
             },
             getDep() {
                 marketApi.getDepth(this.symbol, res => {

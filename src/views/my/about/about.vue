@@ -4,8 +4,8 @@
         <div class="page-main">
             <div class="full">
                 <div class="logo" @click="showConsole">
-                    <img src="../../../assets/img/logo.png"/>
-                    <p>ETV<span>  v{{getVersion}}</span></p>
+                    <img src="../../../assets/img/about_logo.png"/>
+                    <p>Thunder PRO<span>  {{getVersion}}</span></p>
                 </div>
                 <!-- <rail-bar :item="data1"></rail-bar> -->
                 <rail-bar class="mt20" :item="data2" v-if="isApp"></rail-bar>
@@ -18,7 +18,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import railBar from '@/components/RailBar'
 import { MessageBox } from 'mint-ui'
-import marketApi from '@/api/market'  
+import marketApi from '@/api/market'
 import VConsole   from 'vconsole'
 export default {
     components: {
@@ -86,6 +86,8 @@ export default {
         }
         p{
             padding: 0.3rem;
+            font-size: 0.32rem;
+            color: #4B5875;
         }
     }
     .foot{
@@ -102,5 +104,8 @@ export default {
             line-height: 0.4rem;
             font-size: 0.2rem;
         }
+    }
+    .bar{
+        background: #151C2C;
     }
 </style>
