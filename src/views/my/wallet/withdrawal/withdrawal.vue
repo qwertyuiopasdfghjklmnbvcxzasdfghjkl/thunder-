@@ -14,20 +14,32 @@
                             {{$t('account.user_Pick_up_address')}}
                         </label>
                         <p class="address mt10">
-                            <input type="text" v-validate="'required'" name="selToAddress" v-model="form.toAddress"
+                            <input type="text" v-validate="'required'" v-model="form.toAddress"
                                    :placeholder="$t('public0.public-new-address')" autocomplete="off"/>
                             <i class="scanning" v-tap="{methods: scanQRCode}"></i>
                             <i class="address" v-tap="{methods: getAddress}"></i>
-
                         </p>
                     </li>
+                    <li v-show="withdrawalType === 2" class="account_type">
+                        <span>{{$t('market.select_account_type')}}</span>
+                        <div>
+                            <p v-tap="{methods:()=>{showType = !showType}}">{{accountType.name}}</p>
+                            <ul v-show="showType">
+                                <li v-for="item in accountTypeList"
+                                    v-tap="{methods:()=>{accountType = item;showType=false}}">{{item.name}}
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                     <li v-show="withdrawalType === 2">
+                        <!--手机、邮箱、UID-->
                         <label>
                             {{$t('account.user_center_account')}}
                         </label>
                         <p class="address mt10">
-                            <input type="text" v-validate="'required'" name="selToAddress" v-model="form.toAddress"
-                                   :placeholder="accountPlaceholder()" autocomplete="off"/>
+                            <input type="text" v-validate="'required'"
+                                   v-model="form.toAddress" @blur="focusAccount()"
+                                   :placeholder="accountType.name" autocomplete="off"/>
                         </p>
                     </li>
                     <li v-if="symbol==='EOS' || symbol==='XRP'">
@@ -81,7 +93,8 @@
             </div>
         </div>
         <mt-popup class="place_order_popup" v-model="placeOrderVisible" position="bottom">
-            <confirm ref="confirm" :params="params" @removeDialog="removeDialog" @okCallback="okCallback"></confirm>
+            <confirm ref="confirm" :params="params" :type="withdrawalType" :toUserType="accountType.type"
+                     @removeDialog="removeDialog" @okCallback="okCallback"></confirm>
         </mt-popup>
     </div>
 </template>
@@ -93,6 +106,7 @@
     import numUtils from '@/assets/js/numberUtils'
     import confirm from './confirm'
     import utils from '@/assets/js/utils'
+    import userUtils from '@/api/wallet'
 
 
     export default {
@@ -113,12 +127,23 @@
                     googleCode: '',
                     memo: null
                 },
+                accountType: {
+                    name: this.$t('otc_exchange.otc_exchange_phone'),
+                    type: 1
+                },
+                accountTypeList: [
+                    {name: this.$t('otc_exchange.otc_exchange_phone'), type: 1},
+                    {name: this.$t('usercontent.user02'), type: 2},
+                    {name: 'UID', type: 3}
+                ],
+                showType: false,
+                lockAccount:true
             }
         },
         computed: {
             ...mapGetters(['getUserWallets', 'getSymbol', 'getUserInfo']),
             lock() {
-                return (this.form.toAddress && this.form.amount && true) || false
+                return (this.form.toAddress && this.form.amount && this.lockAccount) || false
             },
             lastAmount() {
                 if (this.form.amount) {
@@ -141,10 +166,20 @@
                     email: this.getUserInfo.email || this.getUserInfo.username
                 }
             },
+            insetWithdrawalParams(){
+                return {
+                    toUserType: this.accountType.type,
+                    toAccountName: this.form.toAddress,
+                    quantity: this.form.amount,
+                    symbol: this.symbol,
+                    symbolType: this.symbolInfo.symbolType,
+                    // memo: this.form.memo,
+                }
+            },
             procedureFee() {
-                if(this.withdrawalType === 2){
+                if (this.withdrawalType === 2) {
                     return this.$t('market.fee')
-                }else{
+                } else {
                     if (this.symbolInfo.procedureFeeType == 0) {
                         return this.symbolInfo.procedureFee
                     } else {
@@ -191,7 +226,16 @@
                     this.form.amount = this.symbolInfo.minWithdraw
                     return
                 }
-                this.placeOrderVisible = true
+                if(this.withdrawalType === 2){
+                    userUtils.insetWithdraw(this.insetWithdrawalParams,res=>{
+                        Tip({type: 'success', message: res})
+                    },msg=>{
+                        Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+                    })
+                }else {
+                    this.placeOrderVisible = true
+                }
+
             },
             removeDialog() {
                 this.placeOrderVisible = false
@@ -200,10 +244,28 @@
                 this.placeOrderVisible = false
                 this.$router.push({name: 'trading'})
             },
-            accountPlaceholder(){
-                let t = this.$t('otc_exchange.otc_exchange_phone')+'/'+this.$t('usercontent.user02')+'/UID'
-                console.log(t)
-                return t
+            focusAccount(e) {
+                console.log(e)
+                if(!this.form.toAddress.length){return}
+                if (this.accountType.type === 1) {
+                    let reg = /^[0-9]*$/
+                    if (!reg.test(this.form.toAddress)) {
+                        Tip({type: 'danger', message: this.$t('error_code.SMS_MOBILE_FORMAT_ERROR')})
+                        this.lockAccount = false
+                    }else{
+                        this.lockAccount = true
+                    }
+                } else if (this.accountType.type === 2) {
+                    let reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+                    if (!reg.test(this.form.toAddress)) {
+                        Tip({type: 'danger', message: this.$t('error_code.EMAIL_FORMAT_ERROR')})
+                        this.lockAccount = false
+                    }else{
+                        this.lockAccount = true
+                    }
+                }else{
+                    this.lockAccount = true
+                }
             }
         }
     }
@@ -335,41 +397,45 @@
 
 
         }
+
         .add-top {
-              h4 {
-                  font-size: 0.32rem;
-                  display: flex;
+            h4 {
+                font-size: 0.32rem;
+                display: flex;
 
-                  span:nth-child(2) {
-                      flex: 1;
-                      text-align: right;
-                      color: #ffffff;
-                  }
+                span:nth-child(2) {
+                    flex: 1;
+                    text-align: right;
+                    color: #ffffff;
+                }
 
-                  span:nth-of-type(3) {
-                      color: #ffffff;
-                  }
-              }
+                span:nth-of-type(3) {
+                    color: #ffffff;
+                }
+            }
 
-          }
+        }
     }
 
     .bottom {
         margin-top: 0.4rem;
+        margin-bottom: 0.4rem;
     }
 
     .place_order_popup {
         width: 100%;
         border-radius: 0.3rem 0.3rem 0 0;
     }
-    .select{
+
+    .select {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 0 0.15rem;
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
-        label{
+
+        label {
             flex: 1;
             height: 0.9rem;
             text-align: center;
@@ -378,8 +444,49 @@
             background: #0EB574;
             border-radius: 0.1rem;
             margin: 0.15rem;
-            &.active{
+
+            &.active {
                 background: #E01C37;
+            }
+        }
+    }
+
+    .account_type {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        span {
+            color: #ffffff;
+        }
+
+        div {
+            margin-left: 0.4rem;
+            flex: 1;
+            position: relative;
+            border: 0.02rem solid #1D273C;
+        }
+
+        p {
+            padding: 0.2rem 0.3rem;
+            background: url("../../../../assets/img/ic_up@2x.png") no-repeat right center;
+            background-size: 0.16rem;
+            margin-right: 0.2rem;
+        }
+
+        ul {
+            position: absolute;
+            top: 0.8rem;
+            left: 0;
+            background: #000;
+            box-shadow: 0.2rem 0.2rem 0.4rem #151C2C;
+            width: 100%;
+            z-index: 99;
+
+            li {
+                padding: 0.2rem;
+                margin: 0;
+                border-bottom: 0.01rem solid #151C2C;
             }
         }
     }

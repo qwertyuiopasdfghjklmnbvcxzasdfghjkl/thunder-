@@ -88,7 +88,6 @@
 
 
     export default {
-        name: 'trading',
         data() {
             return {
                 showZero: false,

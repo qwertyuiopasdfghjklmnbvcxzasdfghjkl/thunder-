@@ -10,9 +10,10 @@
                 <span class="market_title">{{symbol_display}}</span>
             </div>
             <span slot="right">
-                <!-- <i class="icon_favorite" :class="{active:curMarket && curMarket.collection}" v-tap="{methods:keep}"></i> -->
+
                 <router-link :to="{name: 'kline', params: {market: `${currentSymbol}_${baseSymbol}`}}" tag="i"
                              class="icon_kline"></router-link>
+                <i class="icon_favorite" :class="{active:curMarket && curMarket.collection}" v-tap="{methods:keep}"></i>
 
              </span>
         </top-back>
@@ -441,13 +442,13 @@
     }
 
     .icon_favorite {
-        margin-right: 0.25rem;
+        margin-left: 0.25rem;
         width: 0.35rem;
         height: 0.35rem;
-        background-image: url('../../assets/img/star_c@2x.png');
+        background-image: url('../../assets/img/i_nc_light@2x.png');
 
         &.active {
-            background-image: url('../../assets/img/star_b@2x.png');
+            background-image: url('../../assets/img/i_sc@2x.png');
         }
     }
 

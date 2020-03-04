@@ -51,15 +51,15 @@
         </div>
         <p class="blance-tip mt30">
             <span>{{$t('exchange.value_available')}}<!--可用--> </span>
-            <span>
-                <font class="ft-c-main">{{Number(toFixed(isBuy ?
+            <span class="ft-c-white">
+                <font class="">{{Number(toFixed(isBuy ?
                 toBalance.availableBalance : fromBalance.availableBalance)).toString().toMoney()}}</font>
                 {{isBuy ?baseSymbol:currentSymbol}}
             </span>
         </p>
         <p class="blance-tip mt15">
             <span>{{$t('exchange.value_frozen')}}<!--冻结--> </span>
-            <span>
+            <span class="ft-c-white">
                 {{Number(toFixed(isBuy ?
                 toBalance.frozenBalance : fromBalance.frozenBalance)).toString().toMoney()}}
                 {{isBuy ?baseSymbol:currentSymbol}}

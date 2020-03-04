@@ -54,6 +54,18 @@ const walletWithdraw = function (data, success, error) {
 }
 wallet.walletWithdraw = walletWithdraw
 
+// 站内转账
+const insetWithdraw = function (data, success, error) {
+  api.post(`${domain}api/v2/account2/transfer/within/station/withdraw`, data, (res) => {
+    if (res.rst === 1) {
+      success && success(res.msg)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+wallet.insetWithdraw = insetWithdraw
+
 // 充值/提现记录 direction: 1 充值、2 提现
 const listDepositHistory = function (data, success, error) {
   api.post(`${domain}/api/v2/account/showHistory`, data, (res) => {

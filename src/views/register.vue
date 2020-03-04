@@ -131,7 +131,7 @@
                 <input type="password" name="passwordConfirm" v-model="formData.passwordConfirm"
                        v-validate="'required|passwordAgain'">
                 <input name="email" v-model="formData.email" v-validate="'required|email'">
-                <input name="ref" v-model="formData.ref" v-validate="'required'">
+                <input name="ref" v-model="formData.ref" v-validate="">
             </div>
         </div>
     </div>
