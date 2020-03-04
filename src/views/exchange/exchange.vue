@@ -283,7 +283,7 @@
                 this.dataSocket = DataWebSocket({
                     symbol: this.symbol,
                     period: '1m',
-                    subscribe: ['depth', 'last_price', 'account', 'user_new_orderbook', 'new_transaction'],
+                    subscribe: ['depth', 'last_price', 'account', 'user_new_orderbook', 'new_transaction', 'market'],
                     callback: (res) => {
                         if (res.symbol && res.symbol !== this.symbol) {
                             console.log(`市场数据不匹配...`)
@@ -350,15 +350,15 @@
                                 }
                             })
                         }
-                        // else if (res.dataType === 'markets') {
-                        //     // 市场信息
-                        //     res.data.forEach(item => {
-                        //         item.idx = window.marketOrder[item.market]
-                        //         item.iconBase64 = window.marketIcon[item.market]
-                        //         item.collection = window.marketCollection[item.market]
-                        //     })
-                        //     window.setMarketList(res.data)
-                        // }
+                        else if (res.dataType === 'markets') {
+                            // 市场信息
+                            res.data.forEach(item => {
+                                item.idx = window.marketOrder[item.market]
+                                item.iconBase64 = window.marketIcon[item.market]
+                                item.collection = window.marketCollection[item.market]
+                            })
+                            window.setMarketList(res.data)
+                        }
                     }
                 })
             },

@@ -249,6 +249,7 @@
             }
             em{
                 font-style: normal;
+                display: block;
             }
         }
     }

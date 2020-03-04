@@ -42,20 +42,22 @@
         data() {
             return {
                 type: 1,
-                selfData: [],
-                mainData: [],
-                newData: [],
             }
         },
         computed: {
             ...mapGetters(['getMarketList']),
+            selfData(){
+                return this.getMarketList
+            },
+            mainData(){
+                return this.getMarketList
+            },
+            newData(){
+                return this.getMarketList
+            },
         },
         watch:{
-            getMarketList(e){
-                this.selfData = e
-                // this.mainData = e
-                this.newData = e
-            }
+
         },
         created () {
             this.socket = KLineWebSocket({

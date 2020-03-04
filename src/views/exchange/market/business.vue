@@ -65,21 +65,21 @@
                 {{isBuy ?baseSymbol:currentSymbol}}
             </span>
         </p>
-        <div class="mt40 tip-panel">
-            <p>{{$t('account.to_unlock')}}<!-- 今日映射ETV --></p>
-            <p>{{toFixed(toUnlockAmount,4)}} ETV</p>
-        </div>
-        <div class="mt20 tip-panel">
-            <p>{{$t('exchange.today_buy')}}<!-- 今日买 --></p>
-            <p>{{toFixed(statisticsTodayTrade.buyTotalAmount,4)}} / {{toFixed(toUnlockAmount*100,4)}} ETV</p>
-        </div>
-        <div class="mt20 tip-panel">
-            <p>{{$t('exchange.today_sell')}}<!-- 今日卖 --></p>
-            <p>{{toFixed(statisticsTodayTrade.sellTotalAmount,4)}} / {{toFixed(toUnlockAmount*100,4)}} ETV</p>
-        </div>
-        <div class="mt20 tip-panel tiptxt">
-            <p>{{$t('exchange.maptip')}}<!-- 提示：24小时映射一次，买卖ETV数量达到要求后等待发放ETV即可 --></p>
-        </div>
+        <!--<div class="mt40 tip-panel">-->
+            <!--<p>{{$t('account.to_unlock')}}&lt;!&ndash; 今日映射ETV &ndash;&gt;</p>-->
+            <!--<p>{{toFixed(toUnlockAmount,4)}} ETV</p>-->
+        <!--</div>-->
+        <!--<div class="mt20 tip-panel">-->
+            <!--<p>{{$t('exchange.today_buy')}}&lt;!&ndash; 今日买 &ndash;&gt;</p>-->
+            <!--<p>{{toFixed(statisticsTodayTrade.buyTotalAmount,4)}} / {{toFixed(toUnlockAmount*100,4)}} ETV</p>-->
+        <!--</div>-->
+        <!--<div class="mt20 tip-panel">-->
+            <!--<p>{{$t('exchange.today_sell')}}&lt;!&ndash; 今日卖 &ndash;&gt;</p>-->
+            <!--<p>{{toFixed(statisticsTodayTrade.sellTotalAmount,4)}} / {{toFixed(toUnlockAmount*100,4)}} ETV</p>-->
+        <!--</div>-->
+        <!--<div class="mt20 tip-panel tiptxt">-->
+            <!--<p>{{$t('exchange.maptip')}}&lt;!&ndash; 提示：24小时映射一次，买卖ETV数量达到要求后等待发放ETV即可 &ndash;&gt;</p>-->
+        <!--</div>-->
         <!-- <div class="tip_color">
             <span>
                 <i class="green"></i>

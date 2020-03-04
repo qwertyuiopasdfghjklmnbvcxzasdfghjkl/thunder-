@@ -67,6 +67,7 @@
         methods: {
             tab(e){
                 let a = e.item
+                this.symbol = a
             },
             change(e){
                 this.$emit('changeMarket',e.data)
@@ -112,7 +113,8 @@
                 list-style-type: none;
                 display: flex;
                 align-items: center;
-                justify-content: center;
+                justify-content: flex-start;
+                padding: 0 0.3rem;
                 li{
                     color: #4B5875;
                     font-size: 0.3rem;

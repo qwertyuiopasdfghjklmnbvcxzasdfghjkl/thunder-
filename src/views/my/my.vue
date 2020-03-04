@@ -56,7 +56,6 @@
             <div class="mt20 box full">
                 <rail-bar v-for="data in data3" :item="data"></rail-bar>
             </div>
-
         </div>
     </div>
 </template>
@@ -124,6 +123,11 @@
                         route: 'transRecords',
                         icon: require('@/assets/img/icon_yjjl.png'),
                         name: this.$t('trade_record.my_trade_record'),
+                    },
+                    {
+                        route: 'transRecords',  // otc 功能 我的广告
+                        icon: require('@/assets/img/icon_ad.png'),
+                        name: this.$t('otc_ad.otc_ad_management'),
                     },
                 ],
                 data3: [
@@ -225,6 +229,9 @@
     }
 </script>
 <style lang="less" scoped="">
+    .page-main{
+        padding-bottom: 0.4rem;
+    }
     .user {
         .user_head {
             position: relative;
