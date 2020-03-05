@@ -123,7 +123,6 @@
     li {
         display: flex;
         padding: 0.24rem 0.3rem;
-        background: #fff;
         margin: 0.2rem 0;
         align-items: center;
         justify-content: space-between;
@@ -134,7 +133,7 @@
             }
 
             small {
-                color: #999;
+                color: #4B5875;
             }
         }
 

@@ -340,13 +340,13 @@
                 .scanning, .address {
                     width: 0.44rem;
                     height: 0.44rem;
-                    background: url("../../../../assets/img/scanner.png") no-repeat center;
+                    background: url("../../../assets/img/scanner.png") no-repeat center;
                     background-size: 0.44rem;
                     margin-left: 0.4rem;
                 }
 
                 .address {
-                    background: url("../../../../assets/img/icon_address.png") no-repeat center;
+                    background: url("../../../assets/img/icon_address.png") no-repeat center;
                     background-size: 0.44rem;
                 }
 
@@ -469,7 +469,7 @@
 
         p {
             padding: 0.2rem 0.3rem;
-            background: url("../../../../assets/img/ic_up@2x.png") no-repeat right center;
+            background: url("../../../assets/img/ic_up@2x.png") no-repeat right center;
             background-size: 0.16rem;
             margin-right: 0.2rem;
         }

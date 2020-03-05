@@ -175,7 +175,7 @@
 
 <style scoped lang="less">
     .detail {
-        background: url("../../../assets/img/total_bg.png") no-repeat center #0C6AC9;
+        background: url("../../assets/img/total_bg.png") no-repeat center #0C6AC9;
         background-size: cover;
         /*overflow: auto;*/
         height: 3.2rem;

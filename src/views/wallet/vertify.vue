@@ -2,7 +2,7 @@
     <div class="confirm">
         <div class="title">
             <i class="cancel" @click="closeDialog">
-                <img src="../../../assets/img/off_blank.png"/>
+                <img src="../../assets/img/off_blank.png"/>
             </i>
             <p>{{mobileState === 1 ? $t('auth_warning.warning_SMS_auth') : $t('account.safety_verification')}}
                 <!--短信验证||谷歌验证--></p>

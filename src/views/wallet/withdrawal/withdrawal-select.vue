@@ -111,7 +111,7 @@
                 background: transparent;
                 border: none;
                 padding-left: 0.85rem;
-                background: url("../../../../assets/img/search.png") no-repeat 0.2rem 0;
+                background: url("../../../assets/img/search.png") no-repeat 0.2rem 0;
                 background-size: 0.36rem;
                 font-size: 0.28rem;
             }

@@ -8,7 +8,7 @@
                 <ul>
                     <li v-for="item in list" v-tap="{methods:action, item:item}">
                         <i>
-                            <img src="../../../../assets/img/address.png">
+                            <img src="../../../assets/img/address.png">
                         </i>
                         <label>
                             <p><strong>{{item.memo}}</strong></p>
@@ -41,8 +41,8 @@
 </template>
 
 <script>
-    import wallet from '../../../../api/wallet'
-    import NoData from "../../../../components/common/noData";
+    import wallet from '../../../api/wallet'
+    import NoData from "../../../components/common/noData";
     import {mapGetters} from 'vuex'
 
     export default {
@@ -164,7 +164,7 @@
         }
     }
 
-    
+
 
     .popup {
         position: fixed;

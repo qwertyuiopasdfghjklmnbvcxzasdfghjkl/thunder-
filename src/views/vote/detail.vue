@@ -76,11 +76,11 @@
                         <input type="number" step="1" min="0" name="" v-model="formData.number" :placeholder="$t('vote.vote_min').format(1)" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
                         <span class="f26 ml20 ft-c-lightGray">({{$t('vote.vote_max').format(availableVotes+'')}})</span>
                     </span>
-                </div> 
+                </div>
                 <div>
                     <span><strong><!-- 消耗 -->{{$t('vote.consume')}}：</strong></span>
                     <span>{{Number(formData.number)*info.price}} {{info.symbol}}</span>
-                </div> 
+                </div>
             </div>
             <mt-button type="primary" size="large" class="mt100" @click="vote">{{$t('public0.ok')}}<!-- 确定 --></mt-button>
         </Dialog>
@@ -98,7 +98,7 @@ import { MessageBox } from 'mint-ui'
 import Dialog from '@/components/common/dialogFull'
 import voteApi from '@/api/vote'
 import numUtils from '@/assets/js/numberUtils'
-import vertify from '@/views/my/wallet/vertify'
+import vertify from '@/views/wallet/vertify'
 import walletApi from '@/api/wallet'
 import Config from '@/api/config'
 
@@ -348,7 +348,7 @@ export default {
             justify-content: space-between;
             border-bottom: 1px solid #eee;
             &:last-of-type {border-bottom: none;}
-            
+
         }
     }
 }

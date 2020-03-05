@@ -17,9 +17,10 @@
         </div>
 
         <div class="">
-            <self-borad :list="selfData" v-show="type===1"/>
-            <mainboard :list="mainData" v-show="type===2"/>
-            <newboard :list="newData" v-show="type===3"/>
+            <market-borad :list="listData"/>
+            <!--<market-borad :list="selfData" v-show="type===1"/>-->
+            <!--<market-borad :list="mainData" v-show="type===2"/>-->
+            <!--<market-borad :list="newData" v-show="type===3"/>-->
         </div>
     </div>
 </template>
@@ -28,16 +29,12 @@
     import Vue from 'vue'
     import {mapGetters, mapActions} from 'vuex'
     import KLineWebSocket from '@/assets/js/websocket'
-    import SelfBorad from "./selfBorad";
-    import Mainboard from "./mainboard";
-    import Newboard from "./newboard";
+    import marketBorad from "./marketBorad";
 
     export default {
         name: 'markets',
         components: {
-            Newboard,
-            Mainboard,
-            SelfBorad
+            marketBorad
         },
         data() {
             return {
@@ -47,7 +44,11 @@
         computed: {
             ...mapGetters(['getMarketList']),
             selfData(){
-                return this.getMarketList
+                return (this.getMarketList||[]).filter(res=>{
+                    if(res.collection){
+                        return res
+                    }
+                })
             },
             mainData(){
                 return this.getMarketList
@@ -55,6 +56,15 @@
             newData(){
                 return this.getMarketList
             },
+            listData(){
+                if(this.type === 1){
+                    return this.selfData
+                }else if(this.type===2){
+                    return this.mainData
+                }else if(this.type===3){
+                    return this.newData
+                }
+            }
         },
         watch:{
 

@@ -6,7 +6,7 @@
                     <ul>
                         <li v-for="(item, i) in baseSymbol"
                             :class="{'active':item === symbol}"
-                            v-tap="{methods: tab, symbol:item}"><span>{{item}}</span></li>
+                            v-tap="{methods: tab,symbol:item}"><span>{{item}}</span></li>
                     </ul>
                 </section>
                 <section class="coin_header">
@@ -78,13 +78,13 @@
             NoData,
             valuation
         },
-        props: ['cSymbol', 'list'],
+        props: ['list'],
         data() {
             return {
                 sortActive: null,
                 sort: null,
                 scroll: false,
-                symbol: this.cSymbol || 'USDT',
+                symbol: 'BTC'
             }
         },
         computed: {
@@ -143,8 +143,15 @@
                     return item.baseSymbol
                 })
                 return [...new Set(_list)].sort()
-            }
+            },
+
         },
+        // watch:{
+        //     baseSymbol(){
+        //         this.symbol = this.baseSymbol[0]
+        //     }
+        // },
+
         methods: {
             ...mapActions(['setLast24h']),
             sortMarket(active) {
@@ -157,13 +164,10 @@
             },
             tab(args) {
                 this.symbol = args.symbol
+                console.log(this.symbol)
             },
             goToExchangePage(item) {
-                // if (this.form === 'kline') {
-                    this.$router.push({name: 'kline', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
-                // // } else {
-                //     this.$router.push({name: 'exchange', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
-                // // }
+                this.$router.push({name: 'kline', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
                 marketApi.get24hPrice({symbol: `${item.currencySymbol}${item.baseSymbol}`}, (data) => {
                     this.setLast24h(data)
                 })
@@ -191,5 +195,5 @@
     }
 </script>
 <style lang="less" scoped>
-   @import "market";
+    @import "market";
 </style>

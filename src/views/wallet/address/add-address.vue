@@ -38,8 +38,8 @@
 
 <script>
     import {mapGetters} from 'vuex'
-    import UiInput from "../../../../components/uiInput";
-    import wallet from '../../../../api/wallet'
+    import UiInput from "../../../components/uiInput";
+    import wallet from '../../../api/wallet'
     import cordovaUtils from '@/assets/js/cordovaUtils'
     import vertify from '../vertify'
     import {MessageBox} from 'mint-ui'
@@ -161,7 +161,7 @@
             z-index: 9;
             width: 0.5rem;
             height: 0.5rem;
-            background: url("../../../../assets/img/scanner.png") no-repeat center;
+            background: url("../../../assets/img/scanner.png") no-repeat center;
             background-size: 0.5rem;
             display: inline-block;
         }
