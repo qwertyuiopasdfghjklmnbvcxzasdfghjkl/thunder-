@@ -229,6 +229,7 @@
                 if(this.withdrawalType === 2){
                     userUtils.insetWithdraw(this.insetWithdrawalParams,res=>{
                         Tip({type: 'success', message: res})
+                        this.$router.push({name: 'trading'})
                     },msg=>{
                         Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
                     })

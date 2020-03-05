@@ -46,6 +46,13 @@
                                 {{$t('account.user_center_send_SMS')}}<!--发送验证码--> {{disabled ? `（${time}s）` : ''}}
                             </mt-button>
                         </div>
+                        <div class="findpwd-content-row email">
+                            <ui-input type="email"
+                                      :label="$t('otc_exchange.otc_exchange_Email')"
+                                      v-model="formData.email"
+                                      :placeholder="true"
+                                      :title="$t('otc_exchange.otc_exchange_Email')"></ui-input><!--邮箱-->
+                        </div>
                     </div>
 
                     <!--邮箱注册-->
@@ -297,7 +304,6 @@
                     formData.username = formData.email
                 } else {
                     formData.username = formData.mobile
-                    delete formData.email
                 }
                 // console.log(formData)
                 this.$validator.validateAll(formData).then((validResult) => {

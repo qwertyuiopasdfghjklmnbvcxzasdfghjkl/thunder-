@@ -1,8 +1,8 @@
 <template>
     <div class="data_box">
         <swiper :options="swiperOption">
-            <swiper-slide v-for="(item,index) in list" :key="index" @click="goToExchangePage(item)">
-                <div class="cont">
+            <swiper-slide v-for="(item,index) in list" :key="index">
+                <div class="cont" @click="goToExchangePage(item)">
                     <p class="tit">
                         <span class="">{{item.currencySymbol}}</span>
                         <span class="">/{{item.baseSymbol}}</span>
@@ -88,9 +88,11 @@
                 return numUtils.BN(v1).toFixed(fixed !== undefined ? fixed : 8)
             },
             goToExchangePage(item) {
+                console.log(item)
                 marketApi.get24hPrice({symbol: `${item.currencySymbol}${item.baseSymbol}`}, (data) => {
                     this.setLast24h(data)
-                    this.$router.push({name: 'exchange', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
+                    localStorage.market =`${item.currencySymbol}_${item.baseSymbol}`
+                    this.$router.push({name: 'exchange' })
                 })
             },
             percentToMoney(item) {

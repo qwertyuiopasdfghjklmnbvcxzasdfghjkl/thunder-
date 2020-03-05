@@ -66,7 +66,6 @@
 
 <style scoped lang="less">
     .cont_list {
-        background: #fff;
         margin: 0.2rem -0.3rem;
         padding: 0 0.3rem;
 
@@ -76,7 +75,7 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                border-bottom: 0.02rem solid #eee;
+                border-bottom: 0.02rem solid #273246;
                 position: relative;
                 &:last-child {
                     border-bottom: none;
@@ -102,18 +101,20 @@
     }
     .search{
         margin: 0.3rem 0;
-        border-bottom: 0.02rem solid #ddd;
+        background: #151C2C;
         p{
             input{
-                height: 0.36rem;
-                margin-bottom: 0.21rem;
+                height: 0.8rem;
+                padding: 0.2rem;
                 width: 100%;
                 background: transparent;
                 border: none;
                 padding-left: 0.85rem;
-                background: url("../../../assets/img/search.png") no-repeat 0.2rem 0;
+                background: url("../../../assets/img/search.png") no-repeat 0.2rem 0.2rem;
                 background-size: 0.36rem;
                 font-size: 0.28rem;
+                color: #ffffff;
+                border-radius: 0.1rem;
             }
         }
     }

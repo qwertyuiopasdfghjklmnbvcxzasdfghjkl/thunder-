@@ -66,7 +66,6 @@
 
 <style scoped lang="less">
     .cont_list {
-        background: #fff;
         margin: 0.2rem -0.3rem;
         padding: 0 0.3rem;
 
@@ -76,7 +75,7 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                border-bottom: 0.02rem solid #eee;
+                border-bottom: 0.02rem solid #273246;
                 position: relative;
                 &:last-child {
                     border-bottom: none;

@@ -1,6 +1,6 @@
 <template>
     <div class="page" style="background-color: #0e1a28;">
-        <top-back :backPage="'exchange'" :params="{market:this.business.market}" :dark="true">
+        <top-back :params="{market:this.business.market}" :dark="true">
             <div class="market-select">
                 <span class="left_nav" v-tap="{methods:toggleMarketList}">
                     <img src="../../assets/img/tc_meus@2x.png"/>

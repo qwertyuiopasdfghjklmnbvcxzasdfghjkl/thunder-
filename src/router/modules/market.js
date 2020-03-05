@@ -11,7 +11,7 @@ export default [
         component: () => import('@/views/exchange/kline'),
     },
     {
-        path: '/market/exchange/:market?',
+        path: '/market/exchange',
         name: 'exchange',
         component: () => import('@/views/exchange/exchange'),
         meta: {nav: true}
