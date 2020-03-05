@@ -62,7 +62,7 @@
                     <li v-for="data in filterSymboltList" v-tap="{methods: toWallet, item:data}">
                         <p>
                             <img :src="'data:image/png;base64,'+data.iconBase64"/>
-                            <spam>{{data.accountName}}</spam>
+                            <span>{{data.accountName}}</span>
                         </p>
                         <label>
                             <p>{{data.totalBalance | number}}</p>

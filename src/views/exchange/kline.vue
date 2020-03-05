@@ -459,6 +459,8 @@
 </script>
 
 <style lang="less" scoped>
+    @c-up:#0EB574;
+    @c-down:#C11623;
     .page-main {
         bottom:1rem;
     }
@@ -527,11 +529,11 @@
     }
 
     .price.up {
-        color: #F43148;
+        color: @c-up;
     }
 
     .price.down {
-        color: #01C89F;
+        color: @c-down;
     }
 
     .info {
@@ -649,6 +651,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        background: #1D2537;
+        padding: 0.15rem;
     }
 
     .acpanel button {
@@ -656,15 +660,16 @@
         font-size: 0.34rem;
         color: #fff;
         flex: 1;
+        margin: 0 0.15rem;
     }
 
     .acpanel button.buy, .acpanel button.sell {
-        height: 1rem;
-        background-color: #FF2B5D;
+        height: 0.9rem;
+        background-color: @c-up;
     }
 
     .acpanel button.sell {
-        background-color: #1FB674;
+        background-color: @c-down;
     }
 
     .kline-panel {
@@ -897,10 +902,10 @@
     }
     .gray6C6F8B {color: #6C6F8B;}
     .buy {
-        color: #F43148;
+        color: @c-up;
     }
     .sell {
-        color: #01C89F;
+        color: @c-down;
     }
     /deep/ .darktab {
         color: #6C6F8B;
@@ -908,7 +913,7 @@
         .ft-c-lightGray {color: #6C6F8B;}
     }
     /deep/ .latest-deal .deal-list li.buy span:nth-of-type(2) {
-        color: #F43148;
+        color: @c-up;
     }
 
 

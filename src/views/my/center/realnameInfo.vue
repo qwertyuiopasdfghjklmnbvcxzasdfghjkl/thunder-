@@ -185,7 +185,7 @@ export default {
             closeOnClickModal: false
           }).then(action => {
             if (action === 'confirm') {
-              this.$router.push({name: 'center'})
+              this.$router.push({name: 'kyc'})
             }
           })
         }, (msg) => {

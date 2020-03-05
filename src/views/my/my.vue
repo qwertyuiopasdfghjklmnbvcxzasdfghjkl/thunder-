@@ -169,9 +169,9 @@
             ...mapGetters(['getUserInfo', 'getVersion']),
         },
         created() {
-            // this.getUserState()
-            // this.getMessageList();
-            // this.getInfo()
+            this.getUserState()
+            this.getMessageList();
+            this.getInfo()
             // this.data4[1].small = `<span class="ft-c-lightGray">${this.getVersion}</span>`
         },
         methods: {

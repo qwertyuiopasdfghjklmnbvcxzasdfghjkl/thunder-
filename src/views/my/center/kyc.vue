@@ -3,7 +3,7 @@
     <top-back>{{$t('account.user_Real_name_verification')}}</top-back>
     <div class="page-main">
         <div class="full mt20">
-            <rail-bar v-for="data in data1" :item="data" class="hr"></rail-bar>
+            <rail-bar v-for="data in data1" :item="data"></rail-bar>
         </div>
     </div>
   </div>
