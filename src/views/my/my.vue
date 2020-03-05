@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <top-back style="background: #151C2C">
+        <top-back style="background: #151C2C" :backPage="'home'">
             {{$t('nav.my')}}
             <!-- <router-link to="/ucenter/set" slot="right">
                 <img class="icon_setting" src="../../assets/img/ic_sz@3x.png">
@@ -73,7 +73,7 @@
         },
         data() {
             return {
-                orignal: config.domain === 'etvcoins.com' ? config.url + '/ceph-data/produ-etv/user/' : config.url + '/ceph-data/dev/user/',
+                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-etv/user/' ,
                 user: {},
                 isUseCoinPay: false,
                 messageList: null,
@@ -112,7 +112,7 @@
                     {
                         route: 'myMapping', // otc的功能 我的订单
                         icon: require('@/assets/img/icon_wddd.png'),
-                        name: this.$t('account.mapping_address'),
+                        name: this.$t('usercontent.user60'),
                     },
                     {
                         route: 'history',

@@ -15,7 +15,7 @@ const config = {
   http: http,
   url: `${http}${domain}`,
   protocol: protocol,
-  brand: 'ETV',
+  brand: 'Thunder',
   version:'1.0.0',
   updateInfo:{  //更新日志
   	'zh-CN':`

@@ -14,10 +14,12 @@
 <script>
     import img from '../../../assets/img/icon_my_b3x.png'
     import { mapActions, mapGetters } from 'vuex'
+    import config from '../../../api/config'
     export default {
         data() {
             return {
-                src: img
+                src: img,
+                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-etv/user/'
             }
         },
         computed:{
