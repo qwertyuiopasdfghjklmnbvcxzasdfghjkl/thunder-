@@ -18,9 +18,6 @@
 
         <div class="">
             <market-borad :list="listData"/>
-            <!--<market-borad :list="selfData" v-show="type===1"/>-->
-            <!--<market-borad :list="mainData" v-show="type===2"/>-->
-            <!--<market-borad :list="newData" v-show="type===3"/>-->
         </div>
     </div>
 </template>

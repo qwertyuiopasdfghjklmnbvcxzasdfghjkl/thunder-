@@ -7,7 +7,7 @@
                 </span>
                 <span class="">{{symbol_display}}</span>
             </div>
-            <!-- <i slot="right" class="icon_favorite" :class="{active:curMarket && curMarket.collection}" v-tap="{methods:keep}"></i> -->
+             <i slot="right" class="icon_favorite" :class="{active:curMarket && curMarket.collection}" v-tap="{methods:keep}"></i>
         </top-back>
         <div class="page-main">
             <div class="full info mt20">
@@ -420,6 +420,7 @@
             },
             keep() {
                 let data = this.curMarket
+                console.log(this.business.market,data)
                 if (this.getApiToken) {
                     if (data.collection) { // 取消
                         marketApi.removeCollection({
@@ -452,7 +453,6 @@
                     name: 'kline',
                     params: {market: `${e.currencySymbol}_${e.baseSymbol}`}
                 })
-                console.log(args)
             }
         }
     }
@@ -462,16 +462,16 @@
     @c-up:#0EB574;
     @c-down:#C11623;
     .page-main {
-        bottom:1rem;
+        bottom:1.3rem;
     }
 
     .icon_favorite {
         width: 0.35rem;
         height: 0.35rem;
-        background-image: url('../../assets/img/star_c@2x.png');
+        background-image: url('../../assets/img/i_nc_light@2x.png');
 
         &.active {
-            background-image: url('../../assets/img/star_b@2x.png');
+            background-image: url('../../assets/img/i_sc@2x.png');
         }
     }
 

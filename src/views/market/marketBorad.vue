@@ -84,7 +84,7 @@
                 sortActive: null,
                 sort: null,
                 scroll: false,
-                symbol: 'BTC'
+                symbol: ''
             }
         },
         computed: {
@@ -146,11 +146,20 @@
             },
 
         },
-        // watch:{
-        //     baseSymbol(){
-        //         this.symbol = this.baseSymbol[0]
-        //     }
-        // },
+        watch:{
+            baseSymbol(){
+                if(!this.symbol){
+                    this.symbol = this.baseSymbol[0]
+                }else{
+                    if((this.baseSymbol||[]).indexOf(this.symbol) === -1){
+                        this.symbol = this.baseSymbol[0]
+                    }
+                }
+            }
+        },
+        mounted(){
+            console.log(this.list)
+        },
 
         methods: {
             ...mapActions(['setLast24h']),

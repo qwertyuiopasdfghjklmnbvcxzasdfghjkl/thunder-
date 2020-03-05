@@ -8,7 +8,7 @@
         </top-back>
         <div class="page-main">
             <div class="register_p">
-                <p class="">Creat New Account</p>
+                <p class="">{{$t('market.register_title')}}</p>
                 <small>{{$t('market.register_p')}}</small>
             </div>
 

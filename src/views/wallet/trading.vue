@@ -17,7 +17,7 @@
 
             <div class="total">
                 <p v-tap="{methods:()=>{ showMoney = !showMoney}}">
-                    <span>({{$t('exchange.exchange_valuation')}}BTC)</span>
+                    <span>({{$t('exchange.exchange_valuation')}}USDT)</span>
                     <img :src="showMoney ? require('../../assets/img/assets_eye_open.png'): require('../../assets/img/assets_eye_closed.png')"/>
                 </p>
                 <h4 class="">{{totalUSDTDisplay}}</h4>
