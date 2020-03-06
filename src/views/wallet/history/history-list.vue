@@ -87,7 +87,7 @@
                                 <p :class="[getWithdrawalState(item.status).className]">{{getWithdrawalState(item.status).value}}</p>
                             </li>
                         </ul>
-                        <noMoreData v-if="noMoreDataWithdrawal" :bgColor="'#F7F7F7'"/>
+                        <noMoreData v-if="noMoreDataWithdrawal"/>
                         <no-data v-if="noDataWithdrawal"/>
                     </mt-loadmore>
                 </div>

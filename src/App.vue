@@ -6,7 +6,7 @@
         <update ref="update"></update>
         <download v-if="system === 0" :phone="phone"></download>
         <nav-footer v-show="$route.meta.nav"></nav-footer>
-        <!-- <init-slides></init-slides> -->
+         <init-slides></init-slides>
     </div>
 </template>
 
@@ -22,14 +22,14 @@
     import marketApi from '@/api/market'
     import walletApi from '@/api/wallet'
     import Download from "@/components/download";
-    // import initSlides from '@/components/initSlides'
+    import initSlides from '@/components/initSlides'
 
     export default {
         components: {
             navFooter,
             update,
             Download,
-            // initSlides
+            initSlides
         },
         data(){
             return{

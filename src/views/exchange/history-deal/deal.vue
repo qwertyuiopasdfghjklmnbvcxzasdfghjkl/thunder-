@@ -216,8 +216,8 @@
     .trust-list {
         li {
             padding: 0.25rem 0.3rem;
-            border-top: 0.2rem solid #F6F6F6;
-            &:last-of-type {border-bottom: 0.2rem solid #F6F6F6;}
+            /*border-top: 0.2rem solid #F6F6F6;*/
+            /*&:last-of-type {border-bottom: 0.2rem solid #F6F6F6;}*/
             .title {
                 position: relative;
 

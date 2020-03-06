@@ -180,6 +180,12 @@ export default [
                 name: 'adManage',
                 component: () => import('@/views/my/advertiseManage/adList'),
                 meta:{login:true}
+            },
+            {
+                path: 'ad-manage/detail',
+                name: 'adManageDetail',
+                component: () => import('@/views/my/advertiseManage/adDetail'),
+                meta:{login:true}
             }
         ]
     },
