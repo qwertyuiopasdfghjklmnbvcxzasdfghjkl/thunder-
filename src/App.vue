@@ -129,15 +129,17 @@
                             item.collection = false
                         })
                     }
-                    res.map((data) => {
-                        if(data.marketType === '1'){
-                            return data //隐藏虚拟市场
+                    let list = []
+                    res.filter((d) => {
+                        if(d.marketType === '1'){
+                            list.push(d) //隐藏虚拟市场
                         }
                     })
-                    this.setMarketList(res)
-                    this.setBtcValues(res)
+                    console.log(list)
+                    this.setMarketList(list)
+                    this.setBtcValues(list)
                     let config = {}
-                    res.forEach((item) => {
+                    list.forEach((item) => {
                         config[item.market] = {
                             minAmount: item.minAmount,
                             minQuantity: item.minQuantity

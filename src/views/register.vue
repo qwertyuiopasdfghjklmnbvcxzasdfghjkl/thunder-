@@ -105,7 +105,7 @@
                                 :label="`${$t('public0.public244')}`"
                                 v-model="formData.ref"
                                 :placeholder="true"
-                                :title="`${$t('public0.public244')}`"></ui-input><!--邀请码-->
+                                :title="`${$t('public0.public244')}（${$t('public0.public237')}）`"></ui-input><!--邀请码-->
                     </div>
 
                     <div class="findpwd-content-row pt30">

@@ -11,6 +11,7 @@
                 </label>
                 <data_box/>
             </div>
+            <otc/>
             <data-list/>
         </div>
     </div>
@@ -26,6 +27,7 @@
     import vote from './index/vote'
     import top from "./index/top";
     import Data_box from "./index/data_box";
+    import otc from "./index/otc";
 
 
     export default {
@@ -36,7 +38,8 @@
             banner,
             notice,
             dataList,
-            vote
+            vote,
+            otc
         },
         created () {
           this.socket = KLineWebSocket({

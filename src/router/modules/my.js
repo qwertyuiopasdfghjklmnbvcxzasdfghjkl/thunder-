@@ -175,6 +175,12 @@ export default [
                 component: () => import('@/views/my/invite_poster'),
                 meta:{login:true}
             },
+            {
+                path: 'ad-manage',
+                name: 'adManage',
+                component: () => import('@/views/my/advertiseManage/adList'),
+                meta:{login:true}
+            }
         ]
     },
     {

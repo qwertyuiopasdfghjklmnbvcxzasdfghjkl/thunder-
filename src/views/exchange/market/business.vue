@@ -68,8 +68,9 @@
         <p class="blance-tip mt60">
             <span>{{$t('home.home46')}}<!--总资产--> </span>
             <span class="ft-c-white">
-                <font class="">{{Number(toFixed(isBuy ?
-                toBalance.availableBalance : fromBalance.availableBalance)).toString().toMoney()}}</font>
+                <font class="">{{(Number(toFixed(isBuy ?
+                toBalance.availableBalance : fromBalance.availableBalance))+Number(toFixed(isBuy ?
+                toBalance.frozenBalance : fromBalance.frozenBalance))).toString().toMoney()}}</font>
                 {{isBuy ?baseSymbol:currentSymbol}}
             </span>
         </p>

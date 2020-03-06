@@ -68,7 +68,7 @@
         line-height: 0.5rem;
         font-size: .34rem;
         color: #ffffff;
-        background: none;
+        background: #151C2C;
         &.logo {background: url('../../assets/img/logo_top.png') #fff no-repeat center; background-size: auto 0.6rem;}
 
         &.line {
@@ -110,7 +110,7 @@
         }
 
         &.dark {
-            background: #131e30;
+            background: #151C2C;
             color: #fff;
             .btn-back {
                 background-image: url('../../assets/img/icon_back_w@3x.png');
