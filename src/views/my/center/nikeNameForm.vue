@@ -1,12 +1,11 @@
 <template>
   <div class="nikename-form">
-      <ui-input
-              :label="$t('public0.public73')"
-              v-model="nicknameValue"
-              :title="$t('public0.public190')"
-      ></ui-input>
-    <p class="mt20 f24 ft-c-lightGray tc">（{{$t('account.user_center_set_username')}}）<!--昵称只能设置一次--></p>
-    <input name="nickname" type="text" v-show="false" v-model="nicknameValue" v-validate="'required'"/>
+    <input name="nickname" type="text" maxlength="15" v-model="nicknameValue" v-validate="'required'" :placeholder="$t('public0.public73')" />
+    <ul  class="mt20 f24 ft-c-note lh17">
+      <li>· 只允许设置汉字、字母和数字</li>
+      <li>· 最大长度为15个字符</li>
+      <li>· 昵称设置后将不可更改，请谨慎操作</li>
+    </ul>
   </div>
 </template>
 
@@ -62,5 +61,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.nikename-form input {
+  margin-top: 0.15rem;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #E6E6E6;
+  color: #333;
+  font-size: 0.32rem;
+  padding: 0.2rem;
+  border-radius: 4px;
+}
 </style>

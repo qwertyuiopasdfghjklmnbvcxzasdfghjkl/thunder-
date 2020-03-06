@@ -66,11 +66,11 @@ TVjsApi.prototype.getPeriod = function(resolution) {
 }
 TVjsApi.prototype.init = function() {
     //设置默认symbol，interval的默认值
-    var upColor = '#F43148', downColor = '#01C89F'
+    var upColor = '#01C89F', downColor = '#F43148'
     var symbol = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'ETHBTC'
     var interval = arguments.length > 0 && arguments[1] !== undefined ? arguments[1] : '720'
-    var precision = arguments.length > 0 && arguments[2] !== undefined ? arguments[2] : 5 
-    var lang = arguments.length > 0 && arguments[3] !== undefined ? arguments[3] : 'en' 
+    var precision = arguments.length > 0 && arguments[2] !== undefined ? arguments[2] : 5
+    var lang = arguments.length > 0 && arguments[3] !== undefined ? arguments[3] : 'en'
     this.symbol = symbol
     this.interval = interval
     this.precision = precision
@@ -185,7 +185,7 @@ TVjsApi.prototype.onMessage = function(data) {
     if (count < 5) {
         console.log("这是后台返回的数据" + count + "：" + JSON.stringify(data.length))
     }
-    
+
     if (data && data.length) {
         var list = []
         var ticker = this.symbol + "-" + this.interval;
