@@ -9,9 +9,9 @@
             <div class="cont mt20">
                 <rail-bar :item="data2"></rail-bar>
             </div>
-            <!-- <div class="cont mt20">
+            <div class="cont mt20">
                 <rail-bar :item="data3"></rail-bar>
-            </div> -->
+            </div>
         </div>
     </div>
 </template>
