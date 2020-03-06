@@ -22,6 +22,7 @@
     import marketApi from '@/api/market'
     import walletApi from '@/api/wallet'
     import Download from "@/components/download";
+    import userApi from '@/api/user'
     // import initSlides from '@/components/initSlides'
 
     export default {
@@ -159,7 +160,7 @@
             loadLoginInfo() {
                 // console.log('getApiToken===', this.getApiToken)
                 if (this.getApiToken) {
-
+                    this.getInfo()
                     walletApi.myAssets({}, (res) => {
                         if(res.length==0){
                             setTimeout(this.loadLoginInfo,2000)
@@ -176,6 +177,11 @@
                 } else {
                     this.setUserWallets([])
                 }
+            },
+            getInfo() {
+                userApi.getUserInfo(res => {
+                    this.setUserInfo(res)
+                })
             },
             getBtcPrice() {
                 if (!this.getApiToken) {
