@@ -129,6 +129,11 @@
                             item.collection = false
                         })
                     }
+                    res.map((data) => {
+                        if(data.marketType === '1'){
+                            return data //隐藏虚拟市场
+                        }
+                    })
                     this.setMarketList(res)
                     this.setBtcValues(res)
                     let config = {}

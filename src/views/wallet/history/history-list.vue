@@ -477,7 +477,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.3rem 0;
-            /*&+li {border-top: 0.02rem solid #eee;}*/
+            &+li {border-top: 0.02rem solid #1D273C;}
 
             div {
                 h4 {

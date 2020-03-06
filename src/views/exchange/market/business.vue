@@ -65,6 +65,14 @@
                 {{isBuy ?baseSymbol:currentSymbol}}
             </span>
         </p>
+        <p class="blance-tip mt60">
+            <span>{{$t('home.home46')}}<!--总资产--> </span>
+            <span class="ft-c-white">
+                <font class="">{{Number(toFixed(isBuy ?
+                toBalance.availableBalance : fromBalance.availableBalance)).toString().toMoney()}}</font>
+                {{isBuy ?baseSymbol:currentSymbol}}
+            </span>
+        </p>
         <!--<div class="mt40 tip-panel">-->
             <!--<p>{{$t('account.to_unlock')}}&lt;!&ndash; 今日映射ETV &ndash;&gt;</p>-->
             <!--<p>{{toFixed(toUnlockAmount,4)}} ETV</p>-->
@@ -178,6 +186,7 @@
                 for (let i = 0; i < this.getUserWallets.length; i++) {
                     let item = this.getUserWallets[i]
                     if (item.symbol === this.baseSymbol) {
+                        console.log(item)
                         return item
                     }
                 }
@@ -595,12 +604,13 @@
     }
 
     .left .price-placeholder {
-        height: 0.64rem;
-        background-color: @c_white;
-        line-height: 0.64rem;
+        height: 0.8rem;
+        border: 0.02rem solid #4B5875;
+        line-height: 0.8rem;
         text-align: center;
-        color: #666;
+        color: #ffffff;
         font-size: 0.24rem;
+        border-radius: 0.1rem;
     }
 
     .left .amount {

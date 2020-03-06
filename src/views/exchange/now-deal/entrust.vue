@@ -162,8 +162,8 @@
 
 <style lang="less" scoped>
     @c_gray: #F4F5FA;
-    @c_buy: #24C898;
-    @c_sell: #F65B69;
+    @c_buy: #F65B69;
+    @c_sell: #24C898;
     @c_light: #91A4A3;
     @c_board: #B9D0CF;
     @c_btn: #1C9CE3;
@@ -188,8 +188,8 @@
     .trust-list {
         li {
             padding: 0.25rem 0.3rem;
-            border-top: 0.2rem solid #F6F6F6;
-            &:last-of-type {border-bottom: 0.2rem solid #F6F6F6;}
+            /*border-top: 0.2rem solid #F6F6F6;*/
+            /*&:last-of-type {border-bottom: 0.2rem solid #F6F6F6;}*/
             .title {
                 position: relative;
 
@@ -321,9 +321,10 @@
     }
 
     .all_repeal {
-        padding: 0.15rem 0.3rem;
-        background-color:#eee;
-        border-radius: 0.32rem;
-        font-size: 0.3rem;
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.1rem;
+        font-size: 0.24rem;
+        color: #0C6AC9;
+        border:0.02rem solid #0C6AC9;
     }
 </style>

@@ -3,10 +3,10 @@
         <top-back :back="false"><span>{{$t('exchange.advanced_market')}}</span></top-back>
         <div class="ft-c-dark">
             <ul class="top_nav">
-                <li :class="{'active':type===1}"
-                    v-tap="{methods: tab, type: 1}">
-                    <span>{{$t('home.home_favorites')}}<!--自选--></span>
-                </li>
+                <!--<li :class="{'active':type===1}"-->
+                    <!--v-tap="{methods: tab, type: 1}">-->
+                    <!--<span>{{$t('home.home_favorites')}}&lt;!&ndash;自选&ndash;&gt;</span>-->
+                <!--</li>-->
 
                 <li :class="{'active':type===2}"
                     v-tap="{methods: tab, type: 2}"><span>{{$t('market.main_board')}}</span><!--主板--></li>
@@ -35,7 +35,7 @@
         },
         data() {
             return {
-                type: 1,
+                type: 2,
             }
         },
         computed: {
