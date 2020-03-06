@@ -7,7 +7,7 @@
                 </span>
                 <span class="">{{symbol_display}}</span>
             </div>
-             <i slot="right" class="icon_favorite" :class="{active:curMarket && curMarket.collection}" v-tap="{methods:keep}"></i>
+             <!--<i slot="right" class="icon_favorite" :class="{active:curMarket && curMarket.collection}" v-tap="{methods:keep}"></i>-->
         </top-back>
         <div class="page-main">
             <div class="full info mt20">

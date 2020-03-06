@@ -2,7 +2,7 @@
     <div class="cont">
         <div class="top">
             <span :class="[data.direction==1?'buy':'sell']">{{getPrice(data.price)}}{{data.direction==1 ? $t('exchange.exchange_buy') : $t('exchange.exchange_sell')}}</span>
-            <span><strong>{{data.toSymbol}} / {{data.fromSymbol}}</strong></span>
+            <span><strong class="ft-c-white">{{data.toSymbol}} / {{data.fromSymbol}}</strong></span>
             <span class="time">{{new Date(Number(data.createdAt)).format()}}</span>
         </div>
 
@@ -109,7 +109,9 @@
 </script>
 
 <style scoped lang="less">
-    @c_f: #999;
+    @c_f: #4B5875;
+    @c_buy: #E01C37;
+    @c_sell: #0EB574;
     .cont {
         .top {
             display: flex;
@@ -135,11 +137,11 @@
         }
 
         .buy {
-            color:  #F07180;
+            color:  @c_sell;
         }
 
         .sell {
-            color: #01C89F;
+            color: @c_buy;
         }
 
         .data {
@@ -174,11 +176,11 @@
                     }
 
                     .buy {
-                        border: 0.06rem solid #F07180;
+                        border: 0.06rem solid @c_sell;
                     }
 
                     .sell {
-                        border: 0.06rem solid #01C89F;
+                        border: 0.06rem solid @c_buy;
                     }
 
                     .border-right {
@@ -217,23 +219,24 @@
             min-width: 0;
             p{
                 line-height: 0.52rem;
+                /*color: #ffffff;*/
                 color: @c_f;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 span{
                     padding-left: 0.2rem;
-                    color: #333;
                 }
             }
         }
         .btn{
-            min-width: 1.2rem; 
+            min-width: 1.2rem;
             text-align: right;
             .cancel{
                 padding: 0.1rem 0.3rem;
                 margin-top: 0.2rem;
-                background-color: #eee;
+                background-color: #212A40;
+                color: #0C6AC9;
                 border-radius:0.25rem;
                 display: inline-block;
             }

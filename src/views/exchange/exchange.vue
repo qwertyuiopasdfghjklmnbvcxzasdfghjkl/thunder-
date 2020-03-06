@@ -13,7 +13,7 @@
 
                 <router-link :to="{name: 'kline', params: {market: `${currentSymbol}_${baseSymbol}`}}" tag="i"
                              class="icon_kline"></router-link>
-                <i class="icon_favorite" :class="{active:curMarket && curMarket.collection}" v-tap="{methods:keep}"></i>
+                <!--<i class="icon_favorite" :class="{active:curMarket && curMarket.collection}" v-tap="{methods:keep}"></i>-->
 
              </span>
         </top-back>
@@ -521,15 +521,12 @@
         background-color: #151C2C;
         margin-left: -0.3rem;
         margin-right: -0.3rem;
-        padding-left: 0.3rem;
-        padding-right: 0.3rem;
-        padding-bottom: 0.5rem;
         position: relative;
         overflow: auto;
     }
 
     .exchange-container {
-        padding-top: 0.3rem;
+        padding: 0.3rem;
         display: flex;
     }
 

@@ -46,7 +46,7 @@
                             </li>
                         </ul>
                         <loading v-if="messageBottomLoading"/>
-                        <noMoreData v-if="!messageBottomLoading && noMoreMessage" :bgColor="'#F7F7F7'"/>
+                        <noMoreData v-if="!messageBottomLoading && noMoreMessage"/>
                     </template>
                     <noData v-if="!messageTopLoading && messageList.length === 0"/>
                 </mt-loadmore>
@@ -265,7 +265,7 @@
         height: .6rem;
         font-size: .28rem;
         line-height: .6rem;
-        color: #999;
+        color: #4C5A74;
     }
 
     .message-filtration a.disabled {
@@ -275,7 +275,7 @@
     .message-item {
         padding: .4rem;
         margin-top: .2rem;
-        background-color: #fff;
+        background-color: #151C2C;
         border-radius: 0.1rem;
         position: relative;
     }
@@ -309,7 +309,7 @@
     }
     .message-item p{
         padding-bottom: 0.1rem;
-        color: #999;
+        color: #ffffff;
     }
 
     .message-item p span {
@@ -318,13 +318,13 @@
         min-height: .4rem;
         font-size: .3rem;
         line-height: .4rem;
-        color: #222;
+        color: #ffffff;
         white-space: normal;
         vertical-align: top;
     }
 
     .message-item p time {
-        color: #999;
+        color: #4C5A74;
     }
 
     .message-item.markread p i {

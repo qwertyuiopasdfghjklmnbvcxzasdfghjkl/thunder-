@@ -7,7 +7,7 @@
                 <div class="img"  :style="{backgroundImage:'url(' + item + ')'}"></div>
                 <span class="start-btn" v-if="index==2" v-tap="{methods:start}"></span>
 		    </swiper-slide>
-		    <div class="swiper-pagination"  slot="pagination"></div>
+		    <div class="swiper-pagination"  slot="custom"></div>
 		</swiper>
 	</div>
 	</transition>
@@ -17,7 +17,7 @@
 export default{
 	data(){
 	    return {
-	    	isFirst:window['cordova'] && !localStorage.getItem('isFirst') ? true : false,
+	    	isFirst: window['cordova'] && !localStorage.getItem('isFirst') ? true : false,
 	    	canStart:false,
 	    	slides:[require('@/assets/img/slides/s1.png'),require('@/assets/img/slides/s2.png'),require('@/assets/img/slides/s3.png')],
 	        swiperOption: {
@@ -44,7 +44,7 @@ export default{
 		})
 		setTimeout(()=>{
 			if(this.isFirst && window.StatusBar){
-				StatusBar.backgroundColorByHexString('#1933D1')
+				// StatusBar.backgroundColorByHexString('#020A25')
 			}
 		},1000)
 	},
@@ -54,7 +54,7 @@ export default{
 	    		localStorage.setItem('isFirst', true)
 	    		this.isFirst = false
 	    		if(window.StatusBar){
-	    			StatusBar.backgroundColorByHexString('#ff576b')
+	    			// StatusBar.backgroundColorByHexString('#ff576b')
 	    		}
 	    	}
 	    }
@@ -62,7 +62,7 @@ export default{
 }
 </script>
 <style lang="less" scoped="">
-.start-btn {position: absolute; z-index: 1; width: 2.6rem; height: 0.8rem; background: url('../assets/img/slides/start.png') no-repeat center/contain; left: 50%; bottom: 1.3rem; margin-left: -1.3rem;}
+.start-btn {position: absolute; z-index: 1; width: 2.6rem; height: 0.8rem; background: url('../assets/img/slides/start.png') no-repeat center/contain; left: 50%; bottom: 2.3rem; margin-left: -1.3rem;}
 .banner {
 	position: fixed;
 	z-index: 999999;
@@ -87,7 +87,7 @@ export default{
 		height: 4px;
 		opacity: 0.3;
 		border-radius: 8px;
-		transition: all ease-out 300ms; 
+		transition: all ease-out 300ms;
 	}
 	/deep/ .swiper-pagination-bullet-active {
 		opacity: 1;

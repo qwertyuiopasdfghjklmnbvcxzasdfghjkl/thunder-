@@ -13,8 +13,8 @@ require((('@/assets/js/bignumber.min')))
 export default function (opts) {
   opts = opts || {}
   opts.container = opts.container || document.body
-  let riseColor = opts.riseColor || '#F43148' // 绿涨
-  let fallColor = opts.fallColor || '#01C89F' // 红跌
+  let riseColor = opts.riseColor || '#01C89F' // 红跌
+  let fallColor = opts.fallColor ||'#F43148' // 绿涨
   let fontColor = opts.fontColor || '#6C6F8B' // 字体颜色
   let gridLineColor = opts.gridLineColor  || '#1c2a40' // 表格线颜色
   let middleLineColor = opts.middleLineColor || '#1c2a40' // 中间线颜色
@@ -403,7 +403,7 @@ export default function (opts) {
     if(asks.min.gt(this._centerPrice)){
       asks.data.unshift({"price":this._centerPrice,"amounts":new BigNumber(0)})
     }
-    
+
     // X轴Price信息
     ctx.textAlign = 'center'
     let prevX = Math.floor(this._right / 2)

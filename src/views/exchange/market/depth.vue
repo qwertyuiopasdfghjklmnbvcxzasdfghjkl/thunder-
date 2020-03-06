@@ -283,8 +283,8 @@
 
 <style lang="less" scoped>
     @c_gray: #F4F5FA;
-    @c_buy: #E01C37;
-    @c_sell: #0EB574;
+    @c_buy: #0EB574;
+    @c_sell: #E01C37;
     @c_light: #4B5875;
     @c_board: #4B5875;
     .order-book {
@@ -348,9 +348,9 @@
     .order-book .sell-list li, .order-book .buy-list li {
         display: flex;
         justify-content: space-between;
-        height: 0.6rem;
-        line-height: 0.6rem;
-        background: url('../../../assets/img/sell-list-bg.png') no-repeat right center;
+        height: 0.5rem;
+        line-height: 0.5rem;
+        background: url('../../../assets/img/buy-list-bg.png') no-repeat right center;
         background-size: 0% 100%;
     }
 
@@ -369,7 +369,7 @@
     }
 
     .order-book .buy-list li {
-        background-image: url('../../../assets/img/buy-list-bg.png');
+        background-image: url('../../../assets/img/sell-list-bg.png');
     }
 
     .order-book .buy-list li span:first-of-type {

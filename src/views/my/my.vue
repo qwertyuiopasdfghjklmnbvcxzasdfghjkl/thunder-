@@ -125,7 +125,7 @@
                         name: this.$t('trade_record.my_trade_record'),
                     },
                     {
-                        route: 'transRecords',  // otc 功能 我的广告
+                        route: 'adManage',  // otc 功能 我的广告
                         icon: require('@/assets/img/icon_ad.png'),
                         name: this.$t('otc_ad.otc_ad_management'),
                     },

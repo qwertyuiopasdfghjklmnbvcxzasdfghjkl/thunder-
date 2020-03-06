@@ -87,7 +87,7 @@
                                 <p :class="[getWithdrawalState(item.status).className]">{{getWithdrawalState(item.status).value}}</p>
                             </li>
                         </ul>
-                        <noMoreData v-if="noMoreDataWithdrawal" :bgColor="'#F7F7F7'"/>
+                        <noMoreData v-if="noMoreDataWithdrawal"/>
                         <no-data v-if="noDataWithdrawal"/>
                     </mt-loadmore>
                 </div>
@@ -477,7 +477,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.3rem 0;
-            /*&+li {border-top: 0.02rem solid #eee;}*/
+            &+li {border-top: 0.02rem solid #1D273C;}
 
             div {
                 h4 {

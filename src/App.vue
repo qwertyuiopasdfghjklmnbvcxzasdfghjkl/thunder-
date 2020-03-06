@@ -6,7 +6,7 @@
         <update ref="update"></update>
         <download v-if="system === 0" :phone="phone"></download>
         <nav-footer v-show="$route.meta.nav"></nav-footer>
-        <!-- <init-slides></init-slides> -->
+         <init-slides></init-slides>
     </div>
 </template>
 
@@ -23,14 +23,14 @@
     import walletApi from '@/api/wallet'
     import Download from "@/components/download";
     import userApi from '@/api/user'
-    // import initSlides from '@/components/initSlides'
+    import initSlides from '@/components/initSlides'
 
     export default {
         components: {
             navFooter,
             update,
             Download,
-            // initSlides
+            initSlides
         },
         data(){
             return{
@@ -130,10 +130,17 @@
                             item.collection = false
                         })
                     }
-                    this.setMarketList(res)
-                    this.setBtcValues(res)
+                    let list = []
+                    res.filter((d) => {
+                        if(d.marketType === '1'){
+                            list.push(d) //隐藏虚拟市场
+                        }
+                    })
+                    console.log(list)
+                    this.setMarketList(list)
+                    this.setBtcValues(list)
                     let config = {}
-                    res.forEach((item) => {
+                    list.forEach((item) => {
                         config[item.market] = {
                             minAmount: item.minAmount,
                             minQuantity: item.minQuantity

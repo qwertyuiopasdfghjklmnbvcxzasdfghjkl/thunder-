@@ -4,10 +4,10 @@
             {{$t('market.select_symbol')}}
         </div>
         <div class="select">
-            <span class="star" v-tap="{methods: ()=>{star=true;symbol=''}}">
-                <img v-show="star" src="../../assets/img/i_sc@2x.png"/>
-                <img v-show="!star" src="../../assets/img/star.png"/>
-            </span>
+            <!--<span class="star" v-tap="{methods: ()=>{star=true;symbol=''}}">-->
+                <!--<img v-show="star" src="../../assets/img/i_sc@2x.png"/>-->
+                <!--<img v-show="!star" src="../../assets/img/star.png"/>-->
+            <!--</span>-->
             <ol>
                 <li v-for="(item, i) in baseSymbol" :class="{active: item === symbol}"
                     v-tap="{methods: tab, item:item}"><span>{{item}}</span></li>

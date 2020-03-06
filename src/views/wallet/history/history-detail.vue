@@ -19,11 +19,15 @@
                 </div>
                 <div class="bot">
                     <div v-tap="{methods: copy, text:data.toAddress}">
-                        <p class="mt30 ft-c-lightGray">{{$t('home.home51')}} <span class="ft-c-main">({{$t('home.copy')}})</span></p>
+                        <p class="mt30 ft-c-lightGray">{{$t('home.home51')}}
+                            <span class="cope"><img src="../../../assets/img/icon_cope.png"/></span>
+                        </p>
                         <p class="mt30 ellipsis">{{data.toAddress}}</p>
                     </div>
                     <div v-tap="{methods: copy, text:data.txId}">
-                        <p class="mt30 ft-c-lightGray">Txid <span class="ft-c-main">({{$t('home.copy')}})</span></p>
+                        <p class="mt30 ft-c-lightGray">Txid
+                            <span class="cope"><img src="../../../assets/img/icon_cope.png"/></span>
+                        </p>
                         <p class="mt30 ellipsis">{{data.txId}}</p>
                     </div>
                     <label>
@@ -131,7 +135,7 @@
 <style scoped lang="less">
 .cont{
     .top{
-        border-bottom: 0.02rem solid #ddd;
+        border-bottom: 0.02rem solid #1D273C;
         &>p{
             display: flex;
             justify-content: center;
@@ -160,15 +164,22 @@
             word-break: break-all;
         }
         span{
-            color: #999;
+            color: #4B5875;
             padding-right: 0.2rem;
         }
         i{
             display: inline-block;
             padding: 0.1rem;
             font-style: normal;
-            color: #00a0e9;
+            color: #ffffff;
         }
+    }
+}
+.cope{
+    margin-left: 0.2rem;
+    img{
+        width: 0.28rem;
+        vertical-align: middle;
     }
 }
 .fail {color: #F07180;}

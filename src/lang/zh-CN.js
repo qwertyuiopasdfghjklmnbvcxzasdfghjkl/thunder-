@@ -1636,6 +1636,11 @@ export default {
 			"fee": "免费",
 			"select_account_type":"请选择账户名类型",
 			"register_title":"创建账号",
+			"flash_buy": "极速买入",
+			"flash_sell": "极速卖出",
+			"flash_buy_small": "法币极速买入数字币",
+			"flash_sell_small": "法币极速买入数字币",
+			"buy_total": "购买总数"
 		},
 		"referral": {
 			"date": "日期",
