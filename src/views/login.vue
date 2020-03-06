@@ -21,10 +21,8 @@
                     <e-mail-login v-show="active==='mail'"/>
                     <phone-login v-show="active==='phone'"/>
                 </div>
-
-                    <router-link tag="span" class="forget mt60" :to="{name:'findpwd'}">{{$t('login_register.forget_password')}} <!--忘记密码--></router-link>
-                    <router-link class="register" :to="{name:'register'}">{{$t('login_register.register')}}</router-link>
-
+                    <router-link tag="span" class="forget mt60" :to="{name:'register'}">{{$t('login_register.register')}}</router-link>
+                    <router-link class="register" :to="{name:'findpwd'}">{{$t('login_register.forget_password')}} <!--忘记密码--></router-link>
 
             </div>
         </div>

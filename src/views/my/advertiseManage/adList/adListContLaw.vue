@@ -1,5 +1,5 @@
 <template>
-    <div class="ad_law box">
+    <div class="ad_law box" v-tap="{methods: toDetail}">
         <div class="top">
             <p><span class="ft-c-red">{{type}}</span>USDT</p>
             <span class="status">{{status}}</span>
@@ -38,7 +38,11 @@
         created() {
 
         },
-        methods: {}
+        methods: {
+            toDetail(){
+                this.$router.push({name: 'adManageDetail'})
+            }
+        }
     }
 </script>
 

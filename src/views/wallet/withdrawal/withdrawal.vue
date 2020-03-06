@@ -324,7 +324,7 @@
                 height: 0.5rem;
                 position: relative;
                 border-bottom: 0.02rem solid #1D273C;
-                padding-bottom: 0.2rem;
+                /*padding-bottom: 0.2rem;*/
                 font-size: 0.32rem;
 
                 input {
