@@ -83,7 +83,8 @@
             goToExchangePage(args) {
                 Indicator.open('loading...')
                 let item = args.item
-                this.$router.push({name: 'exchange', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
+                localStorage.market =`${item.currencySymbol}_${item.baseSymbol}`
+                this.$router.push({name: 'exchange'})
                 marketApi.get24hPrice({symbol: `${item.currencySymbol}${item.baseSymbol}`}, (data) => {
                     this.setLast24h(data)
                 })

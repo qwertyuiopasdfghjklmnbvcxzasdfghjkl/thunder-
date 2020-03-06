@@ -17,8 +17,8 @@
 
             <div class="total">
                 <p v-tap="{methods:()=>{ showMoney = !showMoney}}">
-                    <span>({{$t('exchange.exchange_valuation')}}BTC)</span>
-                    <img :src="showMoney ? require('../../../assets/img/assets_eye_open.png'): require('../../../assets/img/assets_eye_closed.png')"/>
+                    <span>({{$t('exchange.exchange_valuation')}}USDT)</span>
+                    <img :src="showMoney ? require('../../assets/img/assets_eye_open.png'): require('../../assets/img/assets_eye_closed.png')"/>
                 </p>
                 <h4 class="">{{totalUSDTDisplay}}</h4>
             </div>
@@ -26,20 +26,20 @@
 
             <div class="nav_item">
                 <span v-tap="{methods: withdrawal}">
-                      <img src="../../../assets/img/i_tx.png">
+                      <img src="../../assets/img/i_tx.png">
                     <em>
                         {{$t('home.home49')}}<!--提现-->
                     </em>
                 </span>
                 <span v-tap="{methods: pay}">
-                    <img src="../../../assets/img/i_cz.png">
+                    <img src="../../assets/img/i_cz.png">
                     <em>
                         {{$t('home.home50')}}<!--充值-->
                     </em>
                   </span>
                 <span>
                     <router-link :to="{name: 'history'}" slot="right" tag="span">
-                        <img src="../../../assets/img/i_txjl.png">
+                        <img src="../../assets/img/i_txjl.png">
                         <em>{{$t('home.home48')}}</em>
                     </router-link>
                 </span>
@@ -62,11 +62,11 @@
                     <li v-for="data in filterSymboltList" v-tap="{methods: toWallet, item:data}">
                         <p>
                             <img :src="'data:image/png;base64,'+data.iconBase64"/>
-                            <spam>{{data.accountName}}</spam>
+                            <span>{{data.accountName}}</span>
                         </p>
                         <label>
                             <p>{{data.totalBalance | number}}</p>
-                            <span><img src="../../../assets/img/i_rig_c@3x.png"/></span>
+                            <span><img src="../../assets/img/i_rig_c@3x.png"/></span>
                         </label>
                     </li>
                 </ul>
@@ -88,7 +88,6 @@
 
 
     export default {
-        name: 'trading',
         data() {
             return {
                 showZero: false,
@@ -226,7 +225,7 @@
 <style lang="less" scoped>
 
     .top_total {
-        background: url("../../../assets/img/total_bg.png") no-repeat center #0C6AC9;
+        background: url("../../assets/img/total_bg.png") no-repeat center #0C6AC9;
         background-size: cover;
     }
 
@@ -249,6 +248,7 @@
             }
             em{
                 font-style: normal;
+                display: block;
             }
         }
     }

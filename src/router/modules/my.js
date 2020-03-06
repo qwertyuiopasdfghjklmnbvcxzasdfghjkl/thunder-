@@ -1,13 +1,5 @@
 // import My from '@/views/my/index'
-import trading from '@/views/my/wallet/trading'
-import topup from '@/views/my/wallet/topup/topup'
-import withdrawal from '@/views/my/wallet/withdrawal/withdrawal'
-import withdrawalSelect from '@/views/my/wallet/withdrawal/withdrawal-select'
-import addressManage from '@/views/my/wallet/address/address-manage'
-import address from '@/views/my/wallet/address/address'
-import addAddress from '@/views/my/wallet/address/add-address'
-import topupSelect from '@/views/my/wallet/topup/topup-select'
-import walletDetail from '@/views/my/wallet/wallet-detail'
+
 import error from '../../views/error'
 import success from '../../views/success'
 
@@ -128,72 +120,7 @@ export default [
                 component:() => import('@/views/my/center/center'),
                 meta:{login: true}
             },
-            {
-                path: 'trading',
-                name: 'trading',
-                component: trading,
-                meta: {login: true, nav:true}
-            },
-            {
-                path: 'wallet-detail',
-                name: 'wallet-detail',
-                component: walletDetail,
-                meta: {login: true}
-            },
-            {
-                path: 'address-manage',
-                name: 'address-manage',
-                component: addressManage,
-                meta: {login: true}
-            },
-            {
-                path: 'address',
-                name: 'address',
-                component: address,
-                meta: {login: true}
-            },
-            {
-                path: 'add-address',
-                name: 'add-address',
-                component: addAddress,
-                meta: {login: true}
-            },
-            {
-                path: 'topup-select', // 选择充值
-                name: 'topup-select',
-                component: topupSelect,
-                meta: {login: true}
-            },
-            {
-                path: 'topup', // 充值
-                name: topup.name,
-                component: topup,
-                meta: {login: true}
-            },
-            {
-                path: 'withdrawal-select', //
-                name: 'withdrawal-select',
-                component: withdrawalSelect,
-                meta: {login: true}
-            },
-            {
-                path: 'withdrawal', //
-                name: 'withdrawal',
-                component: withdrawal,
-                meta: {login: true}
-            },
-            {
-                path: 'wallet/history',
-                name: 'history',
-                component: () => import('@/views/my/wallet/history/history-list'),
-                meta:{login:true}
-            },
-            {
-                path: 'wallet/history-detail',
-                name: 'history-detail',
-                component: () => import('@/views/my/wallet/history/history-detail'),
-                meta:{login:true}
-            },
+
             {
                 path: 'referral',
                 name: 'referral',

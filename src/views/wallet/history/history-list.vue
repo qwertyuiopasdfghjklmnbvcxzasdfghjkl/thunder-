@@ -12,14 +12,14 @@
 
         <div class="list_box box mt20">
             <div class="list" :class="{active:active==='tokens'}">
-                <label @click="active= active==='tokens'?'':'tokens'">{{$t('home.home56')}}<i><img src="../../../../assets/img/tc_meus_b@2x.png"/></i></label>
+                <label @click="active= active==='tokens'?'':'tokens'">{{$t('home.home56')}}<i><img src="../../../assets/img/tc_meus_b@2x.png"/></i></label>
                 <div>
                     <span @click="symbol='', active=''" :class="{'active': !symbol}">{{$t('home.home59')}}</span>
                     <span v-for="item in symbolList" @click="symbol = item,  active=''" :class="{'active': symbol === item}">{{item}}</span>
                 </div>
             </div>
             <div class="list" :class="{active:active==='status'}">
-                <label @click="active= active==='status'?'':'status'">{{$t('home.home57')}}<i><img src="../../../../assets/img/tc_meus_b@2x.png"/></i></label>
+                <label @click="active= active==='status'?'':'status'">{{$t('home.home57')}}<i><img src="../../../assets/img/tc_meus_b@2x.png"/></i></label>
                 <div>
                     <span @click="status = ''" :class="{'active': status === ''}">{{$t('home.home59')}}</span>
                     <span @click="status = 1" :class="{'active': status === 1}">{{$t('home.home61')}}</span>
@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="list" :class="{active:active==='time'}">
-                <label @click="active= active==='time'?'':'time'">{{$t('home.home58')}}<i><img src="../../../../assets/img/tc_meus_b@2x.png"/></i></label>
+                <label @click="active= active==='time'?'':'time'">{{$t('home.home58')}}<i><img src="../../../assets/img/tc_meus_b@2x.png"/></i></label>
                 <div>
                     <span @click="time = 7" :class="{'active': time === 7}">7 {{$t('exchange.exchange_day')}}</span>
                     <span @click="time = 30" :class="{'active': time === 30}">30{{$t('exchange.exchange_day')}}</span>
@@ -99,7 +99,7 @@
 <script>
     import loading from '@/components/common/loading'
     import noMoreData from '@/components/common/noMoreData'
-    import wallet from '../../../../api/wallet'
+    import wallet from '../../../api/wallet'
     import {mapGetters, mapActions} from 'vuex'
 
     export default {

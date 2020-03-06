@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <top-back>
-            {{$t('home.home50')}}
+            {{$t('home.address')}}
         </top-back>
         <div class="page-main">
             <div class="search">
@@ -44,7 +44,7 @@
             filterSymboltList() {
                 if (this.symbolList.length) {
                     return this.symbolList.filter(item => {
-                        return item.rechargeFlag == 1 && item.symbol.toLowerCase().includes(this.search.toLowerCase())
+                        return item.symbol.toLowerCase().includes(this.search.toLowerCase())
                     })
                 } else {
                     return []
@@ -57,7 +57,7 @@
         methods: {
             ...mapActions(['setSymbol']),
             toaddress(name){
-                this.$router.push({name:'page-topup', params:{}})
+                this.$router.push({name:'address'})
                 this.setSymbol(name.symbol)
             }
         }
@@ -111,7 +111,7 @@
                 background: transparent;
                 border: none;
                 padding-left: 0.85rem;
-                background: url("../../../../assets/img/search.png") no-repeat 0.2rem 0;
+                background: url("../../../assets/img/search.png") no-repeat 0.2rem 0;
                 background-size: 0.36rem;
                 font-size: 0.28rem;
             }

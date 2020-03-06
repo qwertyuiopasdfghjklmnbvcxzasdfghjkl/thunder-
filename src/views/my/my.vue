@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <top-back style="background: #151C2C">
+        <top-back style="background: #151C2C" :backPage="'home'">
             {{$t('nav.my')}}
             <!-- <router-link to="/ucenter/set" slot="right">
                 <img class="icon_setting" src="../../assets/img/ic_sz@3x.png">
@@ -56,7 +56,6 @@
             <div class="mt20 box full">
                 <rail-bar v-for="data in data3" :item="data"></rail-bar>
             </div>
-
         </div>
     </div>
 </template>
@@ -74,7 +73,7 @@
         },
         data() {
             return {
-                orignal: config.domain === 'etvcoins.com' ? config.url + '/ceph-data/produ-etv/user/' : config.url + '/ceph-data/dev/user/',
+                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-etv/user/' ,
                 user: {},
                 isUseCoinPay: false,
                 messageList: null,
@@ -113,7 +112,7 @@
                     {
                         route: 'myMapping', // otc的功能 我的订单
                         icon: require('@/assets/img/icon_wddd.png'),
-                        name: this.$t('account.mapping_address'),
+                        name: this.$t('usercontent.user60'),
                     },
                     {
                         route: 'history',
@@ -124,6 +123,11 @@
                         route: 'transRecords',
                         icon: require('@/assets/img/icon_yjjl.png'),
                         name: this.$t('trade_record.my_trade_record'),
+                    },
+                    {
+                        route: 'transRecords',  // otc 功能 我的广告
+                        icon: require('@/assets/img/icon_ad.png'),
+                        name: this.$t('otc_ad.otc_ad_management'),
                     },
                 ],
                 data3: [
@@ -165,9 +169,9 @@
             ...mapGetters(['getUserInfo', 'getVersion']),
         },
         created() {
-            // this.getUserState()
-            // this.getMessageList();
-            // this.getInfo()
+            this.getUserState()
+            this.getMessageList();
+            this.getInfo()
             // this.data4[1].small = `<span class="ft-c-lightGray">${this.getVersion}</span>`
         },
         methods: {
@@ -225,6 +229,9 @@
     }
 </script>
 <style lang="less" scoped="">
+    .page-main{
+        padding-bottom: 0.4rem;
+    }
     .user {
         .user_head {
             position: relative;
@@ -248,6 +255,7 @@
                     img {
                         height: 100%;
                         width: 100%;
+                        object-fit: cover;
                     }
                 }
 

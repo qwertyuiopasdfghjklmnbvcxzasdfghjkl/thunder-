@@ -7,7 +7,10 @@
             <div class="mt20 full box">
                 <rail-bar v-for="data in data1" :item="data" class="hr"></rail-bar>
                 <div class="bar hr">
-                    <p>{{$t('account.user_center_avatar')}}<!--头像--><font class="f24 ft-c-lightGray" v-if="!getUserInfo.headerImagePath">（{{$t('account.user_center_change')}}）<!--修改--></font></p>
+                    <p>{{$t('account.user_center_avatar')}}<!--头像-->
+                        <font class="f24 ft-c-lightGray" v-if="!getUserInfo.headerImagePath">
+                            （{{$t('account.user_center_change')}}）<!--修改--></font>
+                    </p>
                     <img src="../../../assets/img/user_img@2x.png" v-if="!getUserInfo.headerImagePath">
                     <img :src="orignal+getUserInfo.headerImagePath" @error="setDefaultIcon($event)" v-else>
                     <form class="imgform" ref="form">

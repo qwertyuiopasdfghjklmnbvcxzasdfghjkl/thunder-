@@ -1,7 +1,7 @@
 <template>
     <div class="head">
         <div class="img" v-tap="{methods:$root.routeTo, to:'ucenter', replace:true}">
-            <img src="../../../assets/img/user_img@2x.png" v-if="!getUserInfo.headerImagePath">
+            <img :src="src" v-if="!getUserInfo.headerImagePath">
             <img :src="orignal+getUserInfo.headerImagePath" @error="setDefaultIcon($event)" v-else>
         </div>
         <p>Thunder PRO</p>
@@ -12,12 +12,14 @@
 </template>
 
 <script>
-    import img from '../../../assets/img/icon_my_b3x.png'
+    import img from '../../../assets/img/user_img@2x.png'
     import { mapActions, mapGetters } from 'vuex'
+    import config from '../../../api/config'
     export default {
         data() {
             return {
-                src: img
+                src: img,
+                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-etv/user/'
             }
         },
         computed:{
@@ -29,7 +31,7 @@
         methods: {
             setDefaultIcon(e){
                 let tar = e.currentTarget
-                tar.src = avatar
+                tar.src = img
             },
         }
     }
@@ -55,7 +57,8 @@
         background-color: #eeeeee;
         img{
             width: 100%;
-            min-height: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     }
     p{

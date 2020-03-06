@@ -2,7 +2,7 @@
     <div class="confirm">
         <div class="title">
             <i class="cancel" @click="closeDialog">
-                <img src="../../../../assets/img/off_blank.png"/>
+                <img src="../../../assets/img/off_blank.png"/>
             </i>
             <p>{{mobileState === 1 ? $t('auth_warning.warning_SMS_auth') : $t('account.safety_verification')}}
                 <!--短信验证||谷歌验证--></p>
@@ -21,8 +21,6 @@
                 </mt-button>
             </div>
             <div class="buttons">
-                <!--<span class="mint-button&#45;&#45;default" @click="closeDialog">{{$t('otc_legal.otc_legal_cancel')}}-->
-                    <!--&lt;!&ndash;取消&ndash;&gt;</span>-->
                 <span class="mint-button--primary" @click="auth">{{$t('otc_legal.otc_legal_confirm')}}<!--确定--></span>
             </div>
         </div>
@@ -43,8 +41,6 @@
                    :placeholder="$t('account.user_center_Google_verification_code')" v-if="googleState === 1"/>
             <!--谷歌验证码-->
             <div class="buttons">
-                <!--<span class="mint-button&#45;&#45;default" @click="closeDialog">{{$t('otc_legal.otc_legal_cancel')}}-->
-                    <!--&lt;!&ndash;取消&ndash;&gt;</span>-->
                 <span class="mint-button--primary" @click="auth1">{{$t('otc_legal.otc_legal_confirm')}}<!--确定--></span>
             </div>
         </div>
@@ -59,7 +55,7 @@
     import userUtils from '@/api/wallet'
 
     export default {
-        props: ['params'],
+        props: ['params', 'type', 'toUserType'],
         data() {
             return {
                 toAddress: '',
@@ -199,7 +195,7 @@
                         }
                         return
                     }
-                    let formData = { // 提现
+                    let formData = {
                         alias: null,
                         symbol: this.params.symbol,
                         symbolType: this.params.symbolType,
@@ -255,7 +251,8 @@
         text-align: center;
         border-bottom: 0.01rem solid #eeeeee;
         position: relative;
-        .cancel{
+
+        .cancel {
             display: inline-block;
             width: 1rem;
             height: 1rem;
@@ -263,7 +260,8 @@
             left: 0;
             top: 0;
             text-align: center;
-            img{
+
+            img {
                 vertical-align: middle;
                 width: 0.3rem;
             }

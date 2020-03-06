@@ -6,7 +6,7 @@
                     <ul>
                         <li v-for="(item, i) in baseSymbol"
                             :class="{'active':item === symbol}"
-                            v-tap="{methods: tab, symbol:item}"><span>{{item}}</span></li>
+                            v-tap="{methods: tab,symbol:item}"><span>{{item}}</span></li>
                     </ul>
                 </section>
                 <section class="coin_header">
@@ -78,13 +78,13 @@
             NoData,
             valuation
         },
-        props: ['cSymbol', 'list'],
+        props: ['list'],
         data() {
             return {
                 sortActive: null,
                 sort: null,
                 scroll: false,
-                symbol: this.cSymbol || 'USDT',
+                symbol: ''
             }
         },
         computed: {
@@ -143,8 +143,24 @@
                     return item.baseSymbol
                 })
                 return [...new Set(_list)].sort()
+            },
+
+        },
+        watch:{
+            baseSymbol(){
+                if(!this.symbol){
+                    this.symbol = this.baseSymbol[0]
+                }else{
+                    if((this.baseSymbol||[]).indexOf(this.symbol) === -1){
+                        this.symbol = this.baseSymbol[0]
+                    }
+                }
             }
         },
+        mounted(){
+            console.log(this.list)
+        },
+
         methods: {
             ...mapActions(['setLast24h']),
             sortMarket(active) {
@@ -157,13 +173,10 @@
             },
             tab(args) {
                 this.symbol = args.symbol
+                console.log(this.symbol)
             },
             goToExchangePage(item) {
-                // if (this.form === 'kline') {
-                    this.$router.push({name: 'kline', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
-                // // } else {
-                //     this.$router.push({name: 'exchange', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
-                // // }
+                this.$router.push({name: 'kline', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
                 marketApi.get24hPrice({symbol: `${item.currencySymbol}${item.baseSymbol}`}, (data) => {
                     this.setLast24h(data)
                 })
@@ -191,252 +204,5 @@
     }
 </script>
 <style lang="less" scoped>
-    @write: #ffffff;
-    @write-20: #cbd4ec;
-    @write-374: #ffffff;
-    @write-8e9: #6F7F8F;
-    .page.exchange {top: 0.9rem; height: calc(~"100vh - 0.9rem");}
-    .page-main {top: 3rem;}
-    .right {
-        img {
-            width: 0.34rem;
-        }
-    }
-
-    .mint-tab-container {
-        /*position: absolute;*/
-        /*top: 2.2rem;*/
-        /*left: 0;*/
-        /*right: 0;*/
-        /*bottom: 0*/
-    }
-
-    .mint-tab-container /deep/ .mint-tab-container-wrap {
-        height: 100%;
-    }
-
-    .mint-tab-container /deep/ .mint-tab-container-item {
-        overflow: auto;
-        padding-bottom: 0.2rem;
-    }
-
-    .lastspace {
-        height: 0.4rem;
-        width: 100%;
-    }
-
-    .box {
-        font-size: .3rem;
-        padding: 0;
-    }
-
-    .box > .inner {
-
-    }
-
-    .coin_tab {
-        border-bottom: 1px solid #364463;
-        font-size: 0.3rem;
-        overflow-y: hidden;
-        padding-left: 0.3rem;
-        padding-right: 0.3rem;
-    }
-
-    .coin_tab ul {
-        display: flex;
-        justify-content: space-around;
-        overflow-x: auto;
-    }
-
-    .coin_tab ul li {
-        position: relative;
-        bottom: 0rem;
-        line-height: .75rem;
-        height: .75rem;
-        white-space: nowrap;
-        margin-right: 0.1rem;
-    }
-
-    .coin_tab ul li.active {
-        color: #0C6AC9;
-    }
-
-    .coin_tab ul li.active::after {
-        content: "";
-        position: absolute;
-        display: flex;
-        width: calc(~"100% - 0.08rem");
-        height: 0.01rem;
-        background: #0C6AC9;
-        left: 0.04rem;
-        bottom: 0rem;
-    }
-
-    .coin_tab ul li span {
-        padding: 0.04rem 0.08rem;
-    }
-
-    .coin_header ul {
-        display: flex;
-        justify-content: space-between;
-        padding: 0 0.3rem;
-    }
-
-    .coin_header ul li {
-        font-size: .26rem;
-        width: 1.8rem;
-        line-height: .72rem;
-        height: .72rem;
-        flex-shrink: 0;
-    }
-
-    .coin_header ul li:first-child {
-        width: 2.5rem
-    }
-
-    .coin_header ul li:nth-child(2) {
-        width: 2.4rem;
-    }
-
-    .coin_header ul li:last-child {
-        text-align: right;
-        flex-shrink: 1;
-        flex: 1;
-    }
-
-    .coin_header ul li i.down {
-        display: inline-block;
-        width: 0.22rem;
-        height: 0.26rem;
-        margin-left: .1rem;
-        background: url('../../assets/img/i_down.png') no-repeat center;
-        background-size: contain;
-        vertical-align: sub;
-    }
-
-    .coin_header ul li i.up {
-        display: inline-block;
-        width: 0.22rem;
-        height: 0.26rem;
-        margin-left: .1rem;
-        background: url('../../assets/img/i_up.png') no-repeat center;
-        background-size: contain;
-        vertical-align: sub;
-    }
-
-    .coin_header ul li:nth-child(3) {
-        text-align: right;
-    }
-
-    .coin_content {
-        font-size: .24rem;
-    }
-
-    .coin_content .item {
-        border-bottom: 1px solid #273246;
-    }
-
-    .coin_content .item:first-child {
-
-    }
-
-    .coin_content ul {
-        padding: .2rem .3rem;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .coin_content ul li {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: 0.82rem;
-    }
-
-    .coin_content ul li img {
-        height: .4rem;
-        display: inline-block;
-        width: .4rem;
-        left: 0.3rem;
-        border-radius: 50%;
-        overflow: hidden;
-    }
-
-    .coin_content ul li:nth-child(1) {
-        width: 2.5rem;
-        color: @write-8e9;
-        flex-shrink: 0;
-
-        h1 span {
-            font-size: .34rem;
-            color: #ffffff;
-        }
-
-        h1 i {
-            font-style: normal;
-            font-size: .24rem;
-            color: @write-8e9;
-        }
-
-        h2 {
-            font-size: .24rem;
-            color: @write-8e9;
-            margin-top: 0.1rem;
-        }
-    }
-
-    .coin_content ul li:nth-child(2) {
-        width: 2.4rem;
-        display: flex;
-        flex-shrink: 0;
-        overflow: hidden;
-
-        h1 {
-            font-size: .34rem;
-            width: 100%;
-            display: block;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        h2 {
-            font-size: .24rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-            display: block;
-            color: @write-8e9;
-        }
-    }
-
-    .coin_content ul li:nth-child(3) {
-        flex:1;
-    }
-
-    .percent {
-        min-width: 1.3rem;
-        line-height: 0.6rem;
-        text-align: center;
-        padding:0 0.1rem;
-        display: inline-block;
-        vertical-align: middle;
-        border-radius: 4px;
-        &.c-green {
-            color: #fff;
-            background-color: #0EB574;
-        }
-        &.c-orange {
-            color: #fff;
-            background-color: #E01C37;
-        }
-    }
-    .c-green {
-        color: #5EBC75;
-    }
-
-    .c-orange {
-        color: #E01C37;
-    }
+    @import "market";
 </style>

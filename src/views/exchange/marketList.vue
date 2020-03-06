@@ -4,6 +4,10 @@
             {{$t('market.select_symbol')}}
         </div>
         <div class="select">
+            <span class="star" v-tap="{methods: ()=>{star=true;symbol=''}}">
+                <img v-show="star" src="../../assets/img/i_sc@2x.png"/>
+                <img v-show="!star" src="../../assets/img/star.png"/>
+            </span>
             <ol>
                 <li v-for="(item, i) in baseSymbol" :class="{active: item === symbol}"
                     v-tap="{methods: tab, item:item}"><span>{{item}}</span></li>
@@ -31,7 +35,8 @@
         data() {
             return {
                 symbol: 'USDT',
-                search: ''
+                search: '',
+                star: false
             }
         },
         computed: {
@@ -46,14 +51,24 @@
             marketList(){
                 let list = []
                 let market = this.getMarketList || []
+                console.log(market)
                 market.filter(res=>{
-                    if(this.symbol === res.baseSymbol){
-                        let b = res.market.indexOf(this.search.toUpperCase()) !== -1 || res.market.indexOf(this.search.toLowerCase()) !== -1
-                        if(b){
-                            console.log(res)
-                            list.push(res)
+                    if(this.star){
+                        if(res.collection){
+                            let b = res.market.indexOf(this.search.toUpperCase()) !== -1 || res.market.indexOf(this.search.toLowerCase()) !== -1
+                            if(b){
+                                list.push(res)
+                            }
+                        }
+                    }else{
+                        if(this.symbol === res.baseSymbol){
+                            let b = res.market.indexOf(this.search.toUpperCase()) !== -1 || res.market.indexOf(this.search.toLowerCase()) !== -1
+                            if(b){
+                                list.push(res)
+                            }
                         }
                     }
+
                 })
                 return list
             }
@@ -67,6 +82,8 @@
         methods: {
             tab(e){
                 let a = e.item
+                this.symbol = a
+                this.star = false
             },
             change(e){
                 this.$emit('changeMarket',e.data)
@@ -104,15 +121,33 @@
             color: #ffffff;
             font-size: 0.32rem;
         }
+
         .select{
             width: 100%;
             height:0.5rem;
-            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+
+            .star{
+                width: 0.6rem;
+                height: .6rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-left: 0.3rem;
+                img{
+                    width: 0.3rem;
+                }
+            }
             ol{
+                flex: 1;
+                overflow-y: auto;
                 list-style-type: none;
                 display: flex;
                 align-items: center;
-                justify-content: center;
+                justify-content: flex-start;
+                padding: 0 0.3rem;
                 li{
                     color: #4B5875;
                     font-size: 0.3rem;

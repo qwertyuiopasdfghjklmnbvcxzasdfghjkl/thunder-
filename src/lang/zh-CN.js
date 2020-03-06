@@ -1633,7 +1633,9 @@ export default {
 			"mention_filling_record": "充提记录",
 			"def_withdrawal": "普通提币",
 			"inset_withdrawal": "站内转账",
-			"fee": "免费"
+			"fee": "免费",
+			"select_account_type":"请选择账户名类型",
+			"register_title":"创建账号",
 		},
 		"referral": {
 			"date": "日期",
