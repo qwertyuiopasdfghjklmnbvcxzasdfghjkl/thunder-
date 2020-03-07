@@ -287,7 +287,14 @@
                         className: 'success',
                         value: this.$t('account.user_center_history_status_success') // 成功
                     }
-                } else {
+                } else if(state === 3 || state === 4){
+                    return {
+                        className: 'fail',
+                        value: this.$t('account.user_center_history_status_fail') // 失败
+                    }
+                }
+
+                else {
                     return {
                         className: null,
                         value: null

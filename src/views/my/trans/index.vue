@@ -94,7 +94,7 @@
             }
         },
         created() {
-            // this.getCoinsHistory()
+            this.getCoinsHistory()
         },
         methods: {
             goDetail(data) {

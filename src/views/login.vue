@@ -180,9 +180,14 @@
         width: 100%;
         display: block;
         left: 0;
-        bottom: 0.6rem;
+        bottom: 0.2rem;
         text-align: center;
         color: #ffffff;
         font-size: 0.26rem;
+    }
+    .login-form{
+        height: calc(100vh - 4.5rem);
+        min-height: 6rem;
+        position: relative;
     }
 </style>
