@@ -91,6 +91,18 @@ const deleteAdvertisement = function (id, success, error) {
 }
 otc.deleteAdvertisement = deleteAdvertisement
 
+// 删除广告
+const deleteAdv = function (id, success, error) {
+  api.delete(`${domain}api/v2/otc/ads/del/${id}`, (res) => {
+    if (res.rst === 1) {
+      success && success(res.msg)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+otc.deleteAdv = deleteAdv
+
 // 上传图片
 const uploadImage = function (type, formData, success, error) {
   // type 2:支付宝，3:微信

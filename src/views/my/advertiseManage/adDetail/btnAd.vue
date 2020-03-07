@@ -1,21 +1,47 @@
 <template>
     <div class="btn">
-        <label class="edit">{{$t('market.edit_ad')}}</label>
-        <label class="back">{{$t('market.backout_ad')}}</label>
+        <label class="edit" v-tap="{methods:edit}">{{$t('market.edit_ad')}}</label>
+        <label class="back" v-tap="{methods:del}">{{$t('market.backout_ad')}}</label>
         <label class="put">{{$t('market.putaway_ad')}}</label>
     </div>
 </template>
 
 <script>
+    import otc from '../../../../api/otc'
+    import { MessageBox } from 'mint-ui'
     export default {
         name: "btnAd",
+        props:['item'],
         data() {
             return {}
         },
         created() {
 
         },
-        methods: {}
+        methods: {
+            edit(){
+                this.$router.push({name: 'qotcAddOrUpdate',query: this.item})
+            },
+            del(){
+                MessageBox({
+                    title: this.$t('public0.public242'),
+                    message: this.$t('public0.public3')+'?', // 删除?
+                }).then(action => {
+                    if (action === 'confirm') {
+                        this.api()
+                    }
+                })
+
+            },
+            api(){
+                otc.deleteAdvertisement(this.item.ad_id,res=>{
+                    Tip({type: 'success', message: this.$t(`error_code.${res}`)})
+                    this.$router.back()
+                },msg=>{
+                    Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+                })
+            }
+        }
     }
 </script>
 

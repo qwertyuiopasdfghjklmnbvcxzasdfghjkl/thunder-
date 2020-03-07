@@ -5,27 +5,29 @@
             <div class="ad_detail full">
                 <h4>{{$t('market.base_info')}}</h4>
                 <div class="box">
-                    <p><span>{{$t('exchange.exchange_type')}}</span><span>{{$t('otc_exchange.otc_exchange_buy')}}</span>
+                    <p>
+                        <span>{{$t('exchange.exchange_type')}}</span>
+                        <span :class="[item.ad_type === 2 ? 'sell' : 'buy']">{{type}}</span>
                     </p>
-                    <p><span>{{$t('home.home05')}}</span><span>USDT</span></p>
-                    <p><span>{{$t('exchange.exchange_Transaction_volume')}}</span><span>1.21 CNY</span></p>
-                    <p><span>{{$t('exchange.exchange_problem')}}</span><span>500 USDT</span></p>
-                    <p><span>{{$t('gcox_otc.remain_count')}}</span><span>500 USDT</span></p>
+                    <p><span>{{$t('home.home05')}}</span><span>{{item.symbol}}</span></p>
+                    <p><span>{{$t('exchange.exchange_Transaction_volume')}}</span><span>{{(item.symbol_count - item.remain_count).toFixed(2)}} {{item.symbol}}</span></p>
+                    <p><span>{{$t('exchange.exchange_problem')}}</span><span>{{item.symbol_count}} {{item.symbol}}</span></p>
+                    <p><span>{{$t('gcox_otc.remain_count')}}</span><span>{{item.remain_count}} {{item.symbol}}</span></p>
                 </div>
             </div>
             <div class="ad_detail full">
                 <h4>{{$t('market.pay_require')}}</h4>
                 <div class="box">
                     <p>
-                        <span>{{$t('otc_ad.otc_ad_expiration_pay')}}</span><span>{{$t('otc_exchange.otc_exchange_buy')}}</span>
+                        <span>{{$t('otc_ad.otc_ad_expiration_pay')}}</span><span>{{item.pay_limit_time}} {{$t('exchange.exchange_min')}}</span>
                     </p>
-                    <p><span>{{$t('otc_ad.otc_ad_Minimum_limit')}}</span><span>USDT</span></p>
-                    <p><span>{{$t('otc_ad.otc_ad_Maximum_limit')}}</span><span>1.21 CNY</span></p>
-                    <p><span>{{$t('otc_ad.otc_ad_Payment_method')}}</span><span>500 USDT</span></p>
+                    <p><span>{{$t('otc_ad.otc_ad_Minimum_limit')}}</span><span>{{item.min_amount}} {{item.ad_type === 2 ? item.currency : item.symbol}}</span></p>
+                    <p><span>{{$t('otc_ad.otc_ad_Maximum_limit')}}</span><span>{{item.max_amount}} {{item.ad_type === 2 ? item.currency : item.symbol}}</span></p>
+                    <p><span>{{$t('otc_ad.otc_ad_Payment_method')}}</span><span>{{item.symbol_count}} {{item.symbol}}</span></p>
                 </div>
             </div>
         </div>
-        <component :is="btn"/>
+        <component :is="btn" :item="item"/>
     </div>
 </template>
 
@@ -38,11 +40,23 @@
         components: {down, btnAd},
         data() {
             return {
-                btn: null
+                btn: null,
+                item: {}
             }
         },
+        computed:{
+            type(){
+                return this.$t(this.item.ad_type === 2 ? 'exchange.exchange_sell' : 'exchange.exchange_buy')
+            },
+        },
         created() {
-
+            this.item = this.$route.query
+            // status  广告状态（0：已下架、1：已上架、2：已过期）
+            if(this.item.status == 0){
+                this.btn = btnAd
+            }else if(this.item.status == 1){
+                this.btn = down
+            }
         },
         methods: {}
     }

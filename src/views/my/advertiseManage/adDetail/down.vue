@@ -1,17 +1,39 @@
 <template>
-    <div class="btn">{{$t('otc_ad.otc_cancel_ad')}}</div>
+    <div class="btn" v-tap="{methods:down}">{{$t('otc_ad.otc_cancel_ad')}}</div>
 </template>
 
 <script>
+    import otc from '../../../../api/otc'
+    import { MessageBox } from 'mint-ui'
     export default {
         name: "down",
+        props:['item'],
         data() {
             return {}
         },
         created() {
 
         },
-        methods: {}
+        methods: {
+            del(){
+                MessageBox({
+                    title: this.$t('public0.public242'),
+                    message: this.$t('otc_ad.otc_cancel_ad')+'?', // 删除?
+                }).then(action => {
+                    if (action === 'confirm') {
+                        this.api()
+                    }
+                })
+            },
+            api(){
+                otc.deleteAdv(this.item.ad_id,res=>{
+                    Tip({type: 'success', message: this.$t(`error_code.${res}`)})
+                    this.$router.back()
+                },msg=>{
+                    Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+                })
+            }
+        }
     }
 </script>
 
