@@ -19,7 +19,7 @@
 	    		    </swiper-slide>
 	    		    <div class="swiper-pagination" slot="pagination"></div>
 	    		</swiper>
-	    		<div class="mt40 amount-container">
+	    		<div class="mt50 amount-container">
 	    			<transition enter-active-class="animated short slideInLeft" leave-active-class="animated short slideOutLeft">
 	    			  	<div class="ui-flex ui-flex-justify" v-show="isToken">
 	    			  		<input type="number" name="amount" v-model="amount" class="ui-flex-1" :placeholder="type==1?'请输入购买数量':'请输入卖出数量'">
@@ -44,11 +44,24 @@
     		<div class="full bgblock mt20" v-show="getApiToken && type==2">
     			<p class="f26 grey">选择收款方式</p>
     			<ul class="mt25 payments">
-    				<li v-for="(item, index) in payments" v-tap="{methods:()=>{payType = item}}" class="ui-flex ui-flex-justify" :class="{active:payType==item}">
-    					<span><i class="icon_"></i> {{item}}</span>
-    					<span>fla126@qq.com</span>
+    				<li v-tap="{methods:()=>{payType = 1}}" class="ui-flex ui-flex-justify" :class="{active:payType==1}" v-if="payments.card_number">
+    					<span><i class="icon_"></i> {{$t('otc_legal.oyc_legal_Bank_card')}}<!--银行卡--></span>
+    					<span>{{payments.card_number}}</span>
     				</li>
-    				<router-link v-if="!payments.length" :to="{name:'set-payway'}" class="active" tag="li">{{'添加收款方式'}}</router-link>
+    				<li v-tap="{methods:()=>{payType = 2}}" class="ui-flex ui-flex-justify" :class="{active:payType==2}" v-if="payments.alipay_number">
+    					<span><i class="icon_"></i> {{$t('public0.public199')}}<!--支付宝--></span>
+    					<span>{{payments.alipay_number}}</span>
+    				</li>
+    				<li v-tap="{methods:()=>{payType = 3}}" class="ui-flex ui-flex-justify" :class="{active:payType==3}" v-if="payments.wechat_number">
+    					<span><i class="icon_"></i> {{$t('public0.public198')}}<!--微信--></span>
+    					<span>{{payments.wechat_number}}</span>
+    				</li>
+    				<li v-tap="{methods:()=>{payType = 4}}" class="ui-flex ui-flex-justify" :class="{active:payType==4}" v-if="payments.paypal_number">
+    					<span><i class="icon_"></i> {{$t('public0.public219')}}<!--PayPal--></span>
+    					<span>{{payments.paypal_number}}</span>
+    				</li>
+
+    				<router-link v-if="hasAllPays" :to="{name:'set-payway'}" class="active" tag="li">{{'添加收款方式'}}</router-link>
     			</ul>
     		</div>
     	</div>
@@ -65,12 +78,15 @@
     	<Dialog :show="isShow" :title="$t('昵称设置')" :modal="true" :hide="hideDialog" :submit="modifyNickname">
             <nike-name-form ref="nikeNameForm" :nikename="getUserInfo.nickname" @hide="hideDialog"></nike-name-form>
         </Dialog>
+        <Dialog :show="notMatched" :title="$t('提示')" :showBtns="false" :hide="hideMTDialog">
+            <p class="tc ft-c-default f28 lh17">未匹配成功，建议您分多笔小额下单，更容易匹配成功。</p>
+        </Dialog>
     </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import otcApi from '@/api/qotc'
+import otcApi from '@/api/otc'
 import userApi from '@/api/user'
 import numUtils from '@/assets/js/numberUtils'
 import utils from '@/assets/js/utils'
@@ -91,9 +107,9 @@ export default {
 			amount:'',
 			currency:'CNY',
 			isToken:true, //输入金额类型
-			payType:'支付宝',
+			payType:null, //pay_type: "1" 银行卡； "2" 支付宝； "3"微信支付； "4" Paypal；
 			tokens:[],
-			payments:['支付宝','微信支付'],
+			payments:{},
 			refPrice: 0, // 参考价格
 			swiperOption: {
                 // 所有配置均为可选（同Swiper配置）
@@ -104,10 +120,17 @@ export default {
       			freeMode: true
             },
             isShow:false,
+            notMatched:false
 		}
 	},
 	computed:{
 		...mapGetters(['getApiToken','getSysParams','getUserInfo', 'getUserWallets']),
+		hasAllPays(){
+			return !this.payments.card_number || !this.payments.alipay_number || !this.payments.wechat_number || !this.payments.paypal_number
+		},
+		hasPay(){
+			return this.payments.card_number || this.payments.alipay_number || this.payments.wechat_number || this.payments.paypal_number
+		},
 		balance(){
 			let _balance = 0
 			for(let item of this.getUserWallets){
@@ -133,15 +156,24 @@ export default {
 		},
 		benchSymbolParams() {
 		  this.getBenchSymbolInfo()
+		},
+		isToken(){
+			this.amount = ''
 		}
 	},
 	created(){
 		this.type = this.$route.params.type || 1
 		this.getOtcTokens()
+		this.getPaySettings()
 	},
 	methods:{
 		...mapActions(['setUserInfo']),
 		buyOrSell(){
+
+			if(!this.getUserInfo.nickname){
+				this.isShow = true
+				return
+			}
 			if(this.getUserInfo.kycState !== 1) {
 			    MessageBox.confirm(this.$t('home.home66'), this.$t('实名认证'), {
 			    	cancelButtonText: this.$t('public0.no'),
@@ -153,10 +185,38 @@ export default {
 			    })
 			    return
 			}
-			if(this.type==2){ //如果是卖需检测是否添加支付方式
-				
+			if(this.type==2 && !this.payType){ //如果是卖需添加收款支付方式
+				this.hasPay?Tip({type:'error', message:'请选择收款方式'}):Tip({type:'error', message:'请添加收款方式'})
+				return
 			}
-
+			if(Number(this.amount==0)){
+				Tip({type:'error', message:this.type==1?(this.isToken?'请输入购买数量':'请输入购买金额'):(this.isToken?'请输入卖出数量':'请输入卖出金额')})
+				return
+			}
+			if(this.type==2 && this.isToken && numUtils.BN(this.balance).lt(this.amount)){
+				Tip({type:'error', message:this.token+'账户余额不足'})
+				return
+			}
+			this.quickMatch()
+		},
+		quickMatch(){
+			let _data = {
+	          amount: this.amount,
+	          currency: this.currency,
+	          symbol: this.token,
+	          direction: this.type,
+	          pay_type:this.payType
+	        }
+	        otcApi.quickMatch(res=>{
+	        	// 待完善
+	        },msg=>{
+	        	if(true){ //未匹配成功提示
+	        		this.notMatched = true
+	        		window._matchTimer = setTimeout(()=>{
+	        			this.notMatched = false
+	        		},4000)
+	        	}
+	        })
 		},
 		getOtcTokens(){
 			otcApi.getCoinsList((data) => { // 获取币种信息
@@ -183,14 +243,15 @@ export default {
 		addAdvertisement(){
 
 		},
-		showDialog(){
-            this.isShow = true
-        },
         hideDialog(key){
             if(key===true){
                 this.getInfo()
             }
             this.isShow = false
+        },
+        hideMTDialog(){
+        	this.notMatched = false
+        	window._matchTimer && clearTimeout(window._matchTimer)
         },
         modifyNickname(){
             this.$refs.nikeNameForm.submit()
@@ -205,6 +266,17 @@ export default {
             this.refPrice = numUtils.BN(res.cur_price || 0).toFixed(2)
           })
         },
+        getPaySettings(){ //获取用户支付方式
+        	if(!this.getApiToken){
+        		return
+        	}
+        	otcApi.getPaySettings(res=>{
+        		this.payments = res.data
+        		if(this.payments.alipay_number){
+        			this.payType = 2
+        		}
+        	})
+        }
 	}
 }
 </script>
@@ -245,7 +317,7 @@ export default {
 .bgblock { background-color: #151C2C; padding: 0.3rem; }
 .payments {
 	li {
-		line-height: 0.6rem;
+		line-height: 0.7rem;
 		i {width: 0.3rem; height: 0.32rem; margin-right: 0.1rem; background-image: url('../../assets/img/icon_unchecked.png');}
 		&.active {
 			color: @blue;

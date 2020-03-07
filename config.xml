@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="etv.com" version="1.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>ETV</name>
+<widget id="ltpro.vip" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>雷霆PRO</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>
@@ -39,7 +39,7 @@
         </edit-config>
     </platform>
     <chcp>
-        <config-file url="http://res.ssss.so/hotfix/etv/www/chcp.json" />
+        <config-file url="http://res.ssss.so/hotfix/ltpro/www/chcp.json" />
         <auto-download enabled="false" />
         <auto-install enabled="false" />
         <native-interface version="1" />

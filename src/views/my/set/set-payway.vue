@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import { MessageBox } from 'mint-ui'
 import utils from '@/assets/js/utils'
 import otcApi from '@/api/otc'
@@ -90,12 +91,16 @@ export default {
       }
     }
   },
+  computed:{
+    ...mapGetters(['getUserInfo']),
+  },
   created () {
     this.loadData()
   },
   methods: {
     loadData (callback) {
       otcApi.getPaySettings((res) => {
+        res.real_name = this.getUserInfo.userRealName
         // 银行卡
         this.bankData = {
           card_name: res.real_name,
@@ -171,6 +176,7 @@ export default {
 	  }
 	  span:last-child{
 	    font-size: .28rem;
+      color: #333;
 	  }
 	}
 	h3{

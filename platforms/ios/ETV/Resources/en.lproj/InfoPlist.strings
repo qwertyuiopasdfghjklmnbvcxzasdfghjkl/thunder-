@@ -1,9 +1,0 @@
-/* 
-  Localizable.strings
-  ETV
-
-  Created by lingmin on 2020/1/7.
-  
-*/
-NSCameraUsageDescription = "Access to a camera to take pictures";
-NSPhotoLibraryUsageDescription = "To access photo album for photos";
