@@ -24,7 +24,7 @@
 
                             <!--</p>-->
                             <p class="f36">{{getUserInfo.username}}</p>
-                            <p class="f28">UID：{{getUserInfo.uid}}</p>
+                            <p class="f28">UID：{{getUserInfo.uidSort}}</p>
                         </div>
                         <span>
                             <img src="../../assets/img/i_rig_w@3x.png" style="opacity:0.6;">

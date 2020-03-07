@@ -82,7 +82,7 @@
         },
         created() {
             this.getLast24h()
-            this.getUserInvitedFeeCommission()
+            // this.getUserInvitedFeeCommission()
         },
         methods: {
             getUserInvitedFeeCommission() {

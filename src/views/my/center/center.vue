@@ -95,6 +95,7 @@ export default {
         this.getKYCstate()
         this.initData()
         this.getUserLevel()
+        console.log(this.orignal+this.getUserInfo.headerImagePath)
     },
     methods: {
         ...mapActions(['setApiToken','setUserInfo']),

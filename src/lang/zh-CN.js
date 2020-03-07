@@ -1640,7 +1640,12 @@ export default {
 			"flash_sell": "极速卖出",
 			"flash_buy_small": "法币极速买入数字币",
 			"flash_sell_small": "法币极速买入数字币",
-			"buy_total": "购买总数"
+			"buy_total": "购买总数",
+			"base_info": "基础信息",
+			"pay_require": "支付限制",
+			"edit_ad": "编辑广告",
+			"backout_ad":"撤销广告",
+			"putaway_ad":"上架广告"
 		},
 		"referral": {
 			"date": "日期",

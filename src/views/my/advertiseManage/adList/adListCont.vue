@@ -1,6 +1,6 @@
 <template>
     <div class="ad_list_cont full">
-        <ad-list-cont-law/>
+        <ad-list-cont-law v-for="item in dataList" :item="item"/>
     </div>
 </template>
 
@@ -9,8 +9,16 @@
     export default {
         name: "adListCont",
         components:{adListContLaw},
+        props: ['list'],
         data() {
-            return {}
+            return {
+
+            }
+        },
+        computed:{
+            dataList(){
+                return this.list || []
+            }
         },
         created() {
 

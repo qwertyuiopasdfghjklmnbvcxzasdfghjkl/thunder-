@@ -84,7 +84,7 @@
                                     <h4><span><strong>{{item.symbol}}</strong></span><span>{{item.amount}}</span></h4>
                                     <p>{{new Date(item.updatedAt).format()}}</p>
                                 </div>
-                                <p :class="[getWithdrawalState(item.status).className]">{{getWithdrawalState(item.status).value}}</p>
+                                <p :class="[getWithdrawalState(item.status).className]">{{getWithdrawalState(item).value}}</p>
                             </li>
                         </ul>
                         <noMoreData v-if="noMoreDataWithdrawal"/>
@@ -287,7 +287,14 @@
                         className: 'success',
                         value: this.$t('account.user_center_history_status_success') // 成功
                     }
-                } else {
+                } else if(state === 3 || state === 4){
+                    return {
+                        className: 'fail',
+                        value: this.$t('account.user_center_history_status_fail') // 失败
+                    }
+                }
+
+                else {
                     return {
                         className: null,
                         value: null
@@ -295,39 +302,61 @@
                 }
             },
             getWithdrawalState(state) { // 获取提现状态
-                switch (state) {
-                    case 1:
-                        return {
-                            className: 'underway',
-                            value: this.$t('account.user_center_history_status_review') // 审核中
-                        }
-                    case 2:
-                    case 3:
-                        return {
-                            className: 'underway',
-                            value: this.$t('account.user_center_history_status_withdrawal') // 提现中
-                        }
-                    case 4:
-                        return {
-                            className: 'fail',
-                            value: this.$t('account.user_center_history_status_repeal') // 已撤销
-                        }
-                    case 5:
-                        return {
-                            className: 'fail',
-                            value: this.$t('account.user_center_history_status_fail') // 失败
-                        }
-                    case 6:
-                        return {
-                            className: 'success',
-                            value: this.$t('account.user_center_history_status_complete') // 已完成
-                        }
-                    default:
-                        return {
-                            className: 'underway',
-                            value: null
-                        }
+                if(state.withdrawType === 3){
+                    switch (state.status) {
+                        case 1:
+                            return {
+                                className: 'underway',
+                                value: this.$t('usercontent.user77') // 待审核
+                            }
+                        case 2:
+                            return {
+                                className: 'success',
+                                value: this.$t('account.user_center_history_status_complete') // 已完成
+                            }
+                        case 3:
+                        case 4:
+                            return {
+                                className: 'fail',
+                                value: this.$t('account.user_center_history_status_fail') // 失败
+                            }
+                    }
+                }else{
+                    switch (state.status) {
+                        case 1:
+                            return {
+                                className: 'underway',
+                                value: this.$t('account.user_center_history_status_review') // 审核中
+                            }
+                        case 2:
+                        case 3:
+                            return {
+                                className: 'underway',
+                                value: this.$t('account.user_center_history_status_withdrawal') // 提现中
+                            }
+                        case 4:
+                            return {
+                                className: 'fail',
+                                value: this.$t('account.user_center_history_status_repeal') // 已撤销
+                            }
+                        case 5:
+                            return {
+                                className: 'fail',
+                                value: this.$t('account.user_center_history_status_fail') // 失败
+                            }
+                        case 6:
+                            return {
+                                className: 'success',
+                                value: this.$t('account.user_center_history_status_complete') // 已完成
+                            }
+                        default:
+                            return {
+                                className: 'underway',
+                                value: null
+                            }
+                    }
                 }
+
             },
             todetail(d){
                console.log(d.params)
@@ -485,6 +514,10 @@
 
                     span {
                         padding-right: 0.34rem;
+                        strong{
+                            display: inline-block;
+                            width: 1rem;
+                        }
                     }
                 }
 

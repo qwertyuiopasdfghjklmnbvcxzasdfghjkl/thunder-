@@ -69,7 +69,7 @@
         display: flex;
         height: 0.8rem;
         border-radius: 0.08rem;
-        border: 0.01rem solid #4B5875;
+        border: 0.02rem solid #4B5875;
 
         > div {
             display: flex;
@@ -82,7 +82,7 @@
         > div:nth-of-type(1) {
             width: 0.78rem;
             height: 0.78rem;
-            border-right: 0.01rem solid #4B5875;
+            border-right: 0.02rem solid #4B5875;
         }
 
         > div:nth-of-type(3) {

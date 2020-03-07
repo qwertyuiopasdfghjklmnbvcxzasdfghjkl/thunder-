@@ -1,20 +1,20 @@
 <template>
-    <div class="ad_law box">
+    <div class="ad_law box" v-tap="{methods: toDetail}">
         <div class="top">
-            <p><span class="ft-c-red">{{type}}</span>USDT</p>
+            <p><span :class="[item.ad_type === 2 ? 'sell' : 'buy']">{{type}}</span>{{item.symbol}}</p>
             <span class="status">{{status}}</span>
         </div>
         <div class="tab">
             <div>
-                <p>132</p>
+                <p>{{item.cur_price}} {{item.currency}}</p>
                 <span>{{$t('exchange.exchange_price')}}</span>
             </div>
             <div>
-                <p>100</p>
-                <span>{{$t('market.buy_total')}}</span>
+                <p>{{item.symbol_count}} {{item.symbol}}</p>
+                <span>{{$t('exchange.exchange_amount')}}</span>
             </div>
             <div>
-                <p>02-10</p>
+                <p>{{item.updated_at}}</p>
                 <span>{{$t('exchange.exchange_date')}}</span>
             </div>
         </div>
@@ -24,21 +24,26 @@
 <script>
     export default {
         name: "adLaw",
+        props:['item'],
         data() {
             return {}
         },
         computed:{
             type(){
-                return this.$t('otc_exchange.otc_exchange_buy')
+                return this.$t(this.item.ad_type === 2 ? 'exchange.exchange_sell' : 'exchange.exchange_buy')
             },
             status(){
-                return this.$t('public0.public51')
+                return this.item.status === 3 ? this.$t('gcox_otc.deleted') : this.$t('otc_ad.otc_ad_completed')
             }
         },
         created() {
 
         },
-        methods: {}
+        methods: {
+            toDetail(){
+                this.$router.push({name: 'adManageDetail',query: this.item})
+            }
+        }
     }
 </script>
 
