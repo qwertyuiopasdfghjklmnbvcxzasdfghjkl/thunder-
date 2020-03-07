@@ -84,7 +84,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import otcApi from '@/api/qotc'
+import otcApi from '@/api/otc'
 import numUtils from '@/assets/js/numberUtils'
 import utils from '@/assets/js/utils'
 import Dialog from '@/components/common/dialog'

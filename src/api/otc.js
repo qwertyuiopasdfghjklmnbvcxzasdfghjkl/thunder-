@@ -528,4 +528,16 @@ const exportOTCTradeRecord = function (formData, success, error) {
 }
 otc.exportOTCTradeRecord = exportOTCTradeRecord
 
+// 快速买卖
+const quickMatch = function (data, success, error) {
+  api.post(`${domain}api/v2/otc/orders/match`, data, (res) => {
+    if (res.rst === 1) {
+      success && success(res.data || {})
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+otc.quickMatch = quickMatch
+
 export default otc

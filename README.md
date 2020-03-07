@@ -63,6 +63,6 @@ $ cordova-splash --config=config.xml --splash=splash.png
 ```
 
 alias key0
-password etv123456
+password ltprovip
 
 cordova-hcp build
