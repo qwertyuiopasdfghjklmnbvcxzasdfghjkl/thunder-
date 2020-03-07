@@ -3,8 +3,8 @@
 		<top-back>{{$t('referral.invitation_code')}} <!-- Invitation Code --> </top-back>
 		<div class="page-main poster">
 			<div class="bottom">
-				<p class="f30"><strong>邀请好友到ETV交易所</strong></p>
-				<p class="f24 mt15">一起赚取ETV,最高获得30%交易手续费返佣！</p>
+				<p class="f30"><strong>邀请好友到Thunder交易所</strong></p>
+				<p class="f24 mt15">一起赚取Thunder,最高获得30%交易手续费返佣！</p>
 				<div class="qrcode">
 					<div ref="qrcode"></div>
 					<i class="logo"></i>

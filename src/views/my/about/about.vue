@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <top-back>{{$t('user.about')}}ETV</top-back>
+        <top-back>{{$t('user.about')}}Thunder</top-back>
         <div class="page-main">
             <div class="full">
                 <div class="logo" @click="showConsole">

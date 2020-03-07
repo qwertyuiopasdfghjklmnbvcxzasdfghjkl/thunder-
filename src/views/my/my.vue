@@ -68,12 +68,12 @@
     import myApi from '@/api/user'
 
     export default {
-        components: {
+        components: { 
             railBar
         },
         data() {
             return {
-                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-etv/user/' ,
+                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-thunder/user/' ,
                 user: {},
                 isUseCoinPay: false,
                 messageList: null,
