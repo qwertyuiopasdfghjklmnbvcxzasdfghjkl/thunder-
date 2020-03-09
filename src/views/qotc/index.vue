@@ -36,7 +36,7 @@
 	    			</transition>
 	    		</div>
 	    		<div class="mt25 ui-flex ui-flex-justify f26">
-	    			<span class="grey">参考价格 {{refPrice}} CNY</span>
+	    			<span class="grey">参考价格 {{refPrice}} {{currency}}</span>
 	    			<span class="blue" v-tap="{methods:()=>{isToken = !isToken}}">{{type==1?(isToken?'按金额购买':'按数量购买'):(isToken?'按金额卖出':'按数量卖出')}} <i class="icon_exchange"></i></span>
 	    		</div>
 	    		<div class="mt10 grey f26" v-if="getApiToken">账户余额 {{balance}} {{token}}</div>
@@ -65,7 +65,7 @@
     			</ul>
     		</div>
     	</div>
-    	<span class="icon_ add-advertisement" v-if="getUserInfo.otc" v-tap="{methods:addAdvertisement}"></span>
+    	<router-link class="icon_ add-advertisement" v-if="'有权限发布广告'" tag="span" :to="{name:'qotcAddOrUpdate'}"></router-link>
     	<span class="icon_ online-service" v-tap="{methods:goOnlineService}"></span>
     	<div class="bottom-layer">
     		<template v-if="getApiToken">
@@ -87,6 +87,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import otcApi from '@/api/otc'
+import walletApi from '@/api/wallet'
 import userApi from '@/api/user'
 import numUtils from '@/assets/js/numberUtils'
 import utils from '@/assets/js/utils'
@@ -124,7 +125,7 @@ export default {
 		}
 	},
 	computed:{
-		...mapGetters(['getApiToken','getSysParams','getUserInfo', 'getUserWallets']),
+		...mapGetters(['getApiToken','getUserInfo', 'getUserWallets']),
 		hasAllPays(){
 			return !this.payments.card_number || !this.payments.alipay_number || !this.payments.wechat_number || !this.payments.paypal_number
 		},
@@ -151,9 +152,6 @@ export default {
 		},
 	},
 	watch:{
-		getSysParams(){
-			this.getOtcTokens()
-		},
 		benchSymbolParams() {
 		  this.getBenchSymbolInfo()
 		},
@@ -165,9 +163,10 @@ export default {
 		this.type = this.$route.params.type || 1
 		this.getOtcTokens()
 		this.getPaySettings()
+		this.getBenchSymbolInfo()
 	},
 	methods:{
-		...mapActions(['setUserInfo']),
+		...mapActions(['setUserInfo', 'setUserWallets']),
 		buyOrSell(){
 
 			if(!this.getUserInfo.nickname){
@@ -205,12 +204,17 @@ export default {
 	          currency: this.currency,
 	          symbol: this.token,
 	          direction: this.type,
-	          pay_type:this.payType
+	          payType:this.payType
 	        }
-	        otcApi.quickMatch(res=>{
+	        otcApi.quickMatchAndCreate(_data, res=>{
 	        	// 待完善
+
+	        	if(this.type==2){ //卖币成功刷新用户余额
+	        		this.getAssets()
+	        	}
+	        	this.$router.replace({name:'orderDetail', params:{orderId:res.id}})
 	        },msg=>{
-	        	if(true){ //未匹配成功提示
+	        	if(msg=='AD_NO_ELIGIBLE'){ //未匹配成功提示
 	        		this.notMatched = true
 	        		window._matchTimer = setTimeout(()=>{
 	        			this.notMatched = false
@@ -238,9 +242,6 @@ export default {
 
 		},
 		goOnlineService(){
-
-		},
-		addAdvertisement(){
 
 		},
         hideDialog(key){
@@ -276,7 +277,18 @@ export default {
         			this.payType = 2
         		}
         	})
-        }
+        },
+        getAssets() {
+            walletApi.myAssets({}, (res) => {
+                res = res.filter(item => {
+                    return item.type === 1
+                })
+                res.forEach((item) => {
+                    item.frozenBalance = numUtils.add(item.frozenBalance, item.adFrozenBalance).add(item.loanBalance).toString()
+                })
+                this.setUserWallets(res)
+            })
+        },
 	}
 }
 </script>

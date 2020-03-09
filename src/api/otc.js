@@ -529,8 +529,8 @@ const exportOTCTradeRecord = function (formData, success, error) {
 otc.exportOTCTradeRecord = exportOTCTradeRecord
 
 // 快速买卖
-const quickMatch = function (data, success, error) {
-  api.post(`${domain}api/v2/otc/orders/match`, data, (res) => {
+const quickMatchAndCreate = function (data, success, error) {
+  api.post(`${domain}api/v2/otc/orders/matchAndCreate`, data, (res) => {
     if (res.rst === 1) {
       success && success(res.data || {})
     } else {
@@ -538,6 +538,8 @@ const quickMatch = function (data, success, error) {
     }
   }, error)
 }
-otc.quickMatch = quickMatch
+otc.quickMatchAndCreate = quickMatchAndCreate
+
+
 
 export default otc
