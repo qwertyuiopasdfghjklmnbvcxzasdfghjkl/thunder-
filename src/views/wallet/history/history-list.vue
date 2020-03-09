@@ -12,14 +12,17 @@
 
         <div class="list_box box mt20">
             <div class="list" :class="{active:active==='tokens'}">
-                <label @click="active= active==='tokens'?'':'tokens'">{{$t('home.home56')}}<i><img src="../../../assets/img/tc_meus_b@2x.png"/></i></label>
+                <label @click="active= active==='tokens'?'':'tokens'">{{$t('home.home56')}}<i><img
+                        src="../../../assets/img/tc_meus_b@2x.png"/></i></label>
                 <div>
                     <span @click="symbol='', active=''" :class="{'active': !symbol}">{{$t('home.home59')}}</span>
-                    <span v-for="item in symbolList" @click="symbol = item,  active=''" :class="{'active': symbol === item}">{{item}}</span>
+                    <span v-for="item in symbolList" @click="symbol = item,  active=''"
+                          :class="{'active': symbol === item}">{{item}}</span>
                 </div>
             </div>
             <div class="list" :class="{active:active==='status'}">
-                <label @click="active= active==='status'?'':'status'">{{$t('home.home57')}}<i><img src="../../../assets/img/tc_meus_b@2x.png"/></i></label>
+                <label @click="active= active==='status'?'':'status'">{{$t('home.home57')}}<i><img
+                        src="../../../assets/img/tc_meus_b@2x.png"/></i></label>
                 <div>
                     <span @click="status = ''" :class="{'active': status === ''}">{{$t('home.home59')}}</span>
                     <span @click="status = 1" :class="{'active': status === 1}">{{$t('home.home61')}}</span>
@@ -27,15 +30,17 @@
                 </div>
             </div>
             <div class="list" :class="{active:active==='time'}">
-                <label @click="active= active==='time'?'':'time'">{{$t('home.home58')}}<i><img src="../../../assets/img/tc_meus_b@2x.png"/></i></label>
+                <label @click="active= active==='time'?'':'time'">{{$t('home.home58')}}<i><img
+                        src="../../../assets/img/tc_meus_b@2x.png"/></i></label>
                 <div>
                     <span @click="time = 7" :class="{'active': time === 7}">7 {{$t('exchange.exchange_day')}}</span>
                     <span @click="time = 30" :class="{'active': time === 30}">30{{$t('exchange.exchange_day')}}</span>
-                    <span @click="time = 180" :class="{'active': time === 180}">180{{$t('exchange.exchange_day')}}</span>
+                    <span @click="time = 180"
+                          :class="{'active': time === 180}">180{{$t('exchange.exchange_day')}}</span>
                 </div>
             </div>
         </div>
-        <mt-tab-container v-model="selected"  class="box">
+        <mt-tab-container v-model="selected" class="box">
             <mt-tab-container-item id="tab1">
                 <div class="loadmore-wapper">
                     <mt-loadmore
@@ -56,7 +61,8 @@
                                     <h4><span><strong>{{item.symbol}}</strong></span><span>{{item.amount}}</span></h4>
                                     <p>{{new Date(item.updatedAt).format()}}</p>
                                 </div>
-                                <p :class="[getRechargeState(item.status).className]">{{getRechargeState(item.status).value}}</p>
+                                <p :class="[getRechargeState(item.status).className]">
+                                    {{getRechargeState(item.status).value}}</p>
                             </li>
                         </ul>
                         <noMoreData v-if="noMoreData"/>
@@ -79,12 +85,14 @@
                             :autoFill="false"
                             ref="loadmoreWithdrawal">
                         <ul class="tab_list box">
-                            <li v-for="item in listWithdrawal" v-tap="{methods: todetail, params:{data: item, form: 2}}">
+                            <li v-for="item in listWithdrawal"
+                                v-tap="{methods: todetail, params:{data: item, form: 2}}">
                                 <div>
                                     <h4><span><strong>{{item.symbol}}</strong></span><span>{{item.amount}}</span></h4>
                                     <p>{{new Date(item.updatedAt).format()}}</p>
                                 </div>
-                                <p :class="[getWithdrawalState(item.status).className]">{{getWithdrawalState(item).value}}</p>
+                                <p :class="[getWithdrawalState(item).className]">
+                                    {{getWithdrawalState(item).value}}</p>
                             </li>
                         </ul>
                         <noMoreData v-if="noMoreDataWithdrawal"/>
@@ -116,8 +124,8 @@
                 time: 7,
                 allLoaded: false,
                 allWithdrawalLoaded: false,
-                page:1,
-                withdrawalPage:1,
+                page: 1,
+                withdrawalPage: 1,
                 sport: '',
                 sportWithdrawal: '',
                 list: [],
@@ -126,58 +134,58 @@
                 noMoreDataWithdrawal: false,
                 noData: false,
                 noDataWithdrawal: false,
-                active:''
+                active: ''
             }
         },
-        computed:{
+        computed: {
             ...mapGetters(['getUserWallets']),
-            paramsChange(){
-                return{
+            paramsChange() {
+                return {
                     direction: 1,
                     pageSize: 10,
                     symbol: this.symbol,
-                    time: this.time+'days',
+                    time: this.time + 'days',
                     status: this.status,
                 }
             },
-            paramsChange2(){
-                return{
+            paramsChange2() {
+                return {
                     direction: 2,
                     pageSize: 10,
                     symbol: this.symbol,
-                    time: this.time+'days',
+                    time: this.time + 'days',
                     status: this.status
                 }
             },
-            symbolList(){
+            symbolList() {
                 return this.getUserWallets.map(item => {
                     return item.symbol
                 })
             }
         },
-        watch:{
-            selected(){
+        watch: {
+            selected() {
                 this.active = ''
                 let query = {
                     symbol: this.symbol,
                     time: this.time,
                     status: this.status,
-                    tab:this.selected
+                    tab: this.selected
                 }
-                this.$router.replace({name:'history',query:query})
+                this.$router.replace({name: 'history', query: query})
             },
-            paramsChange(){
+            paramsChange() {
                 let query = {
                     symbol: this.symbol,
                     time: this.time,
                     status: this.status,
-                    tab:this.selected
+                    tab: this.selected
                 }
-                this.$router.replace({name:'history',query:query})
+                this.$router.replace({name: 'history', query: query})
                 this.list = []
                 this.getList()
             },
-            paramsChange2(){
+            paramsChange2() {
                 this.listWithdrawal = []
                 this.getWithdrawalList()
             }
@@ -191,9 +199,9 @@
             this.getWithdrawalList()
         },
         methods: {
-            hideActive(e){
+            hideActive(e) {
                 let $tar = $(e.target)
-                if($tar.hasClass('list_box') || $tar.parents('.list_box').length){
+                if ($tar.hasClass('list_box') || $tar.parents('.list_box').length) {
 
                 } else {
                     this.active = ''
@@ -206,8 +214,8 @@
                 this.getList()
             },
             getList() {
-                let params = {page:this.page}
-                params = Object.assign(params,this.paramsChange)
+                let params = {page: this.page}
+                params = Object.assign(params, this.paramsChange)
                 wallet.listDepositHistory(params, res => {
                     if (this.sport === 'bottom') { // 加载更多数据
                         this.allLoaded = false
@@ -244,8 +252,8 @@
                 this.allWithdrawalLoaded = true
             },
             getWithdrawalList() {
-                let params = {page:this.withdrawalPage}
-                params = Object.assign(params,this.paramsChange2)
+                let params = {page: this.withdrawalPage}
+                params = Object.assign(params, this.paramsChange2)
                 wallet.listDepositHistory(params, res => {
                     if (this.sportWithdrawal === 'bottom') { // 加载更多数据
                         this.allWithdrawalLoaded = false
@@ -287,14 +295,12 @@
                         className: 'success',
                         value: this.$t('account.user_center_history_status_success') // 成功
                     }
-                } else if(state === 3 || state === 4){
+                } else if (state === 3 || state === 4) {
                     return {
                         className: 'fail',
                         value: this.$t('account.user_center_history_status_fail') // 失败
                     }
-                }
-
-                else {
+                } else {
                     return {
                         className: null,
                         value: null
@@ -302,7 +308,7 @@
                 }
             },
             getWithdrawalState(state) { // 获取提现状态
-                if(state.withdrawType === 3){
+                if (state.withdrawType === 3) {
                     switch (state.status) {
                         case 1:
                             return {
@@ -321,7 +327,7 @@
                                 value: this.$t('account.user_center_history_status_fail') // 失败
                             }
                     }
-                }else{
+                } else {
                     switch (state.status) {
                         case 1:
                             return {
@@ -358,11 +364,11 @@
                 }
 
             },
-            todetail(d){
-               console.log(d.params)
+            todetail(d) {
+                console.log(d.params)
                 let data = d.params.data
                 let form = d.params.form
-                this.$router.push({name: 'history-detail',params:{data: data, form: form}})
+                this.$router.push({name: 'history-detail', params: {data: data, form: form}})
             },
         }
     }
@@ -371,7 +377,7 @@
 <style scoped lang="less">
     @bgc: #2f3646;
     @brc: #4B5875;
-    .mint-navbar{
+    .mint-navbar {
         background: none;
     }
 
@@ -383,9 +389,10 @@
         position: relative;
 
         .list {
-            flex:1;
+            flex: 1;
             text-align: center;
             color: #4B5875;
+
             & > div {
                 display: none;
                 position: absolute;
@@ -399,7 +406,7 @@
                 flex-wrap: wrap;
                 border-radius: 0.12rem;
                 z-index: 9;
-                box-shadow:0 0 0.12rem 0 rgba(0, 0, 0, 0.06);
+                box-shadow: 0 0 0.12rem 0 rgba(0, 0, 0, 0.06);
 
                 &:before {
                     position: absolute;
@@ -506,7 +513,10 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.3rem 0;
-            &+li {border-top: 0.02rem solid #1D273C;}
+
+            & + li {
+                border-top: 0.02rem solid #1D273C;
+            }
 
             div {
                 h4 {
@@ -514,7 +524,8 @@
 
                     span {
                         padding-right: 0.34rem;
-                        strong{
+
+                        strong {
                             display: inline-block;
                             width: 1rem;
                         }
@@ -528,30 +539,50 @@
             }
         }
     }
+
     .history-tabs {
         margin-top: 0.9rem;
         position: relative;
         z-index: 1;
         /*/deep/ .mint-navbar {border-bottom: 1px solid #eee;}*/
+
         /deep/ .mint-tab-item {
             height: 0.9rem;
             color: #4B5875;
             padding: 0;
+
             &.is-selected {
-                color: #0C6AC9; border-bottom: none; margin-bottom: 0;
-                .mint-tab-item-label span{
+                color: #0C6AC9;
+                border-bottom: none;
+                margin-bottom: 0;
+
+                .mint-tab-item-label span {
                     border-bottom: 2px solid #0C6AC9;
                     margin-bottom: -2px;
                 }
             }
+
             .mint-tab-item-label {
                 font-size: 0.3rem;
                 line-height: 0.9rem;
-                span {display: inline-block; height: 100%;}
+
+                span {
+                    display: inline-block;
+                    height: 100%;
+                }
             }
         }
     }
-    .fail {color: #F07180;}
-    .success {color: #01C89F;}
-    .underway {color: #999;}
+
+    .fail {
+        color: #F07180;
+    }
+
+    .success {
+        color: #01C89F;
+    }
+
+    .underway {
+        color: #999;
+    }
 </style>

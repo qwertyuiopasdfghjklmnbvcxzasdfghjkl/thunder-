@@ -118,7 +118,8 @@
             goMarket(data) {
                 // console.log(data)
                 let item = data.data
-                this.$router.push({name: 'exchange', params: {market: `${item.currencySymbol}_${item.baseSymbol}`}})
+                localStorage.market = `${item.currencySymbol}_${item.baseSymbol}`
+                this.$router.push({name: 'exchange'})
             },
             withdrawal() {
                 if (Number(this.symbolInfo.withdrawFlag) !== 1) {

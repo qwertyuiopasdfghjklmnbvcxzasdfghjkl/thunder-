@@ -5,7 +5,7 @@
             <img :src="orignal+getUserInfo.headerImagePath" @error="setDefaultIcon($event)" v-else>
         </div>
         <p>Thunder PRO</p>
-        <div class="phone">
+        <div class="phone" v-tap="{methods: linke}">
             <img src="../../../assets/img/svg/service.svg">
         </div>
     </div>
@@ -32,6 +32,9 @@
             setDefaultIcon(e){
                 let tar = e.currentTarget
                 tar.src = img
+            },
+            linke(){
+                this.$router.push({name: 'online'})
             },
         }
     }
@@ -66,11 +69,14 @@
         font-size: 0.36rem;
     }
     .phone{
-        width: 0.4rem;
-        height: 0.4rem;
+        width: 0.8rem;
+        height: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         img{
-            width: 100%;
-            min-height: 100%;
+            width: 0.4rem;
+            height: 0.4rem;
         }
     }
 }

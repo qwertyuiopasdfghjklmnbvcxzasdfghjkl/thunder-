@@ -1,4 +1,4 @@
-//let domain = process.env.NODE_ENV === 'development' ? 'thunder-test.lab.ssss.so' : location.host.split(':')[0]
+// let domain = process.env.NODE_ENV === 'development' ? 'thunder-test.lab.ssss.so' : location.host.split(':')[0]
 let domain = process.env.NODE_ENV === 'development' ? 'ltpro.vip' : location.host.split(':')[0]
 
 
@@ -17,6 +17,7 @@ const config = {
   http: http,
   url: `${http}${domain}`,
   protocol: protocol,
+
   brand: 'Thunder',
   version:'1.0.0',
   updateInfo:{  //更新日志

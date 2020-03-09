@@ -31,6 +31,11 @@
                     {
                         route: 'resetPW',
                         name: this.$t('account.user_center_change_password'),
+                    },
+                    {
+                        route: 'safe',
+                        name: this.$t('public0.public159'),
+                        small: `<span style="color:#999">${this.$t('account.user_center_state_bind')}</span>`
                     }
                 ],
                 userInfo: {},
@@ -54,11 +59,11 @@
                 } else {
                     this.data1[0].small = `<span style="color:#999">${this.$t('user.noBind')}</span>`
                 }
-                /*if(this.getUserInfo.mobileAuthEnable === 1){
+                if(this.getUserInfo.mobileAuthEnable === 1){
                     this.data1[1].small = `<span style="color:#999">${this.$t('account.user_center_state_bind')}</span>`
                 } else {
                     this.data1[1].small = `<span style="color:#999">${this.$t('user.noBind')}</span>`
-                }*/
+                }
             }
         }
     }

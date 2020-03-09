@@ -20,7 +20,7 @@
         <cp-adjust v-model="formData.price" v-if="!isMarket" :accuracy="accuracy.fixedNumber" class="mt30" @keyDown="showPercent=false"></cp-adjust>
         <p class="price-placeholder mt30" v-if="isMarket">{{$t('exchange.exchange_market_price')}}</p>
         <p class="mt20">
-            ≈
+            {{$t('home.home47')}}:
             <valuation :lastPrice="formData.price" :baseSymbol="baseSymbol"/>
         </p>
         <div class=" mt20">
@@ -30,15 +30,16 @@
                        :tip="$t('home.home40')+'('+(isMarket ? (isBuy ?baseSymbol:currentSymbol):currentSymbol)+')'" @keyDown="showPercent=false"></cp-adjust>
         </div>
 
-        <!--<div class="range-percent mt20">-->
-            <!--<div slot="start" class="dots"-->
-                 <!--:class="{d2:percent===25,d3:percent===50,d4:percent===75,d5:percent===100, active:showPercent}">-->
-                <!--<span @click="percent=25, showPercent = true">25%</span>-->
-                <!--<span @click="percent=50, showPercent = true">50%</span>-->
-                <!--<span @click="percent=75, showPercent = true">75%</span>-->
-                <!--<span @click="percent=100, showPercent = true">100%</span>-->
-            <!--</div>-->
-        <!--</div>-->
+        <div class="range-percent mt30">
+            <div slot="start" class="dots"
+                 :class="{d2:percent>=20,d3:percent>=40,d4:percent>=60,d5:percent>=80, d6:percent>=100, active:showPercent}">
+                <span @click="percent=20, showPercent = true"><!--20%--></span>
+                <span @click="percent=40, showPercent = true"><!--40%--></span>
+                <span @click="percent=60, showPercent = true"><!--60%--></span>
+                <span @click="percent=80, showPercent = true"><!--80%--></span>
+                <span @click="percent=100, showPercent = true"><!--100%--></span>
+            </div>
+        </div>
         <div class="total-input" v-if="!isMarket">
 
             <numberbox v-model="formData.total" :accuracy="accuracy.amountAccu" :placeholder="`${$t('exchange.exchange_total')}(${baseSymbol})`"></numberbox>
@@ -519,7 +520,7 @@
     @c_buy: #0EB574;
     @c_sell: #E01C37;
     @c_light: #666;
-    @c_board: #B9D0CF;
+    @c_board: #95b7bf;
     .c_light {
         color: @c_light;
         height: 0.32rem;
@@ -645,7 +646,7 @@
 
     .left .range-percent {
         position: relative;
-        height: 0.32rem;
+        height: 0.4rem;
     }
 
     .left .range-percent p {
@@ -660,18 +661,34 @@
         right: 0;
         display: flex;
         justify-content: space-between;
+        &:after{
+            width: 100%;
+            height: 0.04rem;
+            position: absolute;
+            background: #4B5875;
+            top: 0.18rem;
+            left: 0;
+            content: '';
+        }
     }
 
     .left .range-percent .dots span {
         z-index: 1;
-        width: 0.72rem;
+        width: 0.4rem;
         height: 0.4rem;
-        border: 0.02rem solid #eee;
-        font-size: 0.2rem;
-        text-align: center;
-        line-height: 0.4rem;
-        color: #999;
-        border-radius: 3px;
+        position: relative;
+        z-index: 9;
+        &:after{
+            content: '';
+            width: 0.14rem;
+            height: 0.3rem;
+            background: #4B5875;
+            display: block;
+            top:0.05rem;
+            left: 0.14rem;
+            position: absolute;
+            border-radius: 0.04rem;
+        }
     }
 
     .left .range-percent /deep/ .mt-range-runway {
@@ -691,12 +708,47 @@
         background-color: @c_buy;
     }
 
-    .left .range-percent .dots.active.d2 span:nth-of-type(1),
-    .left .range-percent .dots.active.d3 span:nth-of-type(2),
-    .left .range-percent .dots.active.d4 span:nth-of-type(3),
-    .left .range-percent .dots.active.d5 span:nth-of-type(4) {
-        color: #3B48C8;
-        border-color: #3B48C8;
+    .left .range-percent .dots.active.d2 span:nth-of-type(1):after,
+    .left .range-percent .dots.active.d3 span:nth-of-type(2):after,
+    .left .range-percent .dots.active.d4 span:nth-of-type(3):after,
+    .left .range-percent .dots.active.d5 span:nth-of-type(4):after,
+    .left .range-percent .dots.active.d6 span:nth-of-type(5):after {
+        background:@c_board;
+        width: 0.2rem;
+        top: 0;
+        height: 0.4rem;
+        content: '≡';
+        color: #eee;
+        font-size: 0.2rem;
+        line-height: 0.4rem;
+        text-align: center;
+        z-index: 9;
+        position: relative;
+    }
+    .left .range-percent .dots.active:before{
+        width: 0;
+        height: 0.04rem;
+        position: absolute;
+        background: @c_board;
+        top: 0.18rem;
+        left: 0;
+        content: '';
+        z-index: 8;
+    }
+    .left .range-percent .dots.active.d2:before{
+        width: 0.2rem;
+    }
+    .left .range-percent .dots.active.d3:before{
+        width: calc(~"25% + 0.2rem");
+    }
+    .left .range-percent .dots.active.d4:before{
+        width: calc(~"50% + 0.01rem");
+    }
+    .left .range-percent .dots.active.d5:before{
+        width: calc(~"75% + 0.01rem");
+    }
+    .left .range-percent .dots.active.d6:before{
+        width: 100%;
     }
 
     .left .space-area {

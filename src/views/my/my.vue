@@ -129,6 +129,11 @@
                         icon: require('@/assets/img/icon_ad.png'),
                         name: this.$t('otc_ad.otc_ad_management'),
                     },
+                    {
+                        route: 'referral',  // 邀请好友
+                        icon: require('@/assets/img/invite.png'),
+                        name: this.$t('referral.invite_friends'),
+                    },
                 ],
                 data3: [
                     {
