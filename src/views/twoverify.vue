@@ -173,9 +173,11 @@ export default {
         this.getInfo()
         Tip({type: 'success', message: this.$t(`user.loginSuccess`)})
         if (this.curl) {
-            this.$router.replace({path: this.curl})
+            // this.$router.replace({path: this.curl})
+            this.$router.push({name: 'home'})
         } else {
-            this.$router.replace({path: '/'})
+            // this.$router.replace({path: '/'})
+            this.$router.push({name: 'home'})
         }
       }, (msg) => {
         this.locked = false
@@ -229,9 +231,9 @@ export default {
 
 <style lang="less" scoped>
 .second-content {
-  padding: .3rem;
+  /*padding: .3rem;*/
   margin-top: .2rem;
-  background-color: #fff;
+  /*background-color: #fff;*/
   border-radius: 4px;
   /deep/ .mint-navbar {border-bottom: 1px solid #eee;}
   /deep/ .mint-tab-item {
@@ -289,10 +291,11 @@ export default {
         width: 100%;
         height: .8rem;
         font-size: .3rem;
-        color: #333;
-        background-color: #fff;
-        border: 2px solid #ccc;
+        color: #ffffff;
+        background-color: #151C2C;
+        /*border: 2px solid #ccc;*/
         border-radius: 4px;
+          border: none;
         padding: 0 0.3rem;
         line-height: 1rem;
       }

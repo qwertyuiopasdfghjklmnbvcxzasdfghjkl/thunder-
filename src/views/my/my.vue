@@ -68,12 +68,12 @@
     import myApi from '@/api/user'
 
     export default {
-        components: {
+        components: { 
             railBar
         },
         data() {
             return {
-                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-etv/user/' ,
+                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-thunder/user/' ,
                 user: {},
                 isUseCoinPay: false,
                 messageList: null,
@@ -128,6 +128,11 @@
                         route: 'adManage',  // otc 功能 我的广告
                         icon: require('@/assets/img/icon_ad.png'),
                         name: this.$t('otc_ad.otc_ad_management'),
+                    },
+                    {
+                        route: 'referral',  // 邀请好友
+                        icon: require('@/assets/img/invite.png'),
+                        name: this.$t('referral.invite_friends'),
                     },
                 ],
                 data3: [

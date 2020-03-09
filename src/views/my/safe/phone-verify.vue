@@ -5,7 +5,8 @@
     </top-back>
 
     <div class="page-main">
-      <p class="mt20 f24 ft-c-main"  v-if="getUserInfo.mobileAuthEnable === 1">（{{$t('public0.public245')}}）<!--为了您的资产安全，不建议您解除手机短信验证码功能。--></p>
+      <p class="mt20 f24 ft-c-main"  v-if="getUserInfo.mobileAuthEnable === 1">
+        （{{$t('public0.public245')}}）<!--为了您的资产安全，不建议您解除手机短信验证码功能。--></p>
       <!--1、绑定短信认证-->
       <div class="input_cont mt20">
         <div class="form">

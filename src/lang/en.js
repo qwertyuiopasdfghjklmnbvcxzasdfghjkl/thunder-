@@ -2501,7 +2501,7 @@ export default {
 			"user_center_new_key": "Create New Key",
 			"user_center_help_account": "Assets",
 			"user_center_login_location": "Login Location",
-			"my_stake": "My ETV",
+			"my_stake": "My Thunder",
 			"unread_message": "Unread",
 			"trading_wallet": "Trading",
 			"estimated_value_in_order": "In Order",

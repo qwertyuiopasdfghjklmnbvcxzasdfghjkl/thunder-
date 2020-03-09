@@ -46,13 +46,13 @@
                                 {{$t('account.user_center_send_SMS')}}<!--发送验证码--> {{disabled ? `（${time}s）` : ''}}
                             </mt-button>
                         </div>
-                        <div class="findpwd-content-row email">
-                            <ui-input type="email"
-                                      :label="$t('otc_exchange.otc_exchange_Email')"
-                                      v-model="formData.email"
-                                      :placeholder="true"
-                                      :title="$t('otc_exchange.otc_exchange_Email')"></ui-input><!--邮箱-->
-                        </div>
+                        <!--<div class="findpwd-content-row email">-->
+                            <!--<ui-input type="email"-->
+                                      <!--:label="$t('otc_exchange.otc_exchange_Email')"-->
+                                      <!--v-model="formData.email"-->
+                                      <!--:placeholder="true"-->
+                                      <!--:title="$t('otc_exchange.otc_exchange_Email')"></ui-input>&lt;!&ndash;邮箱&ndash;&gt;-->
+                        <!--</div>-->
                     </div>
 
                     <!--邮箱注册-->
@@ -137,7 +137,7 @@
                        v-validate="'required|password'">
                 <input type="password" name="passwordConfirm" v-model="formData.passwordConfirm"
                        v-validate="'required|passwordAgain'">
-                <input name="email" v-model="formData.email" v-validate="'required|email'">
+                <input name="email" v-model="formData.email" v-validate="">
                 <input name="ref" v-model="formData.ref" v-validate="">
             </div>
         </div>
@@ -203,6 +203,7 @@
         watch: {
             'formData.registerType'() {
                 this.$validator.reset()
+                this.disabled = false
             },
         },
         created() {
@@ -534,6 +535,11 @@
     }
 
     .back_home {
+        display: flex;
+        height: 0.9rem;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
         img {
             width: 0.28rem;
         }

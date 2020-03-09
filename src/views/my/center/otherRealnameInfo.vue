@@ -92,7 +92,7 @@
               <div class="row-description"><p>{{$t('public0.public103').format(brand)}}<!--请您上传一张手持证件及写有“{0}”和当天日期的卡片的照片。请确保头像、证件内容、卡片上“{0}”和当天日期内容清晰可见。--></p></div>
             </div>
           </div>
-         
+
           <mt-button type="primary" :disabled="locked" size="large" class="mt50 mb50" v-tap="{methods:identity2}">{{$t('account.user_complete')}}<!--完成--></mt-button>
       </form>
     </div>
@@ -237,7 +237,7 @@ export default {
             closeOnClickModal: false
           }).then(action => {
             if (action === 'confirm') {
-              this.$router.push({name: 'center'})
+              this.$router.push({name: 'ucenter'})
             }
           })
         }, (msg) => {

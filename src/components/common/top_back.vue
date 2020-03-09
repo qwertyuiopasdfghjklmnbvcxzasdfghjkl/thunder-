@@ -82,15 +82,20 @@
             left: 0;
             background: url('../../assets/img/icon_back_b@3x.png') no-repeat 0.3rem center;
             background-size: 0.2rem auto;
-            z-index: 9;
+            z-index: 99;
         }
 
         .btn-left{
             position: absolute;
-            top: 0.2rem;
-            line-height: 0.5rem;
-            left: 0.3rem;
+            top: 0;
+            /*height: 0.9rem;*/
+            width: 0.8rem;
+            left: 0;
             font-size: 0.32rem;
+            z-index: 9;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-home {
             position: absolute;
@@ -103,10 +108,15 @@
 
         .btn-right {
             position: absolute;
-            top: 0.2rem;
-            line-height: 0.5rem;
-            right: 0.3rem;
+            top: 0;
+            /*height: 0.9rem;*/
+            width: 0.8rem;
+            right: 0;
             font-size: 0.32rem;
+            z-index: 999;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         &.dark {
