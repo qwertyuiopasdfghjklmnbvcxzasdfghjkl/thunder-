@@ -18,9 +18,9 @@ export default {
           return '--'
         }
         let curMarketPrice = curMarketBtc ? numUtils.mul(curMarketBtc, this.getUSDCNY).toFixed(6) : this.getUSDCNY
-        return numUtils.mul(lastPrice, curMarketPrice).toFixed(6).toMoney()
+        return numUtils.mul(lastPrice, curMarketPrice).toFixed(2).toMoney()
       } else {
-        return '0.000000'
+        return '0.00'
       }
     }
   }

@@ -5,7 +5,7 @@ const last24h = {open: '0', high: '0', bottom: '0', close: '0', vol: '0', rfvol:
 const fixed = 8
 
 const state = {
-  initMarket: 'ETV_USDT', // 初始市场
+  initMarket: '', // 初始市场
   marketList: null, // 交易市场列表
   last24h: last24h,
   marketConfig: null,
@@ -37,6 +37,9 @@ const getters = {
 const mutations = {
   updateMarketList (state, marketList) {
     state.marketList = marketList
+  },
+  updateInitMarket (state, InitMarket) {
+    state.initMarket = InitMarket
   },
   updateLast24h (state, last24h) {
     state.last24h = last24h
@@ -128,6 +131,9 @@ const actions = {
   },
   setEntrustNewPrice (context, price) {
     context.commit('updateEntrustNewPrice', price)
+  },
+  setInitMarket (context, data) {
+    context.commit('updateInitMarket', data)
   },
 }
 

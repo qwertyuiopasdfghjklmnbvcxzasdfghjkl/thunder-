@@ -3,95 +3,60 @@
         <top-back>{{$t('home.home34')}}</top-back>
         <div class="page-main">
 
-            <div class="mt35">
-                <p class="success" v-if="state">{{$t('home.home35')}}</p>
-                <div class="cont">
-                    <ui-input :label="$t('home.home08')" v-model="formData.email" :placeholder="true"></ui-input>
-                    <p class="error" v-if="emailError">{{$t('home.home24')}}</p>
-                </div>
-
-                <div class="register-content-button mt80">
-
-                    <mt-button class="circle"
-                               :class="{'unlock': gtLocked}"
-                               type="primary"
-                               size="large"
-                               v-tap="{methods: updatePwd}">{{$t('public0.ok')}}<!--确定--></mt-button>
-
-                </div>
+            <div class="mt_navbar mt20">
+                <label :class="{'active':active==='mail'}"
+                       v-tap="{methods:()=>{this.active='mail'}}">{{$t('login_register.retrieved_by_email')}}</label>
+                <label :class="{'active':active==='phone'}"
+                       v-tap="{methods:()=>{this.active='phone'}}">{{$t('login_register.retrieved_by_cellphone')}}</label>
             </div>
+            <find-p-w-email v-show="active==='mail'"/>
+            <find-p-w-phone v-show="active==='phone'"/>
         </div>
     </div>
 </template>
 
 <script>
-    import UiInput from "../components/uiInput";
-    import userApi from '@/api/user'
 
+    import FindPWEmail from "./login/findPWEmail";
+    import FindPWPhone from "./login/findPWPhone";
     export default {
-        name: 'findpwd',
-        components: {UiInput},
+        components: {FindPWPhone, FindPWEmail},
         data() {
             return {
-                emailError: false,
-                lock: true,
-                state: false,
-                formData:{
-                    email: null
-                }
+                active: 'mail'
             }
         },
-        computed:{
-            gtLocked(){
-                return this.formData.email
-            }
+        computed: {
+
         },
 
         created() {
 
         },
         methods: {
-            updatePwd() {
-                if(this.lock&&this.gtLocked){
-                    this.lock = false;
-                    let reg = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
-                    if(reg.test(this.formData.email)){
-                        this.emailError = false
-                        let data = {
-                            email: this.formData.email,
-                            redirectUrl: ''
-                        }
-                        userApi.forgetPwdSendEmail(data, ()=>{
-                            this.state = true
-                            this.lock = true;
-                        },(msg)=>{
-                            Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
-                            this.lock = true;
-                        })
-                    }else{
-                        this.emailError = true
-                        this.lock = true;
-                    }
-                }
-            },
+
         }
     }
 </script>
 
 
 <style lang="less" scoped>
-    .cont {
-        /*margin-top: 0.55rem;*/
-        position: relative;
+    .mt_navbar{
+        background: none;
+        color: #4B5875;
+        border-bottom: 0.02rem solid #364463;
+        height: 0.6rem;
+        display: flex;
+        align-items: center;
 
-        .error {
-            padding-top: 0.2rem;
-            color: #ff5e2d;
-            font-size: 0.24rem;
+        label{
+            margin: 0 0.2rem;
+            height: 0.6rem;
+            border-bottom: 0.04rem solid transparent;
+            &.active{
+                border-bottom: 0.04rem solid #0C6AC9;
+                color: #ffffff;
+            }
         }
     }
-    .success{
-        color: #1ac27f;
-    }
-
 </style>

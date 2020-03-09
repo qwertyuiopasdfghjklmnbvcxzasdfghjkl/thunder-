@@ -21,7 +21,7 @@
                 <span class="" :class="{sell:(getLast24h.direction!=1)}">{{Number(toFixed(getLast24h.close))}}</span>
                 <small class="f24 pt8 ft-c-dark">≈ <valuation :lastPrice="getLast24h.close" :baseSymbol="baseSymbol"/></small>
             </p>
-            <p class="f24" :class="{sell:(getLast24h.direction!=1)}">{{baseSymbol}}</p>
+            <!--<p class="f24" :class="{sell:(getLast24h.direction!=1)}">{{baseSymbol}}</p>-->
         </div>
         <div class="mt35" v-if="sellBuy!==1">
             <ul class="buy-list f24" ref="parentListBid">
@@ -348,8 +348,8 @@
     .order-book .sell-list li, .order-book .buy-list li {
         display: flex;
         justify-content: space-between;
-        height: 0.5rem;
-        line-height: 0.5rem;
+        height: 0.54rem;
+        line-height: 0.54rem;
         background: url('../../../assets/img/buy-list-bg.png') no-repeat right center;
         background-size: 0% 100%;
     }

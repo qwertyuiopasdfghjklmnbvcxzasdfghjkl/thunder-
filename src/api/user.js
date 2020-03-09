@@ -97,7 +97,7 @@ user.forgetPwdSendEmail = forgetPwdSendEmail
 const forgetPwdChangePwd = function (data, success, error) {
   api.post(`${domain}api/v2/user/resetPwd`, data, (res) => {
     if (res.rst === 1) {
-      success && success()
+      success && success(res)
     } else {
       let msg = ''
       if (res.error) {
@@ -191,6 +191,57 @@ const sendSMSCode = function (data, success, error) {
   }, error)
 }
 user.sendSMSCode = sendSMSCode
+
+// 发送验证码（6位）
+const sendSMSCode6 = function (data, success, error) {
+  let lang = window.localStorage.getItem('lang') || 'zh-CN'
+  switch(lang){
+    case 'zh-CN':
+      lang = 'CN'
+      break
+    case 'cht':
+      lang = 'CNZH'
+      break
+    case 'kr':
+      lang = 'KO'
+      break
+    case 'jp':
+      lang = 'JA'
+      break
+    case 'ar':
+      lang = 'AR'
+      break
+    case 'de':
+      lang = 'DE'
+      break
+    case 'es':
+      lang = 'ES'
+      break
+    case 'fr':
+      lang = 'FR'
+      break
+    case 'it':
+      lang = 'IT'
+      break
+    case 'th':
+      lang = 'TH'
+      break
+    case 'ru':
+      lang = 'RU'
+      break
+    default:
+      lang = 'EN'
+  }
+  data.lang = lang
+  api.post(`${domain}api/v3/individual/sendAuthSms`, data, (res) => {
+    if (res.rst === 1) {
+      success && success(res.msg)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+user.sendSMSCode6 = sendSMSCode6
 
 // 手机重置密码
 const mobileResetPwd = function (data, success, error) {

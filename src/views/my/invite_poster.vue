@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <top-back style="background: #ff9245">{{$t('referral.invitation_code')}} <!-- Invitation Code --> </top-back>
+        <top-back style="background: #ff9245">{{$t('referral.invitation_poster')}} <!-- Invitation Code --> </top-back>
         <div class="page-main poster">
             <div class="bottom">
                 <p class="f30"><strong>{{$t('market.invite_p')}}</strong></p>

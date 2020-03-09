@@ -138,6 +138,7 @@
                 return false
             },
             baseSymbol() {
+                console.log(this.getInitMarket)
                 let symbol = this.market || localStorage.getItem('market') || this.getInitMarket
                 symbol = symbol.split('_')[1]
                 return symbol ? symbol : this.getInitMarket.split('_')[1]
@@ -453,9 +454,11 @@
     }
 
     .icon_kline {
-        width: 0.35rem;
-        height: 0.35rem;
+        width: 0.8rem;
+        height: 0.9rem;
         background-image: url('../../assets/img/sxq_a@2x.png');
+        background-size: 0.4rem;
+        background-position: center;
     }
 
     .market-select {
@@ -585,6 +588,14 @@
         }
     }
     .left_nav{
+        width: 0.8rem;
+        height: 0.9rem;
+        top: 0;
+        left: 0;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         img{
             width:0.3rem
         }

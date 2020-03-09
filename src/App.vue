@@ -106,7 +106,7 @@
             this.stopServer()
         },
         methods: {
-            ...mapActions(['setBTCValuation', 'setUSDCNY', 'setNetworkSignal', 'setBtcValues', 'setMarketList', 'setUserWallets', 'setMarketConfig', 'setApiToken', 'setUserInfo', 'setVersion', 'setSysParams']),
+            ...mapActions(['setBTCValuation', 'setUSDCNY', 'setNetworkSignal', 'setBtcValues', 'setMarketList', 'setUserWallets', 'setMarketConfig', 'setApiToken', 'setUserInfo', 'setVersion', 'setSysParams', 'setInitMarket']),
             getSysparams(){
               marketApi.rateSysparams(res=>{
                 let params = {}
@@ -138,6 +138,7 @@
                     })
                     console.log(list)
                     this.setMarketList(list)
+                    this.setInitMarket(list[0].currencySymbol+'_'+list[0].baseSymbol)
                     this.setBtcValues(list)
                     let config = {}
                     list.forEach((item) => {
@@ -162,7 +163,6 @@
                 } else {
                     fun(data)
                 }
-
             },
             loadLoginInfo() {
                 // console.log('getApiToken===', this.getApiToken)

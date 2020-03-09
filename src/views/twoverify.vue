@@ -173,9 +173,11 @@ export default {
         this.getInfo()
         Tip({type: 'success', message: this.$t(`user.loginSuccess`)})
         if (this.curl) {
-            this.$router.replace({path: this.curl})
+            // this.$router.replace({path: this.curl})
+            this.$router.push({name: 'home'})
         } else {
-            this.$router.replace({path: '/'})
+            // this.$router.replace({path: '/'})
+            this.$router.push({name: 'home'})
         }
       }, (msg) => {
         this.locked = false
