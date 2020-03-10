@@ -11,6 +11,8 @@
                 <div class="user_head">
                     <div class="info" v-tap="{methods:$root.routeTo, to:'center'}">
                         <label>
+                            <!--{{orignal+getUserInfo.headerImagePath}}-->
+                            <!--dev  ? `${http}${domain}/ceph-data/dev/user/` : -->
                             <img src="../../assets/img/user_img@2x.png" v-if="!getUserInfo.headerImagePath">
                             <img :src="orignal+getUserInfo.headerImagePath" @error="setDefaultIcon($event)" v-else>
                         </label>
@@ -73,7 +75,7 @@
         },
         data() {
             return {
-                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-thunder/user/' ,
+                orignal: config.headUrl,
                 user: {},
                 isUseCoinPay: false,
                 messageList: null,

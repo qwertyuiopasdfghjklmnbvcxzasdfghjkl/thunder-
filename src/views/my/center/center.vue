@@ -54,7 +54,7 @@ export default {
         return {
             isShow:false,
             state: null,
-            orignal:config.url+(process.env.NODE_ENV ==='development' ? '/ceph-data/dev/user/':'/ceph-data/produ-thunder/user/'),
+            orignal:config.headUrl,
             data1: [
                 {
                     name: this.$t('account.user_center_account'),

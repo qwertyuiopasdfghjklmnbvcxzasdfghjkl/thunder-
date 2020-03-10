@@ -19,7 +19,7 @@
         data() {
             return {
                 src: img,
-                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-thunder/user/'
+                orignal: config.headUrl
             }
         },
         computed:{
