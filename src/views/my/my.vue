@@ -43,6 +43,8 @@
             <div class="mt20 box full">
                 <rail-bar :item="kyc">
                     <div>
+                        <span class="state wait"  v-if="showVerifyState(0)">{{$t('account.user_center_unverified')}}</span>
+                        <!--未提交-->
                         <span class="state wait"  v-if="showVerifyState(1)">{{$t('public0.public37')}}</span>
                         <!--待审核-->
                         <span class="state wait" v-if="showVerifyState(4)">{{$t('public0.public151')}}</span>
@@ -213,19 +215,17 @@
                 })
             },
             showVerifyState(targetVerifyState) { // 实名验证状态
-                if (this.userState.verifyTimes <= 3) {
-                    if (this.userState.verifyTimes === 3) {
-                        if (this.userState.verifyState === 0) {
+
+                    if (this.userState.verifyTimes > 0) {
+                        if(this.userState.verifyState === 0){
                             return targetVerifyState === 3
-                        } else {
-                            return targetVerifyState === this.userState.verifyState
                         }
+                        return targetVerifyState === this.userState.verifyState
                     } else {
+
                         return targetVerifyState === this.userState.verifyState
                     }
-                } else {
-                    return targetVerifyState === 3
-                }
+
             },
             getMessageList() {
                 // 参数为空时获取所有未读消息
