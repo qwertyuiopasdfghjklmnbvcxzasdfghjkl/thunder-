@@ -22,6 +22,7 @@
 
 <script>
 import otcApi from '@/api/otc'
+import { mapGetters } from 'vuex'
 export default {
   name: 'paypal',
   data () {
@@ -32,6 +33,9 @@ export default {
       }
     }
   },
+  computed:{
+    ...mapGetters(['getUserInfo']),
+  },
   created () {
     this.loadData()
   },
@@ -40,7 +44,7 @@ export default {
       otcApi.getPaySettings((res) => {
         // PayPal
         this.paypalData = {
-          paypal_name: res.real_name,
+          paypal_name: this.getUserInfo.userRealName,
           paypal_number: res.data.paypal_number
         }
       }, (res) => {

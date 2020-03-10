@@ -39,6 +39,7 @@
 import config from '@/api/config'
 import utils from '@/assets/js/utils'
 import otcApi from '@/api/otc'
+import { mapGetters } from 'vuex'
 export default {
   name: 'wechat',
   data () {
@@ -54,6 +55,9 @@ export default {
       },
     }
   },
+  computed:{
+    ...mapGetters(['getUserInfo']),
+  },
   created () {
     this.loadData()
   },
@@ -63,7 +67,7 @@ export default {
         console.log(res)
         // 微信
         this.wechatData = {
-          wechat_name: res.real_name,
+          wechat_name: this.getUserInfo.userRealName,
           wechat_number: res.data.wechat_number,
           wechat_QRcode: res.data.wechat_image_path
         }

@@ -1,7 +1,7 @@
 import otcApi from '@/api/otc'
 
 let config = {
-  symbol: 'ETH',
+  symbol: 'USDT',
   adsTypes: [
     {id: 1, key: 'otc_exchange.otc_exchange_buy', name: '购买'},
     {id: 2, key: 'otc_exchange.otc_exchange_sell', name: '出售'}

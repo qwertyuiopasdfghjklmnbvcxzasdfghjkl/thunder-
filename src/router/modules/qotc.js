@@ -11,7 +11,7 @@ export default [
 	  meta: {login: true}
 	},
 	{
-	  path: '/qotc/order/:orderId?',
+	  path: '/qotc/order/:orderId',
 	  name: 'orderDetail',
 	  component: () => import('@/views/qotc/order_detail'),
 	  meta: {login: true}

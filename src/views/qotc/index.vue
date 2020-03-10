@@ -24,14 +24,14 @@
 	    			  	<div class="ui-flex ui-flex-justify" v-show="isToken">
 	    			  		<input type="number" name="amount" v-model="amount" class="ui-flex-1" :placeholder="type==1?'请输入购买数量':'请输入卖出数量'">
 	    			  		<span class="f30 grey">{{token}}</span>
-	    			  		<span class="f30 blue ml20" v-show="type==2" v-tap="allIn">{{'全部'}}</span>
+	    			  		<span class="f30 blue ml20" v-show="type==2" v-tap="{methods:allIn}">{{'全部'}}</span>
 	    			  	</div>
 	    			</transition>
 	    			<transition enter-active-class="animated short slideInRight" leave-active-class="animated short slideOutRight">
 	    				<div class="ui-flex ui-flex-justify" v-show="!isToken">
 	    					<span class="f52">￥ </span>
-	    			  		<input type="number" name="amount" v-model="amount" class="ui-flex-1" :placeholder="type==1?'请输入购买金额':'请输入卖出金额'">
-	    			  		<span class="f30 blue" v-show="type==2" v-tap="allIn">{{'全部'}}</span>
+	    			  		<input type="number" name="amount" v-model="currencyCount" class="ui-flex-1" :placeholder="type==1?'请输入购买金额':'请输入卖出金额'">
+	    			  		<span class="f30 blue" v-show="type==2" v-tap="{methods:allIn}">{{'全部'}}</span>
 	    			  	</div>
 	    			</transition>
 	    		</div>
@@ -69,7 +69,7 @@
     	<span class="icon_ online-service" v-tap="{methods:goOnlineService}"></span>
     	<div class="bottom-layer">
     		<template v-if="getApiToken">
-	    		<mt-button type="primary" size="large" v-tap="{methods:buyOrSell}">{{type==1?'立即购买':'立即卖出'}}</mt-button>
+	    		<mt-button type="primary" size="large" :disabled="locked" v-tap="{methods:buyOrSell}">{{type==1?'立即购买':'立即卖出'}}</mt-button>
     		</template>
     		<template v-else>
     			<mt-button type="primary" size="large" v-tap="{methods:$root.routeTo, to:'login', query:{curl:$route.fullPath}}">请登录</mt-button>
@@ -106,6 +106,7 @@ export default {
 			type:1,
 			token:'USDT',
 			amount:'',
+			currencyCount:'',
 			currency:'CNY',
 			isToken:true, //输入金额类型
 			payType:null, //pay_type: "1" 银行卡； "2" 支付宝； "3"微信支付； "4" Paypal；
@@ -121,7 +122,8 @@ export default {
       			freeMode: true
             },
             isShow:false,
-            notMatched:false
+            notMatched:false,
+            locked:false
 		}
 	},
 	computed:{
@@ -157,6 +159,7 @@ export default {
 		},
 		isToken(){
 			this.amount = ''
+			this.currencyCount = ''
 		}
 	},
 	created(){
@@ -188,32 +191,46 @@ export default {
 				this.hasPay?Tip({type:'error', message:'请选择收款方式'}):Tip({type:'error', message:'请添加收款方式'})
 				return
 			}
-			if(Number(this.amount==0)){
-				Tip({type:'error', message:this.type==1?(this.isToken?'请输入购买数量':'请输入购买金额'):(this.isToken?'请输入卖出数量':'请输入卖出金额')})
+			if(this.isToken && Number(this.amount==0)){ //币种模式则币种不能为空
+				Tip({type:'error', message:this.type==1?'请输入购买数量':'请输入卖出数量'})
 				return
 			}
-			if(this.type==2 && this.isToken && numUtils.BN(this.balance).lt(this.amount)){
+			if(!this.isToken && Number(this.currencyCount==0)){ //币种模式则总金额不能为空
+				Tip({type:'error', message:this.type==1?'请输入购买金额':'请输入卖出金额'})
+				return
+			}
+			if(this.type==2 && numUtils.BN(this.balance).lt(this.isToken?this.amount:numUtils.div(this.currencyCount, this.refPrice))){
 				Tip({type:'error', message:this.token+'账户余额不足'})
 				return
 			}
 			this.quickMatch()
 		},
 		quickMatch(){
+			this.locked = true
 			let _data = {
-	          amount: this.amount,
 	          currency: this.currency,
 	          symbol: this.token,
 	          direction: this.type,
-	          payType:this.payType
+	          currencyCount: this.currencyCount
 	        }
-	        otcApi.quickMatchAndCreate(_data, res=>{
-	        	// 待完善
-
+	        if(this.type==2){
+	        	_data.payType = this.payType
+	        }
+	        if(this.isToken){
+	        	_data.amount = this.amount
+	        	_data.currencyCount = utils.toFixed(numUtils.mul(this.amount, this.refPrice), 2)
+	        } else {
+	        	_data.currencyCount = this.currencyCount
+	        	_data.amount = utils.toFixed(numUtils.div(this.currencyCount, this.refPrice), 8)
+	        }
+	        otcApi.quickMatchAndCreate(_data, orderId=>{
+	        	this.locked = false
 	        	if(this.type==2){ //卖币成功刷新用户余额
 	        		this.getAssets()
 	        	}
-	        	this.$router.replace({name:'orderDetail', params:{orderId:res.id}})
+	        	this.$router.replace({name:'orderDetail', params:{orderId:orderId}})
 	        },msg=>{
+	        	this.locked = false
 	        	if(msg=='AD_NO_ELIGIBLE'){ //未匹配成功提示
 	        		this.notMatched = true
 	        		window._matchTimer = setTimeout(()=>{
@@ -239,7 +256,11 @@ export default {
 			this.type = args.type
 		},
 		allIn(){
-
+			if(this.isToken){
+				this.amount = this.balance
+			} else {
+				this.currencyCount = utils.toFixed(numUtils.mul(this.balance, this.refPrice), 2)
+			}
 		},
 		goOnlineService(){
 

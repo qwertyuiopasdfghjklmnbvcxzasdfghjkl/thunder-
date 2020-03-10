@@ -27,6 +27,7 @@
 
 <script>
 import otcApi from '@/api/otc'
+import { mapGetters } from 'vuex'
 export default {
   name: 'page-bankset',
   data () {
@@ -38,6 +39,9 @@ export default {
       },
     }
   },
+  computed:{
+    ...mapGetters(['getUserInfo']),
+  },
   created () {
     this.loadData()
   },
@@ -47,7 +51,7 @@ export default {
         console.log(res)
         // 银行卡
         this.bankData = {
-          card_name: res.real_name,
+          card_name: this.getUserInfo.userRealName,
           card_bank: res.data.card_bank,
           card_number: res.data.card_number,
         }

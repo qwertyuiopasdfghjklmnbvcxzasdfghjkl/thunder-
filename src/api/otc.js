@@ -532,7 +532,7 @@ otc.exportOTCTradeRecord = exportOTCTradeRecord
 const quickMatchAndCreate = function (data, success, error) {
   api.post(`${domain}api/v2/otc/orders/matchAndCreate`, data, (res) => {
     if (res.rst === 1) {
-      success && success(res.data || {})
+      success && success(res.order_id)
     } else {
       error && error(res.msg)
     }

@@ -19,21 +19,21 @@
         </select>
       </div>
       <div class="f30 mt40">价格</div>
-      <div class="kuan ui-flex-1">
-        <select v-model="formData.price_type">
-          <option :value="2">固定价格</option>
-          <option :value="1">溢价价格</option>
-        </select>
-      </div>
       <div class="ui-flex ui-flex-justify">
-        <div class="kuan ui-flex ui-flex-5 ui-flex-justify" :class="{error: errors.has('lowest_price')}">
+        <div class="kuan ui-flex-3">
+          <select v-model="formData.price_type">
+            <option :value="2">固定价格</option>
+            <option :value="1">溢价价格</option>
+          </select>
+        </div>
+        <div class="kuan ui-flex ui-flex-5 ui-flex-justify ml20" :class="{error: errors.has('lowest_price')}">
           <numberbox v-model="formData.lowest_price"  :size="13" :accuracy="2" v-validate="'required|intOrDecimal'" data-vv-name="lowest_price" :placeholder="formData.price_type==2?'交易价格':'可接受的最低单价'"/>
           <span class="grey">{{formData.currency}}</span>
         </div>
-        <div class="kuan ui-flex ui-flex-3 ui-flex-justify ml30" :class="{error: errors.has('price_rate')}" v-show="formData.price_type==1">
-          <numberbox v-model="formData.price_rate" :size="6" :accuracy="2" v-validate="'required|premiumPriceValid'" data-vv-name="price_rate" placeholder="溢价率"/>
-          <span class="grey">%</span>
-        </div>
+      </div>
+      <div class="kuan ui-flex ui-flex-justify" :class="{error: errors.has('price_rate')}" v-show="formData.price_type==1">
+        <numberbox v-model="formData.price_rate" :size="6" :accuracy="2" v-validate="'required|premiumPriceValid'" data-vv-name="price_rate" placeholder="溢价率(正负值)"/>
+        <span class="grey">%</span>
       </div>
       <p class="grey f26 mt10" v-show="formData.price_type==1">交易所溢价后单价： {{ratePrice}}{{formData.currency}}</p>
       <p class="grey f26 mt10">市场参加价： {{refPrice}}{{formData.currency}}</p>
@@ -107,6 +107,7 @@ export default {
     return {
       ad_id:null,
       tokens:[],
+      currencyList: [],
       payments:{},
       refPrice: 0, // 参考价格
       agree:true,
@@ -188,6 +189,7 @@ export default {
     }*/
     this.ad_id = this.$route.params.orderId || null
     this.getOtcTokens()
+    this.getOtcCurrency()
     this.getPaySettings().then(()=>{
       this.fnGetAdvertisementDetail()
     })
@@ -298,6 +300,13 @@ export default {
           console.error(msg)
         })
       }
+    },
+    getOtcCurrency () {
+      otcApi.getCurrencys((data) => { // 获取法币信息
+        this.currencyList = data
+      }, (msg) => {
+        console.error(msg)
+      })
     },
     getOtcTokens(){
       otcApi.getCoinsList((data) => { // 获取币种信息
