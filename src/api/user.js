@@ -229,4 +229,29 @@ const getUserLevel = function (success, error) {
 }
 user.getUserLevel = getUserLevel
 
+
+// 绑定邮箱
+const bindEmail = function (data, success, error) {
+  api.post(`${domain}api/v1/safety/bindEmail`, data, (res) => {
+    if (res.rst === 1) {
+      success && success(res.msg)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+user.bindEmail = bindEmail
+
+// 手机解绑绑定验证
+const validateStatus = function (status, success, error) {
+  api.post(`${domain}api/v1/safety/validateStatus/${status}`, (res) => {
+    if (res.rst === 1) {
+      success && success(res.msg)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+user.validateStatus = validateStatus
+
 export default user

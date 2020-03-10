@@ -2247,7 +2247,10 @@ export default {
 			"OTC_USER_UNFROZEN_BODY": "您已解冻，可进行新的OTC交易",
 			"IEO_PROJECT_AFTER_END": "申购已结束",
 			"OTC_RELEASE_SYMBOL_BODY": "已确认收款，释放代币，请查收。",
-			"ENTRUST_ASSET_REQUIRE_NOT_SATISFIED": "委托金额不足"
+			"ENTRUST_ASSET_REQUIRE_NOT_SATISFIED": "委托金额不足",
+			"BIND_EMAIL_FIRST": "请先绑定邮箱",
+			"BIND_EMAIL_ALREADY_EXIST":"该邮箱已绑定，请更换其他的邮箱",
+			"SMS_VERIFICATION_ALREADY_OPEN": "短信验证已是开启状态"
 		},
 		"exchange": {
 			"exchange_low": "24h最低价",
