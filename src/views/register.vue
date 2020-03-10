@@ -274,7 +274,7 @@
                     return
                 }
                 this.disabled = true
-                userApi.sendSMSCode6({
+                userApi.sendSMSCode({
                     countryCode: this.formData.countryCode,
                     phoneNumber: this.formData.mobile
                 }, (res) => {

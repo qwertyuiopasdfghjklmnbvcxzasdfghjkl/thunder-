@@ -50,8 +50,8 @@
                 <ol class="mt30 lh20">
                     <li>• {{$t('vote.rule_4_1')}}</li>
                     <li>• {{$t('vote.rule_4_2')}}</li>
-                    <li>• {{$t('vote.rule_4_3')}}</li>
-                    <li>• {{$t('vote.rule_3_4')}}</li>
+                    <!--<li>• {{$t('vote.rule_4_3')}}</li>-->
+                    <!--<li>• {{$t('vote.rule_3_4')}}</li>-->
                 </ol>
             </div>
         </div>

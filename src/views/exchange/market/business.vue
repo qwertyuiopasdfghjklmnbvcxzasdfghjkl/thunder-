@@ -51,27 +51,27 @@
             </button>
         </div>
         <p class="blance-tip mt30">
-            <span>{{$t('exchange.value_available')}}<!--可用--> </span>
-            <span class="ft-c-white">
-                <font class="">{{Number(toFixed(isBuy ?
-                toBalance.availableBalance : fromBalance.availableBalance)).toString().toMoney()}}</font>
+            <span>{{$t('exchange.value_available')}}<!--可用--></span>
+            <span class="ft-c-white f24">
+                <small class="el">{{Number(toFixed(isBuy ?
+                    toBalance.availableBalance : fromBalance.availableBalance)).toString().toMoney()}}</small>
                 {{isBuy ?baseSymbol:currentSymbol}}
             </span>
         </p>
         <p class="blance-tip mt15">
             <span>{{$t('exchange.value_frozen')}}<!--冻结--> </span>
-            <span class="ft-c-white">
-                {{Number(toFixed(isBuy ?
-                toBalance.frozenBalance : fromBalance.frozenBalance)).toString().toMoney()}}
+            <span class="ft-c-white f24">
+                <small class="el">{{Number(toFixed(isBuy ?
+                    toBalance.frozenBalance : fromBalance.frozenBalance)).toString().toMoney()}}</small>
                 {{isBuy ?baseSymbol:currentSymbol}}
             </span>
         </p>
         <p class="blance-tip mt60">
             <span>{{$t('home.home46')}}<!--总资产--> </span>
-            <span class="ft-c-white">
-                <font class="">{{(Number(toFixed(isBuy ?
+            <span class="ft-c-white f24">
+                <small class="el">{{(Number(toFixed(isBuy ?
                 toBalance.availableBalance : fromBalance.availableBalance))+Number(toFixed(isBuy ?
-                toBalance.frozenBalance : fromBalance.frozenBalance))).toString().toMoney()}}</font>
+                    toBalance.frozenBalance : fromBalance.frozenBalance))).toString().toMoney()}}</small>
                 {{isBuy ?baseSymbol:currentSymbol}}
             </span>
         </p>
@@ -508,7 +508,7 @@
                 }
             },
             toFixed(value, fixed) {
-                let _num = numUtils.BN(value || 0).toFixed(fixed === undefined ? this.accuracy.fixedNumber : fixed, 1)
+                let _num = numUtils.BN(value || 0).toFixed(fixed === undefined ? this.accuracy.fixedNumber : fixed, 2)
                 return utils.removeEndZero(_num)
             }
         }
@@ -641,7 +641,7 @@
         display: flex;
         justify-content: space-between;
         span:first-of-type{min-width: 0.7rem; font-size: 0.26rem;}
-        span:last-of-type{word-break: break-all; font-size: 0.24rem;}
+        span:last-of-type{word-break: break-all; font-size: 0.24rem;    display: flex;line-height: 0.36rem;}
     }
 
     .left .range-percent {
@@ -798,7 +798,7 @@
             position: relative;
             font-size: 0.3rem;
             width: 100%;
-            border: 0.01rem solid #4B5875;
+            border: 0.02rem solid #4B5875;
             background: none;
             border-radius:0.08rem;
             color: #ffffff;
@@ -832,5 +832,13 @@
             line-height: 1.5;
             font-size: 0.2rem;
         }
+    }
+    .el{
+        display: inline-block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        flex: 1;
+        max-width: 2rem;
     }
 </style>

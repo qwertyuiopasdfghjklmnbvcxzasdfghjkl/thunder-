@@ -176,11 +176,11 @@
                     }
 
                     .buy {
-                        border: 0.06rem solid @c_sell;
+                        border: 0.08rem solid @c_sell;
                     }
 
                     .sell {
-                        border: 0.06rem solid @c_buy;
+                        border: 0.08rem solid @c_buy;
                     }
 
                     .border-right {

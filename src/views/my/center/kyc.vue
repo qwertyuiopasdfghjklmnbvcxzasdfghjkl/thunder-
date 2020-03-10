@@ -35,12 +35,6 @@
         beforeRouteEnter(from, to, next) {
             individual.getUserState((data) => {
                 data.verifyState === 0 ? next() : window.vm.$router.replace({name: 'ucenter'})
-                if(data.verifyTimes > 3 ){
-                    Tip({type:'danger', message: this.$t('market.kyc_beyond')})
-                    window.vm.$router.replace({name: 'ucenter'})
-                }else{
-                    next()
-                }
             }, (msg) => {
                 console.error(msg)
                 window.vm.$router.replace({name: 'ucenter'})

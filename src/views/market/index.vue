@@ -48,17 +48,27 @@
                 })
             },
             mainData(){
-                return this.getMarketList
+                return (this.getMarketList||[]).filter(res=>{
+                    if(res.marketCategory == 1){
+                        return res
+                    }
+                })
             },
             newData(){
-                return this.getMarketList
+                return (this.getMarketList||[]).filter(res=>{
+                    if(res.marketCategory == 2){
+                        return res
+                    }
+                })
             },
             listData(){
                 if(this.type === 1){
                     return this.selfData
                 }else if(this.type===2){
+                    console.log(this.mainData)
                     return this.mainData
                 }else if(this.type===3){
+                    console.log(this.newData)
                     return this.newData
                 }
             }

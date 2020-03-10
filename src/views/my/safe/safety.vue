@@ -33,9 +33,8 @@
                         name: this.$t('account.user_center_change_password'),
                     },
                     {
-                        route: 'safe',
+                        route: 'bindEmail',
                         name: this.$t('public0.public159'),
-                        small: `<span style="color:#999">${this.$t('account.user_center_state_bind')}</span>`
                     }
                 ],
                 userInfo: {},
@@ -47,6 +46,9 @@
         watch: {
             getUserInfo(){
                 this.setStatus()
+                if(this.getUserInfo.email){
+                    this.data1[3].route = 'safe'
+                }
             }
         },
         created() {
@@ -64,6 +66,8 @@
                 } else {
                     this.data1[1].small = `<span style="color:#999">${this.$t('user.noBind')}</span>`
                 }
+                this.data1[3].small = this.getUserInfo.email ? `<span style="color:#999">${this.$t('account.user_center_state_bind')}</span>`:
+                    `<span style="color:#999">${this.$t('user.noBind')}</span>`
             }
         }
     }
