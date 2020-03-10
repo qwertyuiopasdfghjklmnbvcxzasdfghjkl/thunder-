@@ -37,15 +37,17 @@ const marketList = function (success, error) {
 
     if (res.rst === 1) {
       if(res.data){
-        let marketOrder = {}, marketIcon = {}, marketCollection = {}
+        let marketOrder = {}, marketIcon = {}, marketCollection = {}, marketCategory = {}
         res.data.forEach(item=>{
           marketOrder[item.market] = item.idx
           marketIcon[item.market] = item.iconBase64
           marketCollection[item.market] = item.collection
+          marketCategory[item.market] = item.marketCategory
         })
         window.marketOrder = marketOrder
         window.marketIcon = marketIcon
         window.marketCollection = marketCollection
+        window.marketCategory = marketCategory
       }
       success && success(res.data)
     } else {

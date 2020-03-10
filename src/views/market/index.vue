@@ -49,14 +49,14 @@
             },
             mainData(){
                 return (this.getMarketList||[]).filter(res=>{
-                    if(res.marketCategory == 1){
+                    if(Number(res.marketCategory) === 1){
                         return res
                     }
                 })
             },
             newData(){
                 return (this.getMarketList||[]).filter(res=>{
-                    if(res.marketCategory == 2){
+                    if(Number(res.marketCategory) === 2){
                         return res
                     }
                 })
@@ -85,6 +85,7 @@
                             item.idx = window.marketOrder[item.market]
                             item.iconBase64 = window.marketIcon[item.market]
                             item.collection = window.marketCollection[item.market]
+                            item.marketCategory = window.marketCategory[item.market]
                         })
                         window.setMarketList(res.data)
                     }

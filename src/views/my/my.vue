@@ -182,6 +182,7 @@
             this.getMessageList();
             this.getInfo()
             // this.data4[1].small = `<span class="ft-c-lightGray">${this.getVersion}</span>`
+            // console.log(window)
         },
         methods: {
             ...mapActions(['setApiToken', 'setUserInfo']),

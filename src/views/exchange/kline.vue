@@ -408,6 +408,7 @@
                               item.idx = window.marketOrder[item.market]
                               item.iconBase64 = window.marketIcon[item.market]
                               item.collection = window.marketCollection[item.market]
+                              item.marketCategory = window.marketCategory[item.market]
                             })
                             // 市场信息
                             window.setMarketList(res.data)
