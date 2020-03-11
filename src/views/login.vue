@@ -44,7 +44,7 @@
                 brand: config.brand.toUpperCase(),
                 curl: '', //登录回调地址
                 vi: 0,
-                active: 'mail'
+                active: 'phone'
             }
         },
         beforeRouteEnter(to, from, next) {

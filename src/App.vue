@@ -106,7 +106,9 @@
             this.stopServer()
         },
         methods: {
-            ...mapActions(['setBTCValuation', 'setUSDCNY', 'setNetworkSignal', 'setBtcValues', 'setMarketList', 'setUserWallets', 'setMarketConfig', 'setApiToken', 'setUserInfo', 'setVersion', 'setSysParams', 'setInitMarket']),
+            ...mapActions(['setBTCValuation', 'setUSDCNY', 'setNetworkSignal', 'setBtcValues', 'setMarketList',
+                'setUserWallets', 'setMarketConfig', 'setApiToken', 'setUserInfo', 'setVersion', 'setSysParams',
+                'setInitMarket', 'setBtcPrice']),
             getSysparams(){
               marketApi.rateSysparams(res=>{
                 let params = {}
@@ -200,6 +202,12 @@
                         CNY: numUtils.BN(res.CNY).toFixed(8),
                         USDT: numUtils.BN(res.USDT).toFixed(8),
                     })
+                    let list={}
+                    for(let v in res){
+                        list[v] = Number(res[v])
+                    }
+                    console.log(list)
+                    this.setBtcPrice(list)
                     this.setBTCValuation(numUtils.BN(res.btcAmount).toFixed(8)) // 当前转换人民币
                 })
             },

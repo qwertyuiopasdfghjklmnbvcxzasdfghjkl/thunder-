@@ -17,10 +17,11 @@
 
             <div class="total">
                 <p v-tap="{methods:()=>{ showMoney = !showMoney}}">
-                    <span>({{$t('exchange.exchange_valuation')}}USDT)</span>
+                    <span>{{$t('exchange.exchange_valuation')}}(USDT)</span>
                     <img :src="showMoney ? require('../../assets/img/assets_eye_open.png'): require('../../assets/img/assets_eye_closed.png')"/>
                 </p>
                 <h4 class="">{{totalUSDTDisplay}}</h4>
+                <span>≈ {{getCoinSign}} {{totalCNY}}</span>
             </div>
 
 
@@ -96,7 +97,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getUserInfo', 'getUserWallets', 'getBTCValuation', 'getUSDTBTC']),
+            ...mapGetters(['getUserInfo', 'getUserWallets', 'getBTCValuation', 'getUSDTBTC', 'getBtcPrice', 'getCoinSign']),
             symbolList() { // 获取币种列表
                 return this.getUserWallets.sort((item1, item2) => {
                     if (item1.symbol === item2.symbol) {
@@ -125,7 +126,14 @@
             },
             totalUSDTDisplay() {
                 if (this.showMoney) {
-                    return utils.removeEndZero(numUtils.BN(this.totalUSDT).toFixed(4))
+                    return utils.removeEndZero(numUtils.mul(this.getBTCValuation, this.getBtcPrice.USDT).toFixed(4))
+                } else {
+                    return '******'
+                }
+            },
+            totalCNY(){
+                if (this.showMoney) {
+                    return utils.removeEndZero(numUtils.mul(this.getBTCValuation, this.getBtcPrice.CNY).toFixed(2))
                 } else {
                     return '******'
                 }
@@ -136,6 +144,7 @@
             // this.getInfo()
             this.getAssets()
             this.gettTotalUSDTAmount()
+            console.log(this.getBTCValuation, this.getBtcPrice.USDT)
         },
         watch: {
             showMoney(_new) {

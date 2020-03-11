@@ -4,6 +4,7 @@ let userWallets = JSON.parse(localStorage.userWallets || '[]')
 const state = {
   btcValuation: 0,
   USDCNY: {},
+  btcPrict: {},
   networkSignal: 0,
   btcValues: {},
   userWallets: userWallets,
@@ -48,6 +49,9 @@ const getters = {
   },
   getSymbol (state){
     return state.symbol
+  },
+  getBtcPrice (state){
+    return state.btcPrict
   }
 }
 
@@ -74,6 +78,9 @@ const mutations = {
   updateSymbol(state, symbol){
     state.symbol = symbol
     localStorage.symbol = symbol
+  },
+  updateBtcPrice(state, btcPrict){
+    state.btcPrict = btcPrict
   }
 }
 
@@ -104,7 +111,10 @@ const actions = {
   },
   setSymbol(context, symbol){
     context.commit('updateSymbol',symbol)
-  }
+  },
+  setBtcPrice (context, btcPrict) {
+    context.commit('updateBtcPrice', btcPrict)
+  },
 }
 
 export default {

@@ -232,7 +232,7 @@ user.getUserLevel = getUserLevel
 
 // 绑定邮箱
 const bindEmail = function (data, success, error) {
-  api.post(`${domain}api/v1/safety/bindEmail`, data, (res) => {
+  api.post(`${domain}api/v1/gcox/user/bindEmail`, data, (res) => {
     if (res.rst === 1) {
       success && success(res.msg)
     } else {
