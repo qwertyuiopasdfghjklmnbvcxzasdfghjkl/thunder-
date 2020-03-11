@@ -171,10 +171,11 @@ utils.removeEndZero = removeEndZero
 
 // 限制上传图片大小，默认2M
 const limitUploadImage = function (file, error, size) {
-  let limitSize = (size || 2) * 1024 * 1024
+  let imgSize = 2 // 设置图片默认大小
+  let limitSize = (size || imgSize) * 1024 * 1024
   if (file.nodeName !== 'INPUT' && file.name && file.size) {
     if (file.size > limitSize) {
-      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_${size || 2}`)
+      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_${size || imgSize}`)
       return false
     } else {
       return true
@@ -184,7 +185,7 @@ const limitUploadImage = function (file, error, size) {
   for (let i = 0; i < files.length; i++) {
     let f = files.item(i)
     if (f.size > limitSize) {
-      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_${size || 2}`)
+      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_${size || imgSize}`)
       return false
     }
   }

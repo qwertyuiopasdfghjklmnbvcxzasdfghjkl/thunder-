@@ -135,7 +135,7 @@ export default {
       if (config.imageType.test(event.target.value)) {
         isTrue = utils.limitUploadImage(event.target, (msg) => {
           Tip({type: 'danger', message: this.$t(msg)})
-        }, 2)
+        }, 4)
       } else {
         isTrue = false
         Tip({type: 'danger', message: this.$t('public0.public43')}) // 请上传JPG、PNG、JPEG、BMP格式的图片
