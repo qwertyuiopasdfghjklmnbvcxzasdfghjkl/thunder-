@@ -47,7 +47,7 @@
                             @click="goToExchangePage(item)">
                             <li>
                                 <h1><span>{{item.currencySymbol}}</span>/<i>{{item.baseSymbol}}</i></h1>
-                                <h2>24h{{$t('home.home04')}} {{toFixed(item.dealAmount, 2)}}</h2>
+                                <h2>24h {{$t('home.home04')}} {{toFixed(item.dealAmount, 0)}}</h2>
                             </li>
                             <li>
                                 <h1 :class="[percent(item).css]">{{toFixed(item.lastPrice, item.accuracy)}}</h1>
