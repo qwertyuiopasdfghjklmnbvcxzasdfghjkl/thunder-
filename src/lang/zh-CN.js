@@ -1653,6 +1653,7 @@ export default {
 			"inner_withdrawal": "站内提币",
 			"flash_topup": "普通充币",
 			"flash_withdrawal": "普通提币",
+			"no_bind_email_unbind_phone":"未绑定邮箱验证码，不可以解绑手机验证码！"
 		},
 		"referral": {
 			"date": "日期",

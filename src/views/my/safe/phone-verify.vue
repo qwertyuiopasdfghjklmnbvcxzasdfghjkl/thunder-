@@ -66,6 +66,8 @@
     import myApi from '@/api/user'
     import userApi from '@/api/individual'
     import UiInput from "@/components/uiInput"
+    import individual from '@/api/individual'
+    import {MessageBox} from 'mint-ui'
 
     export default {
         name: 'phone-verify',
@@ -90,7 +92,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getUserInfo', 'getLang']),
+            ...mapGetters(['getUserInfo', 'getLang', 'getUserState']),
             msgs() {
                 return {
                     phoneNumber: {required: this.$t('public0.public6')}, // 请输入手机号
@@ -99,6 +101,9 @@
                 }
             }
         },
+        created(){
+            this.status()
+        },
         mounted() {
             this.mobileFormData.phoneNumber = this.getUserInfo.mobile
             if(this.mobileFormData.phoneNumber){
@@ -106,7 +111,21 @@
             }
         },
         methods: {
-            ...mapActions(['setUserInfo']),
+            ...mapActions(['setUserInfo', 'setUserState']),
+            status(){
+                if(this.getUserState.emailAuthEnable=== 0 && this.getUserState.mobileAuthState=== 1){
+                    MessageBox({
+                        title: this.$t('public0.public242'),
+                        message: this.$t('market.no_bind_email_unbind_phone'),
+                        confirmButtonText: this.$t('public0.ok'),
+                        closeOnClickModal: false
+                    }).then(action => {
+                        if (action === 'confirm') {
+                            this.$router.push({name: 'safe'})
+                        }
+                    })
+                }
+            },
             bindMobile() {
                 this.$validator.validateAll(this.mobileFormData).then((validResult) => {
                     if (!validResult) {
@@ -140,7 +159,7 @@
                                     smsCode: ''
                                 }
                                 this.getInfo()
-                                // this.getValidateStatus(0)
+                                this.getValidateStatus()
                             }, (msg) => {
                                 this.lock = false
                                 Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
@@ -151,7 +170,7 @@
                             this.lock = false
                             Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
                             this.getInfo()
-                            // this.getValidateStatus(1)
+                            this.getValidateStatus()
                         }, (msg) => {
                             this.lock = false
                             Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
@@ -159,13 +178,13 @@
                     })
                 })
             },
-            // getValidateStatus(i) {
-            //     myApi.validateStatus(i, res => {
-            //
-            //     }, msg => {
-            //
-            //     })
-            // },
+            getValidateStatus() {
+                individual.getUserState((data) => {
+                    this.setUserState(data)
+                }, (msg) => {
+                    console.error(msg)
+                })
+            },
             getInfo() {
                 myApi.getUserInfo(res => {
                     this.setUserInfo(res);

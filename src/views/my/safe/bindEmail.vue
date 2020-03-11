@@ -32,6 +32,7 @@
                 <div class="findpwd-content-row email">
                     <ui-input type="email"
                               :value="getUserInfo.email"
+                              :readonly="true"
                               :placeholder="true"></ui-input><!--邮箱-->
                 </div>
                 <!--<div class="mt50 switch">-->
@@ -89,14 +90,14 @@
         created() {
 
         },
-        beforeRouteEnter(from, to, next) {
-            myApi.getUserState((data) => {
-                data.email ? window.vm.$router.replace({name: 'safe'}) : next()
-            }, (msg) => {
-                console.error(msg)
-                window.vm.$router.replace({name: 'safe'})
-            })
-        },
+        // beforeRouteEnter(from, to, next) {
+        //     myApi.getUserState((data) => {
+        //         data.email ? window.vm.$router.replace({name: 'safe'}) : next()
+        //     }, (msg) => {
+        //         console.error(msg)
+        //         window.vm.$router.replace({name: 'safe'})
+        //     })
+        // },
         methods: {
             removeDialog() {
                 this.bindConfirm = false

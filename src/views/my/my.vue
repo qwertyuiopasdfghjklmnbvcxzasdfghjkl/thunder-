@@ -185,7 +185,7 @@
             // console.log(window)
         },
         methods: {
-            ...mapActions(['setApiToken', 'setUserInfo']),
+            ...mapActions(['setApiToken', 'setUserInfo', 'setUserState']),
             getInfo() {
                 myApi.getUserInfo(res => {
                     this.setUserInfo(res);
@@ -211,6 +211,7 @@
                         this.kyc.route = 'ucenter'
                     }
                     this.isUseCoinPay = (data.coinState === 1)
+                    this.setUserState(data)
                 }, (msg) => {
                     // console.error(msg)
                 })
