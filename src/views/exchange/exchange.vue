@@ -34,12 +34,17 @@
                             :tradeType="tradeType"
                             :currentSymbol="currentSymbol"
                             :baseSymbol="baseSymbol"
+                            :curCNYPrice="curCNYPrice"
                             :accuracy="accuracy"></business>
                 </div>
 
                 <div class="right">
-                    <depth v-model="showLatestDeal" :baseSymbol="baseSymbol" :currentSymbol="currentSymbol"
-                           v-show="!showLatestDeal" :accuracy="accuracy"></depth>
+                    <depth v-model="showLatestDeal"
+                           :baseSymbol="baseSymbol"
+                           :currentSymbol="currentSymbol"
+                           v-show="!showLatestDeal"
+                           :curCNYPrice="curCNYPrice"
+                           :accuracy="accuracy"></depth>
                 </div>
             </section>
             <div class="full entrust-container box mt20">
@@ -74,6 +79,7 @@
     import historyDeal from "./history-deal/deal";
     import entrust from "./now-deal/entrust";
     import MarketList from "./marketList";
+    import otc from '../../api/otc'
 
     export default {
         name: 'exchange',
@@ -99,7 +105,8 @@
                     market: ''
                 },
                 inter: null,
-                market: null
+                market: null,
+                curCNYPrice: null,
             }
         },
         computed: {
@@ -117,12 +124,13 @@
                 let fixedNumber = 8, quantityAccu = 4, amountAccu = 8
                 for (let item of this.getMarketList || []) {
                     if (item.market === this.symbol) {
-                        fixedNumber = Number(item.accuracy)
-                        quantityAccu = Number(item.quantityAccu)
-                        amountAccu = Number(item.amountAccu)
+                        fixedNumber = Number(item.accuracy) || 4
+                        quantityAccu = Number(item.quantityAccu) || 4
+                        amountAccu = Number(item.amountAccu) || 4
                         break
                     }
                 }
+                console.log(fixedNumber)
                 return {fixedNumber: fixedNumber, quantityAccu: quantityAccu, amountAccu: amountAccu}
             },
             curMarket() {
@@ -182,6 +190,7 @@
                 console.log(this.symbol)
                 this.dataSocket.close()
                 this.InitDataSoket()
+                this.getCNYPrice()
                 // this.dataSocket.switchSymbol(this.symbol)
             },
             curMarket() {
@@ -192,6 +201,7 @@
             this.checkMarket()
             this.tradeType = this.$route.params.action !== false ? 'buy' : 'sell'
             this.InitDataSoket()
+            this.getCNYPrice()
         },
         mounted() {
             /* this.inter = setInterval(()=>{
@@ -209,6 +219,17 @@
         },
         methods: {
             ...mapActions(['setLast24h', 'tiggerEvents']),
+            getCNYPrice(){
+                let data= {
+                    ad_type: 1,
+                    symbol: this.currentSymbol,
+                    currency: 'CNY',
+                    bench_marking_id: 1,
+                }
+                otc.getBenchSymbolInfo(data,res=>{
+                    this.curCNYPrice = Number(res.cur_price).toFixed(2) || '--'
+                })
+            },
             checkMarket() {
                 if (this.curMarket && this.curMarket.market !== 'ETVUSDT' && this.curMarket.visible == 0) {
                     if (!this.$route.query.visible) {

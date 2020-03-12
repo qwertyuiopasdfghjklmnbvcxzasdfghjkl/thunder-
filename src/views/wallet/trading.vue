@@ -132,6 +132,7 @@
                 }
             },
             totalCNY(){
+                console.log(this.getBTCValuation, this.getBtcPrice.CNY)
                 if (this.showMoney) {
                     return utils.removeEndZero(numUtils.mul(this.getBTCValuation, this.getBtcPrice.CNY).toFixed(2))
                 } else {

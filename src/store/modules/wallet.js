@@ -100,10 +100,11 @@ const actions = {
   setBtcValues (context, data) {
     let btcValues = {}
     data.forEach((item) => {
-      if (item.baseSymbol === 'BTC') {
+      // if (item.baseSymbol === 'BTC') {
         btcValues[item.currencySymbol] = item.lastPrice
-      }
+      // }
     })
+    console.log(btcValues)
     context.commit('updateBtcValues', btcValues)
   },
   setUserWallets (context, userWallets) {

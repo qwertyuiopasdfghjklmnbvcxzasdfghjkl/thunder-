@@ -5,35 +5,64 @@
             <span>{{$t('exchange.exchange_amount')}}({{currentSymbol}})<!--数量--></span>
         </div>
         <div class="bid-sell mt20">
-            <ul class="sell-list f24" ref="parentListAsk" v-if="sellBuy!==2">
+            <ul class="sell-list f24" ref="parentListAsk" v-show="sellBuy!==2">
                 <li v-for="n in askLength">
                     <span>--</span>
                     <span>--</span>
                 </li>
                 <li v-for="(item, index) in filterAsks" :style="listItemStyle(item, 'ask')">
-                    <span @click="clickChangeValue(toFixed(item.price), 'price')">{{Number(toFixed(item.price))}}</span>
-                    <span @click="clickChangeValue(toFixed(item.price), 'price')">{{Number(toFixed(item.avaliableAmount, accuracy.quantityAccu))}}</span>
+                    <span @click="clickChangeValue(toFixed(item.price), 'price')">{{toFixed(item.price)}}</span>
+                    <span @click="clickChangeValue(toFixed(item.price), 'price')">{{toFixed(item.avaliableAmount)}}</span>
                 </li>
             </ul>
         </div>
         <div class="numb_text">
             <p class="">
-                <span class="" :class="{sell:(getLast24h.direction!=1)}">{{Number(toFixed(getLast24h.close))}}</span>
-                <small class="f24 pt8 ft-c-dark">≈ <valuation :lastPrice="getLast24h.close" :baseSymbol="baseSymbol"/></small>
+                <span class="" :class="{sell:(getLast24h.direction!=1)}">{{toFixed(getLast24h.close)}}</span>
+                <small class="f24 pt8 ft-c-dark">
+                    ≈ {{getCoinSign}} {{curCNYPrice}}
+                    <!--<valuation :lastPrice="getLast24h.close" :symbol="currentSymbol" :curCNYPrice="curCNYPrice"/>-->
+                </small>
             </p>
             <!--<p class="f24" :class="{sell:(getLast24h.direction!=1)}">{{baseSymbol}}</p>-->
         </div>
-        <div class="mt35" v-if="sellBuy!==1">
+        <div class="mt20" v-show="sellBuy!==1">
             <ul class="buy-list f24" ref="parentListBid">
                 <li v-for="(item, index) in filterBids" :style="listItemStyle(item, 'bid')">
-                    <span @click="clickChangeValue(toFixed(item.price), 'price')">{{Number(toFixed(item.price))}}</span>
-                    <span @click="clickChangeValue(toFixed(item.price), 'price')">{{Number(toFixed(item.avaliableAmount, accuracy.quantityAccu))}}</span>
+                    <span @click="clickChangeValue(toFixed(item.price), 'price')">{{toFixed(item.price)}}</span>
+                    <span @click="clickChangeValue(toFixed(item.price), 'price')">{{toFixed(item.avaliableAmount)}}</span>
                 </li>
                 <li v-for="n in bidLength">
                     <span>--</span>
                     <span>--</span>
                 </li>
             </ul>
+        </div>
+        <div class="check">
+            <label>
+                <p v-tap="{methods:()=>{show=!show,showSellBuy=false}}">
+                    <span v-if="accuracy.fixedNumber === 8">{{$t('home.8decimal')}}</span>
+                    <span v-if="accuracy.fixedNumber === 6">{{$t('home.6decimal')}}</span>
+                    <span v-if="accuracy.fixedNumber === 4">{{$t('home.4decimal')}}</span>
+                </p>
+                <ul v-if="show">
+                    <li v-tap="{methods:()=>{accuracy.fixedNumber = 8,show=false}}">{{$t('home.8decimal')}}</li>
+                    <li v-tap="{methods:()=>{accuracy.fixedNumber = 6,show=false}}">{{$t('home.6decimal')}}</li>
+                    <li v-tap="{methods:()=>{accuracy.fixedNumber = 4,show=false}}">{{$t('home.4decimal')}}</li>
+                </ul>
+            </label>
+            <label>
+                <p v-tap="{methods:()=>{showSellBuy=!showSellBuy,show=false}}">
+                    <span v-if="sellBuy===0">{{$t('home.default')}}</span>
+                    <span v-if="sellBuy===1">{{$t('home.show-sell')}}</span>
+                    <span v-if="sellBuy===2">{{$t('home.show-buy')}}</span>
+                </p>
+                <ul v-if="showSellBuy">
+                    <li v-tap="{methods:()=>{sellBuy = 0,showSellBuy=false}}">{{$t('home.default')}}</li>
+                    <li v-tap="{methods:()=>{sellBuy = 1,showSellBuy=false}}">{{$t('home.show-sell')}}</li>
+                    <li v-tap="{methods:()=>{sellBuy = 2,showSellBuy=false}}">{{$t('home.show-buy')}}</li>
+                </ul>
+            </label>
         </div>
     </div>
 </template>
@@ -57,7 +86,8 @@
             currentSymbol: {
                 type: String,
                 default: ''
-            }
+            },
+            curCNYPrice: 0
         },
         components: {
             valuation
@@ -77,7 +107,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getLast24h', 'getEntrustPrices', 'getNetworkSignal']),
+            ...mapGetters(['getLast24h', 'getEntrustPrices', 'getNetworkSignal', 'getCoinSign']),
             fromCoin() {
                 return this.currentSymbol
             },
@@ -185,7 +215,7 @@
                 let temp = {}
                 try {
                     datas.forEach((item) => {
-                        let key = this.toFixed(item.price)
+                        let key = item.price
                         let tempItem = temp[key]
                         if (!tempItem) {
                             temp[key] = {
@@ -202,6 +232,7 @@
                 } catch (ex) {
                     console.warn(datas)
                 }
+                console.log(mergeDatas)
                 return mergeDatas
             },
             getMaxAmount(datas) {
@@ -275,7 +306,7 @@
                 }
             },
             toFixed(value, fixed) {
-                return numUtils.BN(value || 0).toFixed(fixed === undefined ? this.accuracy.fixedNumber : fixed, 1)
+                return numUtils.BN(value || 0).toFixed(fixed === undefined ? this.accuracy.fixedNumber : fixed)
             }
         }
     }
@@ -399,7 +430,7 @@
         label {
             padding: 0.06rem 0.1rem;
             position: relative;
-            border: 0.02rem solid #999;
+            border: 0.02rem solid #4B5875;
             font-size: 0.2rem;
             flex: 1;
             text-align: center;
@@ -418,13 +449,13 @@
                 left: -1px;
                 right: -1px;
                 bottom: 0.44rem;
-                border: 0.02rem solid #999;
+                border: 0.02rem solid #4B5875;
                 z-index: 9;
-                background: #eee;
+                background: #1d2537;
 
                 li {
                     padding: 0.16rem 0.2rem;
-                    border-bottom: 0.02rem solid #999;
+                    border-bottom: 0.02rem solid #4B5875;
 
                     &:last-child {
                         border-bottom: none;

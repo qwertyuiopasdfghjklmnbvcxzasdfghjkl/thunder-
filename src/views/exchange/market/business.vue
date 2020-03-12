@@ -21,7 +21,11 @@
         <p class="price-placeholder mt30" v-if="isMarket">{{$t('exchange.exchange_market_price')}}</p>
         <p class="mt20">
             {{$t('home.home47')}}:
-            <valuation :lastPrice="formData.price" :baseSymbol="baseSymbol"/>
+            <valuation
+                    :lastPrice="formData.price"
+                    :symbol="currentSymbol"
+                    :curCNYPrice="curCNYPrice"
+                    :unitPrice="unitPrice"/>
         </p>
         <div class=" mt20">
             <!-- <numberbox v-model="formData.amount" :accuracy="accuracy.quantityAccu" :placeholder="$t('exchange.exchange_amount')" v-focus></numberbox>
@@ -118,7 +122,8 @@
     export default {
         props: {
             accuracy: {
-                type: Object
+                type: Object,
+                default: 2
             },
             currentSymbol: {
                 type: String,
@@ -132,7 +137,8 @@
                 type: String,
                 default: 'buy'
             },
-            pTradeType: null
+            pTradeType: null,
+            curCNYPrice: 0
         },
         components: {
             cpAdjust,
@@ -156,7 +162,8 @@
                 },
                 toUnlockAmount:0,
                 statisticsTodayTrade:{},
-                mainMarket:'LTNUSDT'
+                mainMarket:'LTNUSDT',
+                moPrice: 0
             }
         },
         computed: {
@@ -197,6 +204,9 @@
             marketPrice() {
                 return this.$t('exchange.exchange_market_price') // 市价
             },
+            unitPrice(){
+                return Number(this.curCNYPrice)/Number(this.moPrice)// 单价
+            }
         },
         watch: {
             entrustType() {
@@ -221,6 +231,8 @@
                     this.updateValue = false
                     setTimeout(() => {
                         this.formData.price = this.toFixed(utils.removeEndZero(this.getLast24h.close))
+                        // console.log(this.formData.price)
+                        this.moPrice = this.toFixed(utils.removeEndZero(this.getLast24h.close))
                     }, 200)
                 }
             },
@@ -508,7 +520,8 @@
                 }
             },
             toFixed(value, fixed) {
-                let _num = numUtils.BN(value || 0).toFixed(fixed === undefined ? this.accuracy.fixedNumber : fixed, 2)
+                console.log(value, fixed, this.accuracy.fixedNumber)
+                let _num = numUtils.BN(value || 0).toFixed(fixed === undefined ? this.accuracy.fixedNumber : fixed)
                 return utils.removeEndZero(_num)
             }
         }

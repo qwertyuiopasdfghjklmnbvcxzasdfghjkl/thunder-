@@ -75,6 +75,12 @@
                             CNY: numUtils.BN(res.USDCNY).toFixed(8),
                             USDT: numUtils.BN(res.USDT).toFixed(8),
                         })
+                        let list = {}
+                        for(let v in res){
+                            list[v] = Number(res[v])
+                        }
+                        console.log(list)
+                        this.setBtcPrice(list)
                         this.setBTCValuation(numUtils.BN(res.totalAmount).toFixed(8)) // 当前转换人民币
                     }
                 }

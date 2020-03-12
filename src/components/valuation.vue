@@ -5,24 +5,27 @@
 <script>
 import { mapGetters } from 'vuex'
 import numUtils from '@/assets/js/numberUtils'
+import otc from '../api/otc'
 export default {
-  props: ['lastPrice', 'baseSymbol'],
-  computed: {
-    ...mapGetters(['getCoinSign', 'getUSDCNY', 'getUsdRate', 'getBtcValues', 'getLang']),
-    curPrice () {
-      let lastPrice = this.lastPrice
-      if (lastPrice && this.getUSDCNY) {
-
-        let curMarketBtc = this.getBtcValues[this.baseSymbol]
-        if (!curMarketBtc && this.baseSymbol !== 'BTC') {
-          return '--'
-        }
-        let curMarketPrice = curMarketBtc ? numUtils.mul(curMarketBtc, this.getUSDCNY).toFixed(6) : this.getUSDCNY
-        return numUtils.mul(lastPrice, curMarketPrice).toFixed(2).toMoney()
-      } else {
-        return '0.00'
-      }
+  props: ['lastPrice', 'symbol', 'curCNYPrice', 'unitPrice'],
+  data(){
+    return {
+      noMore: null,
     }
+  },
+  computed: {
+    ...mapGetters(['getCoinSign']),
+    curPrice(){
+      let i = this.curCNYPrice
+      if(this.lastPrice){
+        i = numUtils.mul(this.lastPrice,this.unitPrice).toFixed(2)
+      }
+      // console.log(this.lastPrice, this.unitPrice)
+      return i || '--'
+    }
+  },
+  watch:{
+
   }
 }
 </script>
