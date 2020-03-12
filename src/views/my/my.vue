@@ -232,12 +232,12 @@
             getMessageList() {
                 // 参数为空时获取所有未读消息
                 userApi.getMessages({}, (res) => {
-                    let i = 0;
-                    (res.data||[]).filter(res=>{
-                        if(res.messageState === 0){
-                            i++
-                        }
-                    })
+                    let i = res.unread;
+                    // (res.data||[]).filter(res=>{
+                    //     if(res.messageState === 0){
+                    //         i++
+                    //     }
+                    // })
                     if(i){
                         this.data3[0].small = `<span class="ft-c-lightGray">${this.$t('account.unread_message')}</span>
                     <span class="mint-badge is-error is-size-small">${i}</span>`
