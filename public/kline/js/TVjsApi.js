@@ -158,6 +158,7 @@ TVjsApi.prototype.init = function() {
                 document.querySelector('#price').innerHTML = tar.innerHTML
                 self.isClicked = true
                 window.VM.active = ''
+                console.log(window, tar)
             });
             window.VM.setMA(true)
 
