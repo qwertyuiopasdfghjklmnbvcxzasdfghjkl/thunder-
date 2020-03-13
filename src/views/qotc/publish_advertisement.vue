@@ -39,7 +39,7 @@
       <p class="grey f26 mt10">市场参加价： {{refPrice}}{{formData.currency}}</p>
       <div class="f30 mt40">数量</div>
       <div class="kuan ui-flex ui-flex-justify" :class="{error: errors.has('symbol_count')}" >
-        <numberbox v-model="formData.symbol_count" :size="13"  v-validate="'required|intOrDecimal'" data-vv-name="symbol_count" placeholder="请输入交易数量"/>
+        <numberbox v-model="formData.symbol_count" :size="15" :accuracy="4" v-validate="'required|intOrDecimal|buyAmountLimitValid|maxInputValue:9999999999'" data-vv-name="symbol_count" placeholder="请输入交易数量"/>
         <span class="grey">{{formData.symbol}}</span>
       </div>
       <p class="grey f26 mt10">账户余额： {{balance}} {{formData.symbol}}</p>
@@ -54,26 +54,27 @@
       <div class="f30 mt40">单笔限额({{formData.ad_type==1?formData.symbol:formData.currency}})</div>
       <div class="ui-flex ui-flex-justify">
         <div class="kuan ui-flex-1"  :class="{error: errors.has('min_amount')}" >
-          <numberbox v-model="formData.min_amount" :size="13"  v-validate="'required|intOrDecimal'" data-vv-name="min_amount" placeholder="最小单笔限额"/>
+          <numberbox id="ads_min_amount" v-model="formData.min_amount" :size="tradeLimitAccuracy.size" :accuracy="tradeLimitAccuracy.accuracy" v-validate="'required|intOrDecimal|minAmountValid|minamount|maxInputValue:9999999999,public0.public258'" data-vv-name="min_amount" placeholder="最小单笔限额"/>
         </div>
         <span class="f30 grey mt10 ml20 mr20" style="line-height: 0.9rem;"> ~ </span>
         <div class="kuan ui-flex-1"  :class="{error: errors.has('max_amount')}">
-          <numberbox v-model="formData.max_amount" :size="13"  v-validate="'required|intOrDecimal'" data-vv-name="max_amount" placeholder="最大单笔限额"/>
+          <numberbox id="ads_max_amount" v-model="formData.max_amount" :size="tradeLimitAccuracy.size" :accuracy="tradeLimitAccuracy.accuracy" v-validate="'required|intOrDecimal|maxamount|maxInputValue:9999999999,public0.public259'" data-vv-name="max_amount" placeholder="最大单笔限额"/>
         </div>
       </div>
       <div class="f30 mt40">{{formData.ad_type==1?'付款方式':'收款方式'}}</div>
+      <input type="hidden" v-validate="'required'" data-vv-name="pay_type" v-model="formData.pay_type"/>
       <ul class="mt10 payments">
         <li v-tap="{methods:setPayment, type:1}" :class="{active:isPayChecked(1)}" v-if="payments.card_number">
-          <i :class="[isPayChecked(1) ? 'icon-checkbox-checked' : 'icon-checkbox-unchecked']"></i> {{$t('otc_legal.oyc_legal_Bank_card')}}<!--银行卡-->
+          <i :class="[isPayChecked(1) ? 'icon-checkbox-checked' : 'icon-checkbox-unchecked']"></i> {{$t(payTrans[1])}}<!--银行卡-->
         </li>
         <li v-tap="{methods:setPayment, type:2}" :class="{active:isPayChecked(2)}" v-if="payments.alipay_number">
-          <i :class="[isPayChecked(2) ? 'icon-checkbox-checked' : 'icon-checkbox-unchecked']"></i> {{$t('public0.public199')}}<!--支付宝-->
+          <i :class="[isPayChecked(2) ? 'icon-checkbox-checked' : 'icon-checkbox-unchecked']"></i> {{$t(payTrans[2])}}<!--支付宝-->
         </li>
         <li v-tap="{methods:setPayment, type:3}" :class="{active:isPayChecked(3)}" v-if="payments.wechat_number">
-          <i :class="[isPayChecked(3) ? 'icon-checkbox-checked' : 'icon-checkbox-unchecked']"></i> {{$t('public0.public198')}}<!--微信-->
+          <i :class="[isPayChecked(3) ? 'icon-checkbox-checked' : 'icon-checkbox-unchecked']"></i> {{$t(payTrans[3])}}<!--微信-->
         </li>
         <li v-tap="{methods:setPayment, type:4}" :class="{active:isPayChecked(4)}" v-if="payments.paypal_number">
-          <i :class="[isPayChecked(4) ? 'icon-checkbox-checked' : 'icon-checkbox-unchecked']"></i> {{$t('public0.public219')}}<!--PayPal-->
+          <i :class="[isPayChecked(4) ? 'icon-checkbox-checked' : 'icon-checkbox-unchecked']"></i> {{$t(payTrans[4])}}<!--PayPal-->
         </li>
 
         <router-link v-if="hasAllPays" :to="{name:'set-payway'}" class="active" tag="li">{{formData.ad_type==1?'添加付款方式':'添加收款方式'}}</router-link>
@@ -96,6 +97,10 @@ import numUtils from '@/assets/js/numberUtils'
 import utils from '@/assets/js/utils'
 import numberbox from '@/components/numberInput'
 import Dialog from '@/components/common/dialog'
+import { Validator } from 'vee-validate'
+import { MessageBox } from 'mint-ui'
+import store from '@/store'
+import otcConfig from '@/assets/js/otcconfig'
 
 
 export default {
@@ -115,7 +120,7 @@ export default {
         ad_type: 1,
         symbol: 'USDT',
         currency: 'CNY',
-        bench_marking_id: 2,
+        bench_marking_id: otcConfig.benchMarkingId,
         price_rate: '',
         price_type: 2, //price_type: 1 浮动价格； 2 固定价格；
         lowest_price: '',
@@ -131,7 +136,7 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(['getUserWallets']),
+    ...mapGetters(['getUserWallets', 'getUserInfo']),
     msgs () {
       return {
         lowest_price: {required: this.$t('请输入交易单价')}, // 请输入交易单价
@@ -141,6 +146,13 @@ export default {
         symbol_count: {required: this.$t('请输入交易数量')}, // 请输入交易数量
         pay_type: {required: this.$t(this.formData.ad_type==1?'请选择付款方式':'请选择收款方式')}, // 请选择付款\收款方式
       }
+    },
+    payTrans(){
+      let _payTrans = {}
+      for(let item of otcConfig.payments){
+        _payTrans[item.id] = item.key
+      }
+      return _payTrans
     },
     ratePrice(){
       if (this.refPrice && this.formData.price_rate) {
@@ -173,8 +185,39 @@ export default {
         bench_marking_id: this.formData.bench_marking_id,
       }
     },
+    tradeLimitAccuracy () {
+      return this.formData.ad_type == 1 ? {size: 15, accuracy: 4} : {size: 13, accuracy: 2}
+    },
+    coinMinLimit(){
+      let _coinMinLimit = 0
+      for(let item of this.tokens){
+        if (item.symbol == this.formData.symbol) {
+          _coinMinLimit = item.minLimit
+          if(!this.ad_id && this.formData.ad_type == 1) {
+            this.formData.min_amount = item.minLimit
+          }
+          break
+        }
+      }
+      return _coinMinLimit
+    },
+    currencyMinLimit(){
+      let _currencyMinLimit = 0
+      for(let item of this.currencyList){
+        if (item.currency == this.formData.currency) {
+          _currencyMinLimit = item.minLimit
+          if (!this.ad_id && this.formData.ad_type == 2) {
+            this.formData.min_amount = item.minLimit
+          }
+          break
+        }
+      }
+      return _currencyMinLimit
+    }
   },
   watch:{
+    currencyMinLimit(){},
+    coinMinLimit(){},
     benchSymbolParams() {
       this.getBenchSymbolInfo()
     },
@@ -183,11 +226,28 @@ export default {
       this.formData.price_rate = ''
     }
   },
+  beforeRouteEnter (to, from, next) {
+    if(process.env.NODE_ENV === 'development'){ //开发环境下跳过检测
+      next()
+      return
+    }
+    if(store.getters.getUserInfo.mobileAuthEnable!=1){
+      MessageBox.confirm(window.vm.$t('未绑定手机号，是否立即前往？'),window.vm.$t('确认'),{
+        cancelButtonText:window.vm.$t('取消'),
+        confirmButtonText:window.vm.$t('确认'),
+      }).then(action => {
+        window.vm.$router.push({name:'phoneVerify'})
+      })
+    } else {
+      next()
+    }
+  },
   created(){
     /*if('没有权限发布广告'){
       this.$router.back()
     }*/
     this.ad_id = this.$route.params.orderId || null
+    this.setValidate()
     this.getOtcTokens()
     this.getOtcCurrency()
     this.getPaySettings().then(()=>{
@@ -198,7 +258,38 @@ export default {
   },
   methods:{
     ...mapActions(['setUserWallets']),
-
+    setValidate(){
+      Validator.extend('minAmountValid', {
+        getMessage: (field, args) => {
+          if (this.formData.ad_type === 1) {
+            return this.$t('public0.public110').format(this.coinMinLimit) // 最小限额必须大于等于{0}
+          } else {
+            return this.$t('public0.public110').format(this.currencyMinLimit) // 最小限额必须大于等于{0}
+          }
+        },
+        validate: (value, args) => {
+          value = parseFloat(value)
+          if (this.formData.ad_type === 1) {
+            return value >= this.coinMinLimit
+          } else {
+            return value >= this.currencyMinLimit
+          }
+        }
+      })
+      Validator.extend('buyAmountLimitValid', {
+        getMessage: (field, args) => {
+          return this.$t('public0.public119').format(this.coinMinLimit) // 购买数量必须大于等于{0}
+        },
+        validate: (value, args) => {
+          value = parseFloat(value)
+          if (this.formData.ad_type === 1) {
+            return value >= this.coinMinLimit
+          } else {
+            return true
+          }
+        }
+      })
+    },
     isPayChecked(_type){
       return this.formData.pay_type.includes(_type)
     },

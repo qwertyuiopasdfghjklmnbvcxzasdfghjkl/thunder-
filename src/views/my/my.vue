@@ -11,6 +11,8 @@
                 <div class="user_head">
                     <div class="info" v-tap="{methods:$root.routeTo, to:'center'}">
                         <label>
+                            <!--{{orignal+getUserInfo.headerImagePath}}-->
+                            <!--dev  ? `${http}${domain}/ceph-data/dev/user/` : -->
                             <img src="../../assets/img/user_img@2x.png" v-if="!getUserInfo.headerImagePath">
                             <img :src="orignal+getUserInfo.headerImagePath" @error="setDefaultIcon($event)" v-else>
                         </label>
@@ -41,6 +43,8 @@
             <div class="mt20 box full">
                 <rail-bar :item="kyc">
                     <div>
+                        <span class="state wait"  v-if="showVerifyState(0)">{{$t('account.user_center_unverified')}}</span>
+                        <!--未提交-->
                         <span class="state wait"  v-if="showVerifyState(1)">{{$t('public0.public37')}}</span>
                         <!--待审核-->
                         <span class="state wait" v-if="showVerifyState(4)">{{$t('public0.public151')}}</span>
@@ -73,7 +77,7 @@
         },
         data() {
             return {
-                orignal: process.env.NODE_ENV === 'development'  ? config.url + '/ceph-data/dev/user/' : config.url + '/ceph-data/produ-thunder/user/' ,
+                orignal: config.headUrl,
                 user: {},
                 isUseCoinPay: false,
                 messageList: null,
@@ -109,11 +113,11 @@
                         icon: require('@/assets/img/ic_aqzx@3x.png'),
                         name: this.$t('user.safety')
                     },
-                    {
-                        route: 'myMapping', // otc的功能 我的订单
-                        icon: require('@/assets/img/icon_wddd.png'),
-                        name: this.$t('usercontent.user60'),
-                    },
+                    // {
+                    //     route: 'myMapping', // otc的功能 我的订单
+                    //     icon: require('@/assets/img/icon_wddd.png'),
+                    //     name: this.$t('usercontent.user60'),
+                    // },
                     {
                         route: 'history',
                         icon: require('@/assets/img/icon_ctjl.png'),
@@ -124,11 +128,11 @@
                         icon: require('@/assets/img/icon_yjjl.png'),
                         name: this.$t('trade_record.my_trade_record'),
                     },
-                    {
-                        route: 'adManage',  // otc 功能 我的广告
-                        icon: require('@/assets/img/icon_ad.png'),
-                        name: this.$t('otc_ad.otc_ad_management'),
-                    },
+                    // {
+                    //     route: 'adManage',  // otc 功能 我的广告
+                    //     icon: require('@/assets/img/icon_ad.png'),
+                    //     name: this.$t('otc_ad.otc_ad_management'),
+                    // },
                     {
                         route: 'referral',  // 邀请好友
                         icon: require('@/assets/img/invite.png'),
@@ -178,6 +182,7 @@
             this.getMessageList();
             this.getInfo()
             // this.data4[1].small = `<span class="ft-c-lightGray">${this.getVersion}</span>`
+            // console.log(window)
         },
         methods: {
             ...mapActions(['setApiToken', 'setUserInfo']),
@@ -202,25 +207,26 @@
                         verifyState: data.verifyState,
                         verifyTimes: data.verifyTimes
                     }
+                    if(this.userState.verifyState !== 0){
+                        this.kyc.route = 'ucenter'
+                    }
                     this.isUseCoinPay = (data.coinState === 1)
                 }, (msg) => {
                     // console.error(msg)
                 })
             },
             showVerifyState(targetVerifyState) { // 实名验证状态
-                if (this.userState.verifyTimes <= 3) {
-                    if (this.userState.verifyTimes === 3) {
-                        if (this.userState.verifyState === 0) {
+
+                    if (this.userState.verifyTimes > 0) {
+                        if(this.userState.verifyState === 0){
                             return targetVerifyState === 3
-                        } else {
-                            return targetVerifyState === this.userState.verifyState
                         }
+                        return targetVerifyState === this.userState.verifyState
                     } else {
+
                         return targetVerifyState === this.userState.verifyState
                     }
-                } else {
-                    return targetVerifyState === 3
-                }
+
             },
             getMessageList() {
                 // 参数为空时获取所有未读消息

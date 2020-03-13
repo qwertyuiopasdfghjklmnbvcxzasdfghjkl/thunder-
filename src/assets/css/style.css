@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?yopvg9');
-  src:  url('fonts/icomoon.eot?yopvg9#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?yopvg9') format('truetype'),
-    url('fonts/icomoon.woff?yopvg9') format('woff'),
-    url('fonts/icomoon.svg?yopvg9#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?ypv2n4');
+  src:  url('fonts/icomoon.eot?ypv2n4#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?ypv2n4') format('truetype'),
+    url('fonts/icomoon.woff?ypv2n4') format('woff'),
+    url('fonts/icomoon.svg?ypv2n4#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-trash:before {
+  content: "\e90e";
+}
+.icon-arrow-down3:before {
+  content: "\e90a";
+}
+.icon-arrow-up2:before {
+  content: "\e90b";
+}
+.icon-checkbox-checked:before {
+  content: "\e914";
+}
+.icon-checkbox-unchecked:before {
+  content: "\e915";
+}
 .icon-filter_none:before {
   content: "\e90c";
 }
@@ -60,16 +75,4 @@
 }
 .icon-share:before {
   content: "\e904";
-}
-.icon-arrow-down3:before {
-  content: "\e90a";
-}
-.icon-arrow-up2:before {
-  content: "\e90b";
-}
-.icon-checkbox-checked:before {
-  content: "\e914";
-}
-.icon-checkbox-unchecked:before {
-  content: "\e915";
 }

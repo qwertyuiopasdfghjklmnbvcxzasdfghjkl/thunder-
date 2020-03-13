@@ -13,19 +13,21 @@
                     :maxlength="32"
                     :label="$t('account.user_center_new_password')"
                     v-model="formData.password"
+                    :placeholder="true"
                     :title="$t('account.user_center_new_password')"></ui-input><!--新密码-->
             <i class="icon_showpwd" :class="{active:showpwd}"
                    v-tap="{methods: ()=>{showpwd = !showpwd}}"></i>
           </div>
-          <p class="f24 ft-c-main pwd-error" v-if="pwdError">{{$t('login_register.lintonPWReg')}}</p>
+          <p class="f24 ft-c-red pwd-error" v-if="pwdError">{{$t('login_register.lintonPWReg')}}</p>
           <div class="findpwd-content-row confirmPassword">
-            <ui-input 
+            <ui-input
                     :type="showpwd? 'text':'password'"
                     :maxlength="32"
                     :label="$t('login_register.confirm_new_password')"
                     v-model="formData.passwordConfirm"
+                    :placeholder="true"
                     :title="$t('login_register.confirm_new_password')"></ui-input><!--确认密码-->
-            
+
           </div>
           <div class="findpwd-content-row mt50">
             <mt-button type="primary" :disabled="locked" size="large" @click="resetPwd">{{$t('exchange.exchange_determine')}}<!--确定--></mt-button>
@@ -86,7 +88,7 @@ export default {
     })
   },
   methods: {
-    
+
     resetPwd () {
       this.$validator.validateAll().then((validResult) => {
         if (!validResult) {
@@ -175,7 +177,7 @@ export default {
       }
     }
     .ui_input {flex: 1;}
-    
+
     .icon_showpwd {
         position: absolute;
         right: 0.3rem;

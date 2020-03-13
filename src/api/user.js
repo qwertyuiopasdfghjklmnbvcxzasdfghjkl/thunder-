@@ -141,7 +141,7 @@ const getGtInfo = function (success, error) {
 }
 user.getGtInfo = getGtInfo
 
-// 发送验证码（4位）
+// 发送验证码（6位）
 const sendSMSCode = function (data, success, error) {
   let lang = window.localStorage.getItem('lang') || 'zh-CN'
   switch(lang){
@@ -182,57 +182,7 @@ const sendSMSCode = function (data, success, error) {
       lang = 'EN'
   }
   data.lang = lang
-  api.post(`${domain}api/v3/user/sendSms`, data, (res) => {
-    if (res.rst === 1) {
-      success && success(res.msg)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-user.sendSMSCode = sendSMSCode
-
-// 发送验证码（6位）
-const sendSMSCode6 = function (data, success, error) {
-  let lang = window.localStorage.getItem('lang') || 'zh-CN'
-  switch(lang){
-    case 'zh-CN':
-      lang = 'CN'
-      break
-    case 'cht':
-      lang = 'CNZH'
-      break
-    case 'kr':
-      lang = 'KO'
-      break
-    case 'jp':
-      lang = 'JA'
-      break
-    case 'ar':
-      lang = 'AR'
-      break
-    case 'de':
-      lang = 'DE'
-      break
-    case 'es':
-      lang = 'ES'
-      break
-    case 'fr':
-      lang = 'FR'
-      break
-    case 'it':
-      lang = 'IT'
-      break
-    case 'th':
-      lang = 'TH'
-      break
-    case 'ru':
-      lang = 'RU'
-      break
-    default:
-      lang = 'EN'
-  }
-  data.lang = lang
+  // 4位 api/v3/user/sendSms
   api.post(`${domain}api/v3/individual/sendAuthSms`, data, (res) => {
     if (res.rst === 1) {
       success && success(res.msg)
@@ -241,7 +191,7 @@ const sendSMSCode6 = function (data, success, error) {
     }
   }, error)
 }
-user.sendSMSCode6 = sendSMSCode6
+user.sendSMSCode = sendSMSCode
 
 // 手机重置密码
 const mobileResetPwd = function (data, success, error) {
@@ -278,5 +228,17 @@ const getUserLevel = function (success, error) {
   }, error)
 }
 user.getUserLevel = getUserLevel
+
+//图片上传接口
+const imageUpload = function (data, success, error) {
+  api.post(`${domain}api/v5/user/image/upload`, data, (res) => {
+    if (res.rst === 1) {
+      success && success(res.data)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+user.imageUpload = imageUpload
 
 export default user

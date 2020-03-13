@@ -50,6 +50,7 @@
                   item.idx = window.marketOrder[item.market]
                   item.iconBase64 = window.marketIcon[item.market]
                   item.collection = window.marketCollection[item.market]
+                  item.marketCategory = window.marketCategory[item.market]
                 })
                   console.log(res.data)
                 window.setMarketList(res.data)

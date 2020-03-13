@@ -9,6 +9,7 @@ let https = window.location.protocol === 'https:'?true:false
 if (process.env.VUE_APP_HTTPS==='true') {
   https = true
 }
+let dev = process.env.NODE_ENV === 'development'
 const protocol = window.location.protocol === 'https:' || https ? 'wss://': 'ws://'
 const http = window.location.protocol === 'https:' || https ? 'https://' : 'http://'
 const config = {
@@ -17,7 +18,7 @@ const config = {
   http: http,
   url: `${http}${domain}`,
   protocol: protocol,
-
+  headUrl: dev  ? `${http}${domain}/ceph-data/dev/user/` : `${http}${domain}/ceph-data/produ-thunder/user/`,
   brand: 'Thunder',
   version:'1.0.0',
   updateInfo:{  //更新日志

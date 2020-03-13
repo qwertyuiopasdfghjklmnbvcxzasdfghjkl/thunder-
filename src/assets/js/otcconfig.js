@@ -16,7 +16,8 @@ let config = {
   ],
   additional: [
     {symbol: 'ATN', price: 0.1},{symbol: 'MECoin', price: 0.25},
-  ]
+  ],
+  benchMarkingId:2, //参考价默认交易所id
 }
 otcApi.getCoinsList((res) => {
   res.forEach((item) => {

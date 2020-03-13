@@ -105,6 +105,12 @@ export default [
                 meta:{login: true}
             },
             {
+                path: 'bind-email',
+                name: 'bindEmail',
+                component:() => import('@/views/my/safe/bindEmail'),
+                meta:{login: true}
+            },
+            {
                 path: 'about',
                 name: 'about',
                 component:() => import('@/views/my/about/about'),

@@ -4,13 +4,13 @@
       <i class="icon_service" slot="right" v-tap="{methods:goOnlineService}"></i>
     </top-back>
     <div class="page-main">
-      <component :is="isBuyer" :adInfo="adInfo" :orderInfo="orderInfo" :adPay="adPay"></component>
+      <component :is="isBuyer" :adInfo="adInfo" :orderInfo="orderInfo"></component>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import OrderBuy from './order_buy'
 import OrderSell from './order_sell'
 import otcApi from '@/api/otc'
@@ -35,29 +35,16 @@ export default {
     adInfo(){
       return this.data.adInfo || {}
     },
-    adPay(){
-      return this.adInfo.pay_type && this.adInfo.pay_type.split(',') || []
-    },
     orderInfo(){
       let orderInfo = this.data.orderInfo || {}
       orderInfo.total_price = utils.removeEndZero(utils.toFixed(orderInfo.currency_count,2)).toMoney()
       orderInfo.cur_price = utils.removeEndZero(utils.toFixed(orderInfo.cur_price,2)).toMoney()
       orderInfo.symbol_count = utils.removeEndZero(utils.toFixed(orderInfo.symbol_count,8)).toMoney()
-      orderInfo.surplus_Time = '00:00'
       let date = utils.formatDate(orderInfo.apply_time).getTime()
       let ndate = utils.formatDate(this.data.cur_time).getTime()
       let diffTime = Math.floor((ndate - date) / 1000)
       let surplusTime = orderInfo.pay_apply_time * 60 - diffTime
-      let interval = utils.countDown(surplusTime, (time) => {
-        if (time === '00:00') {
-          orderInfo.isExpire = true
-        } else if (time === '05:00' && orderInfo.to_user_name === this.getUserInfo.username && orderInfo.pay_state === 0) {
-          // 您的付款确认时间还剩5分钟，5分钟后系统将自动取消订单！请付款并标记确认付款！
-          // 添加系统消息
-          this.$emit('addSystemMessage', orderInfo.order_number, 'PAYMENT_TIMEOUT_REMIND')
-        }
-        orderInfo.surplus_Time = time
-      })
+      orderInfo.surplus_Time = surplusTime
       orderInfo.isExpire = surplusTime <= 0
       return orderInfo
     }
@@ -75,11 +62,57 @@ export default {
   },
   created(){
     this.data = this.$route.params.data
+    this.addOtcSocketEvent(this.systemEvent)
+  },
+  beforeDestroy () {
+    this.removeOtcSocketEvent(this.systemEvent)
   },
   methods:{
+    ...mapActions(['addOtcSocketEvent', 'removeOtcSocketEvent']),
     goOnlineService(){
       
     },
+    cancelApeal (appealManageId) { // 取消申诉
+      otcApi.cancelAppeal(appealManageId, (msg) => {
+        this.orderInfo.appeal_state = 2
+        Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+      }, (msg) => {
+        Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+      })
+    },
+    systemEvent (data) {
+      let optType = parseInt(data.operate_type)
+      let childType = parseInt(data.child_type)
+      if (optType === 1) { // 系统消息
+        switch (childType) {
+          case 31: // 新建订单消息
+          case 32: // 取消订单消息
+          case 33: // 系统自动取消订单消息
+          case 34: // 买家付款消息
+          case 35: // 正常放币消息
+          case 36: // 强制放币买家消息
+          case 37: // 强制放币卖家消息
+          case 38: // 解除锁币消息
+            let orderNumber = JSON.parse(data.link).order_number
+            if (childType === 34) {
+              if (orderNumber === this.orderInfo.order_number) {
+                this.getOrderDetail()
+              }
+              // 买方已经标记确认付款，请查收！
+              MessageBox.alert(this.$t('error_code.CONFIRM_PAYMENT')).then((action) => {}, (cancel) => {})
+            } else if (childType === 35) {
+              if (orderNumber === this.orderInfo.order_number) {
+                this.orderInfo.state = 2
+              }
+              // 卖家已确认收款，并释放代币，请注意查收！
+              MessageBox.alert(this.$t('error_code.SELLER_RELEASE_CURRENCY_WARN')).then((action) => {
+                this.orderInfo.pay_state = 1
+              }, (cancel) => {})
+            }
+            break
+        }
+      }
+    }
   }
 }
 </script>

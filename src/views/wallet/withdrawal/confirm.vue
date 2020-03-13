@@ -16,7 +16,7 @@
                 <input class="input" v-validate="'required|pInteger'" :maxLength="6" name="smsCode" :msgs="msgs.smsCode"
                        :errs="errors" v-model="comData.smsCode" :title="$t('account.user_center_SMS_code')"
                        :placeholder="$t('account.user_center_SMS_code')"><!--短信验证码-->
-                <mt-button type="primary" style="font-size: 0.28rem;" :disabled="disabled" @click="sendSMSCode">
+                <mt-button type="primary" style="font-size: 0.28rem;" :disabled="disabled" v-tap="{methods:sendSMSCode}">
                     {{$t('account.user_center_send_SMS')}}<!--发送验证码--> {{disabled ? `（${time}s）` : ''}}
                 </mt-button>
             </div>
@@ -159,6 +159,7 @@
                 })
             },
             sendSMSCode() {
+                console.log(this.disabled)
                 if (this.disabled) {
                     return
                 }

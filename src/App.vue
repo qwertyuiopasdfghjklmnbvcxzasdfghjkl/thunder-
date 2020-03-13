@@ -79,8 +79,9 @@
                     }
                 }
             })
+            
             //建立OTC推送，初始化数据
-            /*this.otcws = new OtcWebSocket({
+            this.otcws = new OtcWebSocket({
               onMessage: (data) => {
                 let events = this.getOtcSocketEvents
                 for (let i = 0; i < events.length; i++) {
@@ -88,7 +89,7 @@
                   ev(data)
                 }
               }
-            })*/
+            })
 
 
             if(!window['cordova']){
