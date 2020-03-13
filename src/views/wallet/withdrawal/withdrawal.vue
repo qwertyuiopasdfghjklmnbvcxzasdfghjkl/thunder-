@@ -193,7 +193,18 @@
                 }
             }
         },
-        watch: {},
+        watch: {
+            //rechargeFlag
+            withdrawalType(e){
+                console.log(this.symbolInfo.rechargeFlag)
+                if(e === 2){
+                    if(this.symbolInfo.rechargeFlag !== 1){
+                        this.withdrawalType = 1
+                        Tip({type: 'danger', message: this.$t('error_code.SYMBOL_NOT_INNER_WITHDRAWAL')})
+                    }
+                }
+            }
+        },
         created() {
             this.symbol = this.getSymbol
             this.form.toAddress = this.$route.params.address || ''
