@@ -52,7 +52,8 @@
                         <p class="mt10">
                             <input type="number" v-model="form.amount"
                                    name="amount"
-                                   :placeholder="$t('account.user_minimum_number_of_cash').format(`：${symbolInfo.minWithdraw}`)"/>{{symbol}}
+                                   :placeholder="$t('account.user_minimum_number_of_cash').format(`：${withdrawalType === 1 ? symbolInfo.minWithdraw: symbolInfo.stationWithdrawMin}`)"/>
+                            {{symbol}}
                             <!--最小提现数量为：{0} {symbol}-->
                             <a href="javascript:;" class="set_all" @click="setAll">{{$t('trade_record.trade_record_all')}}</a>
                         </p>
@@ -178,7 +179,11 @@
             },
             procedureFee() {
                 if (this.withdrawalType === 2) {
-                    return this.$t('market.fee')
+                    if (this.symbolInfo.stationFeeType == 0) {
+                        return this.symbolInfo.stationFee
+                    } else {
+                        return !!Number(this.form.amount) ? utils.removeEndZero(numUtils.mul(this.symbolInfo.stationFee, this.form.amount).toFixed(8)) : '--'
+                    }
                 } else {
                     if (this.symbolInfo.procedureFeeType == 0) {
                         return this.symbolInfo.procedureFee
@@ -218,15 +223,16 @@
                 if (Number(this.form.amount) > Number(this.symbolInfo.availableBalance)) {
                     Tip({type: 'danger', message: this.$t('exchange.exchange_Insufficient_balance')})
                     return
-                } else if (Number(this.form.amount) < Number(this.symbolInfo.minWithdraw)) {
-                    Tip({
-                        type: 'danger',
-                        message: this.$t('account.user_minimum_number_of_cash').format(`：${this.symbolInfo.minWithdraw} ${this.symbol}`)
-                    }) // 最小提币数量为{0}。
-                    this.form.amount = this.symbolInfo.minWithdraw
-                    return
                 }
                 if(this.withdrawalType === 2){
+                    if (Number(this.form.amount) < Number(this.symbolInfo.stationWithdrawMin)) {
+                        Tip({
+                            type: 'danger',
+                            message: this.$t('account.user_minimum_number_of_cash').format(`：${this.symbolInfo.stationWithdrawMin} ${this.symbol}`)
+                        }) // 最小提币数量为{0}。
+                        this.form.amount = this.symbolInfo.stationWithdrawMin
+                        return
+                    }
                     userUtils.insetWithdraw(this.insetWithdrawalParams,res=>{
                         Tip({type: 'success', message: res})
                         this.$router.push({name: 'trading'})
@@ -234,6 +240,14 @@
                         Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
                     })
                 }else {
+                    if (Number(this.form.amount) < Number(this.symbolInfo.minWithdraw)) {
+                        Tip({
+                            type: 'danger',
+                            message: this.$t('account.user_minimum_number_of_cash').format(`：${this.symbolInfo.minWithdraw} ${this.symbol}`)
+                        }) // 最小提币数量为{0}。
+                        this.form.amount = this.symbolInfo.minWithdraw
+                        return
+                    }
                     this.placeOrderVisible = true
                 }
 

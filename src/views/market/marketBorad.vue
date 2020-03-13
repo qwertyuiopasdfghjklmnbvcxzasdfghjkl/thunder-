@@ -138,6 +138,7 @@
                 return markets
             },
             baseSymbol() {
+                console.log(this.list)
                 let _temp = this.list || []
                 let _list = _temp.map(item => {
                     return item.baseSymbol
@@ -147,7 +148,8 @@
 
         },
         watch:{
-            baseSymbol(){
+            baseSymbol(e){
+                console.log(e)
                 if(!this.symbol){
                     this.symbol = this.baseSymbol[0]
                 }else{
@@ -159,6 +161,7 @@
         },
         mounted(){
             console.log(this.list)
+            this.symbol = this.baseSymbol[0]
         },
 
         methods: {

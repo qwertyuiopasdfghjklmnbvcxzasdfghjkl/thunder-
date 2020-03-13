@@ -144,7 +144,7 @@
             this.showMoney = JSON.parse(localStorage.getItem('showAssets') || 'true')
             // this.getInfo()
             this.getAssets()
-            this.gettTotalUSDTAmount()
+            // this.gettTotalUSDTAmount()
             console.log(this.getBTCValuation, this.getBtcPrice.USDT)
         },
         watch: {
@@ -154,11 +154,11 @@
         },
         methods: {
             ...mapActions(['setBTCValuation', 'setSymbol', 'setUserInfo', 'setUserWallets']),
-            gettTotalUSDTAmount() {
-                walletApi.gettTotalUSDTAmount(res => {
-                    this.totalUSDT = res
-                })
-            },
+            // gettTotalUSDTAmount() {
+            //     walletApi.gettTotalUSDTAmount(res => {
+            //         this.totalUSDT = res
+            //     })
+            // },
             getAssets() {
                 walletApi.myAssets({}, (res) => {
                     if (res.length == 0) {

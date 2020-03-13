@@ -35,7 +35,7 @@
         },
         data() {
             return {
-                type: 2,
+                type: 0,
             }
         },
         computed: {
@@ -77,6 +77,7 @@
 
         },
         created () {
+            this.type = 2
             this.socket = KLineWebSocket({
                 subscribe:['market'],
                 callback: (res) => {
