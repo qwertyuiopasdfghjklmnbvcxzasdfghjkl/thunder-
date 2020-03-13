@@ -85,10 +85,12 @@
                         for (let i in gtParams) {
                             formData[i] = gtParams[i]
                         }
+
                         userApi.getRsaPublicKey((rsaPublicKey) => {
                             formData.password = utils.encryptPwd(rsaPublicKey, formData.password)
                             formData.rsaPublicKey = rsaPublicKey
-                            console.log(new Date().getTime())
+
+                            console.log(formData)
                             userApi.login(formData, (apiToken, res) => {
                                 this.locked = true
                                 if (apiToken) {

@@ -175,7 +175,7 @@ const limitUploadImage = function (file, error, size) {
   let limitSize = (size || imgSize) * 1024 * 1024
   if (file.nodeName !== 'INPUT' && file.name && file.size) {
     if (file.size > limitSize) {
-      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_${size || imgSize}`)
+      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_`)
       return false
     } else {
       return true
@@ -185,7 +185,7 @@ const limitUploadImage = function (file, error, size) {
   for (let i = 0; i < files.length; i++) {
     let f = files.item(i)
     if (f.size > limitSize) {
-      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_${size || imgSize}`)
+      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_`)
       return false
     }
   }

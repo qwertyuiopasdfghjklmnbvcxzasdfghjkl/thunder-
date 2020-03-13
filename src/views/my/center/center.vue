@@ -160,7 +160,7 @@ export default {
             return Tip({type: 'danger', message: this.$t('public0.public43')}) // 请上传JPG、PNG、JPEG、BMP格式的图片
           }
           let isTrue = utils.limitUploadImage(target, (msg) => {
-            Tip({type: 'danger', message: this.$t(msg)})
+            Tip({type: 'danger', message: this.$t(msg).format('3')})
           }, 3)
           if (!isTrue) {
             target.value = ''

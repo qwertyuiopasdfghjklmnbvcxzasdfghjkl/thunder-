@@ -2215,6 +2215,7 @@ export default {
 			"VERIFY_FIRST_PASS": "您的实名认证已通过初审",
 			"IMAGE_EXCEED_2": "图片不能超过2M",
 			"IMAGE_EXCEED_1": "图片不能超过1M",
+			"IMAGE_EXCEED_": "图片不能超过{0}M",
 			"PASSWORD_ERROR_FOUR": "密码错误，您还有2次机会",
 			"codeSuccess": "验证码发送成功",
 			"PHONE_NUMBER_FORMAT_ERROR": "手机号格式错误",

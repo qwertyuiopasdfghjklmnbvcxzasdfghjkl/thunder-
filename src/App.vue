@@ -80,7 +80,7 @@
                             list[v] = Number(res[v])
                         }
                         console.log(list)
-                        this.setBtcPrice(list)
+                        // this.setBtcPrice(list)
                         this.setBTCValuation(numUtils.BN(res.totalAmount).toFixed(8)) // 当前转换人民币
                     }
                 }
