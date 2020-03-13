@@ -198,7 +198,7 @@
             withdrawalType(e){
                 console.log(this.symbolInfo.rechargeFlag)
                 if(e === 2){
-                    if(this.symbolInfo.rechargeFlag !== 1){
+                    if(Number(this.symbolInfo.rechargeFlag) !== 1){
                         this.withdrawalType = 1
                         Tip({type: 'danger', message: this.$t('error_code.SYMBOL_NOT_INNER_WITHDRAWAL')})
                     }
@@ -470,9 +470,11 @@
             background: #0EB574;
             border-radius: 0.1rem;
             margin: 0.15rem;
+            opacity: 0.5;
 
             &.active {
                 background: #E01C37;
+                opacity: 1;
             }
         }
     }
