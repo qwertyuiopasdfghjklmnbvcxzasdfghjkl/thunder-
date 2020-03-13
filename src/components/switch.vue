@@ -1,86 +1,112 @@
 <template>
-  <label class="switch">
-    <input class="switch-input" type="checkbox" v-model="checked">
-    <span class="switch-core"></span>
-    <div class="switch-label">
-      <label><slot></slot></label>
-    </div>
-  </label>
+  <div class="cont" :style="switch_size" @click="chang()"
+       :class=" switch_value?size:''">
+    <p class="switch_bg" :style="`background:${background};opacity:${switch_value?1:0}`">{{openText}}</p>
+    <span class="radiu" :style="switch_radius"></span>
+  </div>
 </template>
 
 <script>
-export default {
-  name: 'cp-switch',
-  props: {
-    val: {
-      type: Boolean,
-      default: false
+  export default {
+    name: 'switch-vi',
+    props: {
+      value: {
+        default: false,
+        type: Boolean
+      },
+      size: {
+        default: 'small',
+        type: String
+      },
+      background: {
+        default: '#0C6AC9',
+        type: String
+      },
+      openText: null
+    },
+    data () {
+      return {
+        switch_value: this.value,
+        switch_size: null,
+        switch_radius: null
+      }
+    },
+    created () {
+      if (this.size === 'small') {
+        this.switch_size = `width:32px;height:18px;`
+        this.switch_radius = `width:18px;height:18px`
+      } else if (this.size === 'leg') {
+        this.switch_size = `width:50px;height:22px;`
+        this.switch_radius = `width:22px;height:22px`
+      } else if (this.size === 'big') {
+        this.switch_size = `width:66px;height:30px;`
+        this.switch_radius = `width:30px;height:30px`
+      }
+    },
+    methods: {
+      chang () {
+        this.switch_value = !this.switch_value
+        this.$emit('input', this.switch_value)
+      }
     }
-  },
-  data () {
-    return {
-      checked: false
-    }
-  },
-  watch: {
-    checked (n, o) {
-      this.$emit('callback', this.checked)
-    }
-  },
-  created () {
-    this.checked = this.val
+
   }
-}
 </script>
 
-<style lang="less" scoped>
-.switch {
-  display: flex;
-  align-items: center;
-  position: relative;
-  .switch-input {
-      display: none;
-  }
-  .switch-core {
-    display: inline-block;
+<style scoped lang="less">
+  .cont {
+    width: 32px;
+    height: 18px;
+    border-radius: 50px;
+    background: #ccc;
     position: relative;
-    width: 1.2rem;
-      height: 0.4rem;
-    background: #292929;
-    &:after, &:before {
-      content: " ";
-      top: 0;
-      left: 0;
-      position: absolute;
-      transition: transform .3s;
-    }
-    &:before {
-      width: 1.2rem;
-      height: 0.4rem;
-      background-color: #292929;
-    }
-    &:after {
-      width: 0.6rem;
-      height: 0.4rem;
-      background-color: #8089a3;
-      box-shadow: 0 1px 3px rgba(0,0,0,.4);
+    display: inline-block;
+    margin: 8px;
+    cursor: pointer;
+    transition: .3s;
+    overflow: hidden;
+
+    &.small {
+      .radiu {
+        left: 14px;
+      }
     }
 
+    &.leg {
+      .radiu {
+        left: 28px;
+      }
+    }
+
+    &.big {
+      .radiu {
+        left: 30px;
+      }
+    }
+
+    .radiu {
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+      left: 0;
+      top: 0;
+      transition: .3s;
+    }
   }
-  .switch-input:checked + .switch-core {
-      background-color: #26a2ff;
+  .switch_bg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    transition: 0.3s;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    color: #ffffff;
+    text-indent: 5px;
   }
-  .switch-input:checked + .switch-core::before {
-      transform: scale(0);
-  }
-  .switch-input:checked + .switch-core::after {
-      transform: translateX(0.6rem);
-      background-color: #292929;
-  }
-  .switch-label {
-      margin-left: 0.26rem;
-      display: inline-block;
-      font-size: 0.26rem;
-  }
-}
 </style>

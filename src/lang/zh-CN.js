@@ -1653,6 +1653,8 @@ export default {
 			"inner_withdrawal": "站内提币",
 			"flash_topup": "普通充币",
 			"flash_withdrawal": "普通提币",
+			"no_bind_email_unbind_phone":"未绑定邮箱验证码，不可以解绑手机验证码！",
+			"user_SMS_code": "短信验证码"
 		},
 		"referral": {
 			"date": "日期",
@@ -2213,6 +2215,7 @@ export default {
 			"VERIFY_FIRST_PASS": "您的实名认证已通过初审",
 			"IMAGE_EXCEED_2": "图片不能超过2M",
 			"IMAGE_EXCEED_1": "图片不能超过1M",
+			"IMAGE_EXCEED_": "图片不能超过{0}M",
 			"PASSWORD_ERROR_FOUR": "密码错误，您还有2次机会",
 			"codeSuccess": "验证码发送成功",
 			"PHONE_NUMBER_FORMAT_ERROR": "手机号格式错误",
@@ -2247,7 +2250,11 @@ export default {
 			"OTC_USER_UNFROZEN_BODY": "您已解冻，可进行新的OTC交易",
 			"IEO_PROJECT_AFTER_END": "申购已结束",
 			"OTC_RELEASE_SYMBOL_BODY": "已确认收款，释放代币，请查收。",
-			"ENTRUST_ASSET_REQUIRE_NOT_SATISFIED": "委托金额不足"
+			"ENTRUST_ASSET_REQUIRE_NOT_SATISFIED": "委托金额不足",
+			"BIND_EMAIL_FIRST": "请先绑定邮箱",
+			"BIND_EMAIL_ALREADY_EXIST":"该邮箱已绑定，请更换其他的邮箱",
+			"SMS_VERIFICATION_ALREADY_OPEN": "短信验证已是开启状态",
+            "SYMBOL_NOT_INNER_WITHDRAWAL": "该币种暂未开启站内转账"
 		},
 		"exchange": {
 			"exchange_low": "24h最低价",

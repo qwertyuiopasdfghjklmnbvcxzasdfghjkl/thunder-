@@ -16,7 +16,7 @@
     <script src="./js/bignumber.min.js"></script>
     <script src="./js/numberUtils.js"></script>
     <style type="text/css">
-        html, body {min-height: 430px;}
+        html, body {min-height: 430px;font-size: 12px}
         .controls {padding-left: 0.3rem; padding-right: 0.3rem; line-height: 30px; display: -webkit-box; display: -ms-flexbox; display: flex; font-size: 12px;  position: relative; background-color: #131e30;}
         .controls > div {min-width: 1.8rem; position: relative;}
         /*.controls > div:nth-of-type(1), .controls > div:nth-of-type(2) {border-right: 1px solid #6C6F8B;}*/
@@ -25,9 +25,22 @@
         .dropMenu {position: absolute; background-color: #122544; left: 0.3rem; right: 0.3rem; top: 30px; z-index: 1; color: #9596aa; font-size: 14px; text-align: center}
         .dropMenu li {width: 20%; float: left; line-height: 35px;}
         .dropMenu li.active {background-color: #0067e7; color: #fff;}
-        .price {font-size: 12px;margin-top: 6px; position: relative; height: 15px; overflow: hidden;}
-        .price p {position: absolute;  -webkit-transform: scale(0.825); transform: scale(0.825); left: -1rem; right: -1rem;}
-        .price p span + span {margin-left: 0.1rem;}
+        /*.price {font-size: 12px;margin-top: 6px; position: relative; height: 15px; overflow: hidden;}*/
+        /*.price p {position: absolute;  -webkit-transform: scale(0.825); transform: scale(0.825); left: -1rem; right: -1rem;}*/
+        /*.price p span + span {margin-left: 0.1rem;}*/
+        .price_box{
+            position: fixed;
+            top: 1rem;
+            right: 0.1rem;
+            width: 2.5rem;
+            background: #101724;
+            padding: 0.2rem;
+            display: flex;
+        }
+        .price_box > span{
+            display: block;
+            font-size: 0.2rem;
+        }
         #trade-view {margin-top: 10px; height: -webkit-calc(100vh - 61px); height: calc(100vh - 61px);}
     </style>
 </head>
@@ -49,7 +62,11 @@
             <li :class="{active:indicator===''}" @click="removeIndicator">{{lang==='zh'?'关闭':"Close"}}</li>
         </ul>
     </div>
-    <div class="price tc"><p id="price"><span>开= n/a</span><span>高= n/a</span><span>低= n/a</span><span>收= n/a</span></p></div>
+    <div class="price tc">
+        <p id="price" class="price_box">
+            <!--<span>开= n/a</span><span>高= n/a</span><span>低= n/a</span><span>收= n/a</span>-->
+        </p>
+    </div>
     <div id="trade-view"></div>
 </div>
 <script>
@@ -86,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if(query.domain){
                 this.domain = query.domain
             }
-            
+
         },
         mounted:function(){
           var self = this

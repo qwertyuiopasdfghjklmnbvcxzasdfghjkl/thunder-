@@ -146,7 +146,7 @@
                 }, () => {
                     this.responseState.item1 = true
                 })
-                this.getUnReadLength()
+                // this.getUnReadLength()
             })
         },
         methods: {

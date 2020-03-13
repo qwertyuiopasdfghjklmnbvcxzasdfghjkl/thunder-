@@ -10,7 +10,8 @@ const state = {
   lang: window.localStorage.getItem('lang') || 'zh-CN', //语言包
   api_token: JsCookies.get('api_token'),
   userInfo: userInfo || {},
-  version: '1.0.0'
+  version: '1.0.0',
+  userState: {}
 }
 const getters = {
   getLang (state){
@@ -25,6 +26,9 @@ const getters = {
   getVersion (state) {
     return state.version
   },
+  getUserState (state){
+    return state.userState
+  }
 }
 
 const mutations = {
@@ -39,6 +43,9 @@ const mutations = {
   },
   updateVersion (state, version) {
     state.version = version
+  },
+  updateUserState (state, userState) {
+    state.userState = userState
   },
 }
 
@@ -68,6 +75,9 @@ const actions = {
   setVersion ({commit}, version){
     commit('updateVersion',version)
   },
+  setUserState (context, userState){
+    context.commit('updateUserState',userState)
+  }
 }
 
 export default {

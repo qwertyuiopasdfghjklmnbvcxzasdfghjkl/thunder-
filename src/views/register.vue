@@ -170,7 +170,7 @@
                 areaCodeList: commonConfig.areaCodeList,
                 formData: {
                     countryCode: commonConfig.defaultCode,
-                    registerType: 0,
+                    registerType: 1,
                     mobile: '',
                     smsCode: '',
                     username: '',

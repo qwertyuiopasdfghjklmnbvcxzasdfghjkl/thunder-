@@ -11,6 +11,7 @@
                 </label>
                 <data_box/>
             </div>
+            <!--<p>{{this.$store.state.common.lang}}</p>-->
             <otc/>
             <data-list/>
         </div>
@@ -42,6 +43,7 @@
             otc
         },
         created () {
+            console.log(this.$store)
           this.socket = KLineWebSocket({
             subscribe:['market'],
             callback: (res) => {

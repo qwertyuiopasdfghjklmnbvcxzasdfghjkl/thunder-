@@ -120,6 +120,14 @@ router.beforeEach((to, from, next) => {
   }
 });
 
+
+// 非开发环境 禁止打印
+if(process.env.NODE_ENV !== 'development'){
+    window.console.log = ()=>{}
+    window.console.error = ()=>{}
+    window.console.warn = ()=>{}
+}
+
 let init = ()=>{
   window.vm = new Vue({
         i18n,

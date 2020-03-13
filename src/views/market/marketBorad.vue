@@ -47,7 +47,7 @@
                             @click="goToExchangePage(item)">
                             <li>
                                 <h1><span>{{item.currencySymbol}}</span>/<i>{{item.baseSymbol}}</i></h1>
-                                <h2>24h{{$t('home.home04')}} {{toFixed(item.dealAmount, 2)}}</h2>
+                                <h2>24h {{$t('home.home04')}} {{toFixed(item.dealAmount, 0)}}</h2>
                             </li>
                             <li>
                                 <h1 :class="[percent(item).css]">{{toFixed(item.lastPrice, item.accuracy)}}</h1>
@@ -138,6 +138,7 @@
                 return markets
             },
             baseSymbol() {
+                console.log(this.list)
                 let _temp = this.list || []
                 let _list = _temp.map(item => {
                     return item.baseSymbol
@@ -147,7 +148,8 @@
 
         },
         watch:{
-            baseSymbol(){
+            baseSymbol(e){
+                console.log(e)
                 if(!this.symbol){
                     this.symbol = this.baseSymbol[0]
                 }else{
@@ -159,6 +161,7 @@
         },
         mounted(){
             console.log(this.list)
+            this.symbol = this.baseSymbol[0]
         },
 
         methods: {

@@ -16,7 +16,7 @@
                     <!-- <img :src="getMarketImg(item.iconBase64)"> -->
                     <span class="f34">{{item.currencySymbol}}</span><span class="ft-c-lightGray f24">/{{item.baseSymbol}}</span>
                     <p class="ft-c-lightGray ellipsis mt10 f24">24H{{$t('home.home04')}}
-                        {{humanNum(item.dealAmount)}}</p>
+                        {{toFixed(item.dealAmount, 0)}}</p>
                 </li>
                 <li class="ui-flex-3">
                     <p class="f34" :class="[percent(item).css]">{{toFixed(item.lastPrice, item.accuracy)|number}}</p>

@@ -16,7 +16,7 @@
                     </div>
                   <div class="second-content-item mt30" @click="focusVerifyCode">
                     <div class="second-content-row SMSLabel  ui-flex ui-flex-justify" v-if="formData.verifyType===0">
-                      <span>{{$t('account.user_center_SMS_code')}}<!--短信验证码--></span>
+                      <span>{{$t('market.user_SMS_code')}}<!--短信验证码--></span>
                       <mt-button type="default" size="small" :disabled="disabled" v-tap="{methods:sendSMSCode}">{{$t('account.user_center_send_SMS')}}<!--发送验证码-->{{disabled ? `（${time}s）` : ''}}</mt-button>
                     </div>
                     <div class="second-content-row googleLabel  ui-flex ui-flex-justify" v-if="formData.verifyType===1">

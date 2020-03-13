@@ -185,7 +185,7 @@
             // console.log(window)
         },
         methods: {
-            ...mapActions(['setApiToken', 'setUserInfo']),
+            ...mapActions(['setApiToken', 'setUserInfo', 'setUserState']),
             getInfo() {
                 myApi.getUserInfo(res => {
                     this.setUserInfo(res);
@@ -211,6 +211,7 @@
                         this.kyc.route = 'ucenter'
                     }
                     this.isUseCoinPay = (data.coinState === 1)
+                    this.setUserState(data)
                 }, (msg) => {
                     // console.error(msg)
                 })
@@ -231,8 +232,15 @@
             getMessageList() {
                 // 参数为空时获取所有未读消息
                 userApi.getMessages({}, (res) => {
-                    if (res.total) {
-                        this.data3[0].small = `<span class="ft-c-lightGray">${this.$t('account.unread_message')}</span><span class="mint-badge is-error is-size-small">${res.total}</span>`
+                    let i = res.unread;
+                    // (res.data||[]).filter(res=>{
+                    //     if(res.messageState === 0){
+                    //         i++
+                    //     }
+                    // })
+                    if(i){
+                        this.data3[0].small = `<span class="ft-c-lightGray">${this.$t('account.unread_message')}</span>
+                    <span class="mint-badge is-error is-size-small">${i}</span>`
                     }
                 })
             }

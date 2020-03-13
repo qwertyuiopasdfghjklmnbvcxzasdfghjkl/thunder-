@@ -158,6 +158,7 @@ TVjsApi.prototype.init = function() {
                 document.querySelector('#price').innerHTML = tar.innerHTML
                 self.isClicked = true
                 window.VM.active = ''
+                console.log(window, tar)
             });
             window.VM.setMA(true)
 
@@ -221,7 +222,7 @@ TVjsApi.prototype.getBars = function(symbolInfo, resolution, rangeStartDate, ran
             var self = this
             setTimeout(function(){
                 var tar = document.querySelector('iframe').contentWindow.document.querySelector('.pane-legend-item-value-container')
-                document.querySelector('#price').innerHTML = tar.innerHTML
+                // document.querySelector('#price').innerHTML = tar.innerHTML
                 self.isFirst = false
             },100)
         }
