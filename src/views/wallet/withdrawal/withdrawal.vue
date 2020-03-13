@@ -194,11 +194,11 @@
             }
         },
         watch: {
-            //rechargeFlag
+            //stationFlag
             withdrawalType(e){
-                console.log(this.symbolInfo.rechargeFlag)
+                console.log(this.symbolInfo.stationFlag)
                 if(e === 2){
-                    if(Number(this.symbolInfo.rechargeFlag) !== 1){
+                    if(Number(this.symbolInfo.stationFlag) !== 1){
                         this.withdrawalType = 1
                         Tip({type: 'danger', message: this.$t('error_code.SYMBOL_NOT_INNER_WITHDRAWAL')})
                     }
