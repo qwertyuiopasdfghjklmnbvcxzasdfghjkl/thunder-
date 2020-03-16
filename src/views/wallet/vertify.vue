@@ -4,12 +4,14 @@
             <i class="cancel" @click="closeDialog">
                 <img src="../../assets/img/off_blank.png"/>
             </i>
-            <p>{{mobileState === 1 ? $t('auth_warning.warning_SMS_auth') : $t('account.safety_verification')}}
+            <p v-if="params.title">{{params.title}}</p>
+            <p v-else>{{mobileState === 1 ? $t('auth_warning.warning_SMS_auth') : $t('account.safety_verification')}}
                 <!--短信验证||谷歌验证--></p>
         </div>
+        <div class="desc ft-c-default mt30 pl30 pr30 lh15" v-if="params.desc">{{params.desc}}</div>
         <!--短信验证-->
         <div class="form" v-if="mobileState === 1">
-            <input class="input" ref="box" type="password" v-validate="'required'" name="passwordVerify"
+            <input class="input" ref="box" type="password" v-validate="'required'" name="password"
                    :msgs="msgs.password" :errs="errors" v-model="comData.password"
                    :title="$t('account.user_center_login_password')"
                    :placeholder="$t('account.user_center_login_password')"><!--登录密码-->
@@ -17,36 +19,27 @@
                 <input class="input" v-validate="'required|pInteger'" :maxLength="6" name="smsCode" :msgs="msgs.smsCode"
                        :errs="errors" v-model="comData.smsCode" :title="$t('account.user_center_SMS_code')"
                        :placeholder="$t('account.user_center_SMS_code')"><!--短信验证码-->
-                <mt-button type="primary" style="font-size: 0.28rem;" :disabled="disabled" @click="sendSMSCode">
+                <mt-button type="primary" class="ml30" style="font-size: 0.28rem;" :disabled="disabled" @click="sendSMSCode">
                     {{$t('account.user_center_send_SMS')}}<!--发送验证码--> {{disabled ? `（${time}s）` : ''}}
                 </mt-button>
             </div>
             <div class="buttons">
-                <span class="mint-button--default" @click="closeDialog">{{$t('otc_legal.otc_legal_cancel')}}
+                <span class="mint-button--grey mint-button--large" @click="closeDialog">{{$t('otc_legal.otc_legal_cancel')}}
                     <!--取消--></span>
-                <span class="mint-button--primary" @click="auth">{{$t('otc_legal.otc_legal_confirm')}}<!--确定--></span>
+                <span class="mint-button--primary mint-button--large" @click="auth">{{$t('otc_legal.otc_legal_confirm')}}<!--确定--></span>
             </div>
         </div>
         <!--谷歌验证-->
-        <div class="form" v-if="mobileState !== 1">
-            <div class="smsCode safetyCode">
-                <input v-validate="'required|pInteger'" class="verifycode mr20" :maxLength="6" name="safetyCode"
-                       :msgs="msgs.safetyCode" :errs="errors" v-model="formData.safetyCode"
-                       :title="$t('account.user_center_code')" :placeholder="$t('account.user_center_code')"/>
-                <mt-button type="primary" style="font-size: 0.28rem;" :disabled="disabled"
-                           v-tap="{methods:sendEMAILCode}">{{$t('account.user_center_send_SMS')}}<!--发送验证码--> {{disabled
-                    ? `（${time}s）` : ''}}
-                </mt-button>
-            </div>
-            <input v-validate="'required|pInteger'" class="verifycode" :maxLength="6" name="verifyCode"
-                   :msgs="msgs.verifyCode" :errs="errors" v-model="formData.verifyCode"
-                   :title="$t('account.user_center_Google_verification_code')"
-                   :placeholder="$t('account.user_center_Google_verification_code')" v-if="googleState === 1"/>
-            <!--谷歌验证码-->
-            <div class="buttons">
-                <!--<span class="mint-button&#45;&#45;default">{{$t('otc_legal.otc_legal_cancel')}}&lt;!&ndash;取消&ndash;&gt;</span>-->
-                <span class="mint-button--primary" @click="auth1">{{$t('otc_legal.otc_legal_confirm')}}<!--确定--></span>
-            </div>
+        <div class="form"  v-if="mobileState !== 1">
+          <div class="smsCode safetyCode">
+            <input v-validate="'required|pInteger'" class="verifycode mr20" :maxLength="6" name="safetyCode" :msgs="msgs.safetyCode" :errs="errors" v-model="formData.safetyCode" :title="$t('account.user_center_code')" :placeholder="$t('account.user_center_code')"/>      
+            <mt-button type="primary" style="font-size: 0.28rem;" :disabled="disabled" v-tap="{methods:sendEMAILCode}">{{$t('account.user_center_send_SMS')}}<!--发送验证码-->{{disabled ? `（${time}s）` : ''}}</mt-button>
+          </div>
+          <input v-validate="'required|pInteger'" class="verifycode" :maxLength="6" name="verifyCode" :msgs="msgs.verifyCode" :errs="errors" v-model="formData.verifyCode" :title="$t('account.user_center_Google_verification_code')" :placeholder="$t('account.user_center_Google_verification_code')" v-if="googleState === 1" /><!--谷歌验证码-->
+          <div class="buttons">
+            <span class="mint-button--grey mint-button--large" @click="closeDialog">{{$t('otc_legal.otc_legal_cancel')}}<!--取消--></span>
+            <span class="mint-button--primary mint-button--large" @click="auth1">{{$t('otc_legal.otc_legal_confirm')}}<!--确定--></span>
+          </div>
         </div>
     </div>
 </template>
@@ -59,7 +52,7 @@
     import userUtils from '@/api/wallet'
 
     export default {
-        props: ['params', 'mobileState'],
+        props: ['params', 'mobileState', 'googleState'],
         data() {
             return {
                 toAddress: '',
@@ -202,92 +195,92 @@
 </script>
 
 <style lang="less" scoped="">
-    .title {
-        font-size: 0.32rem;
+.title {
+    font-size: 0.32rem;
+    height: 1rem;
+    line-height: 1rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+    color: #222222;
+    text-align: center;
+    border-bottom: 0.01rem solid #eeeeee;
+    position: relative;
+    .cancel{
+        display: inline-block;
+        width: 1rem;
         height: 1rem;
-        line-height: 1rem;
-        padding-left: 0.3rem;
-        padding-right: 0.3rem;
-        color: #222222;
+        position: absolute;
+        left: 0;
+        top: 0;
         text-align: center;
-        border-bottom: 0.01rem solid #eeeeee;
-        position: relative;
-        .cancel{
-            display: inline-block;
-            width: 1rem;
-            height: 1rem;
-            position: absolute;
-            left: 0;
-            top: 0;
-            text-align: center;
-            img{
-                vertical-align: middle;
-                width: 0.3rem;
-            }
+        img{
+            vertical-align: middle;
+            width: 0.3rem;
         }
     }
+}
 
-    .form {
-        padding: 0.3rem;
-    }
+.form {
+    padding: 0.3rem;
+}
 
-    .input, .verifycode {
-        width: 100%;
-        background-color: #fff;
-        border: 2px solid #ddd;
-        border-radius: 4px;
-        padding: 0.2rem;
-        font-size: 0.32rem;
-        box-sizing: border-box;
-    }
+.input, .verifycode {
+    width: 100%;
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    padding: 0.2rem;
+    font-size: 0.32rem;
+    box-sizing: border-box;
+}
 
-    .smsCode {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 0.3rem;
-        margin-bottom: 0.3rem;
-    }
+.smsCode {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+}
 
-    .smsCode.safetyCode {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
+.smsCode.safetyCode {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
-    .smsCode input {
-        width: 60%;
-    }
+.smsCode input {
+    width: 60%;
+}
 
-    .smsCode span {
-        display: inline-block;
-        width: 2.3rem;
-        height: 0.9rem;
-        line-height: 0.9rem;
-        text-align: center;
-        cursor: pointer;
-        border-radius: 4px;
-    }
+.smsCode span {
+    display: inline-block;
+    width: 2.3rem;
+    height: 0.9rem;
+    line-height: 0.9rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
 
-    .smsCode span.disabled {
-        background: #999;
-    }
+.smsCode span.disabled {
+    background: #999;
+}
 
-    .buttons span {
-        display: inline-block;
-        width: 3rem;
-        height: 1rem;
-        line-height: 1rem;
-        text-align: center;
-        cursor: pointer;
-        font-size: 0.3rem;
-        border-radius: 4px;
-    }
+.buttons span {
+    display: inline-block;
+    height: 1rem;
+    line-height: 1rem;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.3rem;
+    border-radius: 4px;
+    &:last-of-type {margin-left: 0.3rem;}
+}
 
-    .buttons {
-        display: flex;
-        justify-content: space-between;
-    }
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
 
-    input.verifycode {
-        margin-bottom: 0.3rem;
-    }
+input.verifycode {
+    margin-bottom: 0.3rem;
+}
 </style>

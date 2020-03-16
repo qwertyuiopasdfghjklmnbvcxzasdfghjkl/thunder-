@@ -1,84 +1,80 @@
 <template>
   <div>
-    <p class="grey mt20">{{$t('请使用本人名下的{0}向此账号进行转账汇款，如不一致，卖方可邀请退款或取消订单。').format('支付宝')}}</p>
     <div class="mt50 ui-flex ui-flex-justify">
-      <span class="grey"><i class="icon_ orderid"></i> 订单号：215265216621646</span>
+      <span class="grey"><i class="icon_ orderid"></i> 订单号：{{orderInfo.order_id}}</span>
       <span class="blue" v-tap="{methods:()=>{dialShow = true}}"><i class="icon_ phone"></i> 联系买家</span>
     </div>
     <div class="mt30 bgblock">
-      <div class="tc f36"><i class="icon_ status pending"></i> 待付款</div>
-      <div class="tc f24 grey mt15">请于 <span class="blue">16:00</span> 分钟内付款给卖家</div>
+      <div class="tc f36"><i class="icon_ status" :class="getStatusIcon"></i> {{orderState.title}}</div>      
+      <div class="tc f24 grey mt15" v-if="orderState.state==0">
+        <template v-if="orderInfo.appeal_state==3">{{'放置有申述或被申诉，但交易失败的审批原因'}}</template>
+        <template v-else-if="orderInfo.cancelType==1">超出 <span class="blue">{{orderInfo.pay_apply_time}}</span> 分钟未付款，订单已被系统自动取消</template>
+        <template v-else>请勿再次付款</template>
+      </div>
+      <div class="tc f24 grey mt15 lh17" v-if="orderState.state==1">
+        <p>对方正在付款，剩余 <span class="blue">{{surplusTime}}</span> 分钟</p>
+        <p>对方在上述时间内超时未付款，系统将自动取消该订单</p>
+      </div>
+      <div class="tc f24 grey mt15 lh17" v-if="orderState.state==2">
+        <p>对方付款完成</p>
+        <p>请务必登录收款账户，并确认收到该笔款项后的 <span class="blue">{{surplusTime}}</span> 分钟内进行放币</p>
+      </div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==21">平台方将根据双方提供的资料进行核实，请耐心等待结果。</div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==22">该订单已被卖方申诉，请尽快联系卖方或平台客服处理</div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==3">成功卖出了 <span class="blue">{{orderInfo.symbol_count}} </span>{{orderInfo.symbol}}</div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==31">{{'放置有申述或被申诉，但交易成功的审批原因'}}</div>
       <div class="price_info ui-flex ui-flex-justify f24 mt40 grey">
-        <div>交易金额(CNY)
-          <p class="white f32 tc mt30">500</p>
+        <div>交易金额({{orderInfo.currency}})
+          <p class="white f32 tc mt30">{{orderInfo.currency_count}}</p>
         </div>
-        <div>购买数量(USDT)
-          <p class="white f32 tc mt30">71.265925</p>
+        <div>购买数量({{orderInfo.symbol}})
+          <p class="white f32 tc mt30">{{orderInfo.symbol_count}}</p>
         </div>
-        <div>单价(CNY/USDT)
-          <p class="white f32 tc mt30">4.56</p>
-        </div>
-      </div>
-      <div class="user_info grey f32">
-        <div class="ui-flex ui-flex-justify">
-          <span>姓名</span>
-          <span class="white">王大头 <i class="icon_ copy"></i></span>
-        </div>
-        <div class="ui-flex ui-flex-justify">
-          <span>支付宝账号</span>
-          <span class="white">54954959@qq.com <i class="icon_ copy"></i></span>
-        </div>
-        <div class="ui-flex ui-flex-justify">
-          <span>收款二维码</span>
-          <span class="white"><i class="icon_ qrcode" v-tap="{methods:()=>{qrShow = true}}"></i></span>
-        </div>
-        <div class="ui-flex ui-flex-justify">
-          <span>备注</span>
-          <span class="white">转账时请勿备注任何信息</span>
+        <div>单价({{orderInfo.currency}}/{{orderInfo.symbol}})
+          <p class="white f32 tc mt30">{{orderInfo.cur_price}}</p>
         </div>
       </div>
-      <div class="ui-flex ui-flex-justify" style="margin-top: 2.5rem;">
-        <mt-button type="cancel" size="large" v-tap="{methods:()=>{ccShow = true}}">取消交易</mt-button>
-        <mt-button type="primary" size="large" class="ml30" v-tap="{methods:()=>{zfShow = true}}">已付款</mt-button>
+      <div class="user_info grey f32" v-if="orderInfo.cancelType!=2">
+        <div class="ui-flex ui-flex-justify">
+          <span>收款方式</span>
+          <span class="white">
+            <i class="icon_payment" :class="[payTrans[orderInfo.pay_type]]"></i>
+            {{currentPayInfo.name}}
+            &nbsp;&nbsp;{{currentPayInfo.number}}
+          </span>
+        </div>
+        <div class="ui-flex ui-flex-justify">
+          <span>买家</span>
+          <span class="white">{{orderInfo.to_real_name}}</span>
+        </div>
+        <div class="ui-flex ui-flex-justify">
+          <span>订单时间</span>
+          <span class="white">{{orderInfo.created_at}}</span>
+        </div>
       </div>
+
+      <div class="ui-flex ui-flex-justify btns" v-if="orderState.state==2">
+        <mt-button type="cancel" size="large" :disabled="canAppeal" v-tap="{methods:$root.routeTo, to:'qotcAppeal', params:{orderNumber:orderInfo.order_number}}">{{canAppeal?'申诉({0})'.format(appealTime):'申诉'}}</mt-button>
+        <mt-button type="primary" size="large" class="ml30" v-tap="{methods:()=>{fbShow = true}}">放币</mt-button>
+      </div>
+      <div class="btns" v-if="orderState.state==21">
+        <mt-button type="cancel" size="large" disabled>{{'已申诉'}}</mt-button>
+      </div>
+
+      <div class="btns" v-if="orderState.state==3||orderState.state==31">
+        <mt-button type="primary" size="large" v-tap="{methods:$root.routeTo, to:'trading', replace:true}">{{'我的资产'}}</mt-button>
+        <p class="grey f24 tc mt25">-请到资产中核对您的资产金额-</p>
+      </div>
+
     </div>
-    <Dialog :show="qrShow" :title="$t('收款二维码')" :hide="hideQRDialog" :showCancel="false" :submit="hideQRDialog">
-        <div class="tc"><img src="../../assets/img/zfb_qrcode.jpg"></div>
-        <p class="ft-c-note mt25 f28 tc">长按二维码保存到手机</p>
+    <Dialog :show="dialShow" :title="$t('联系买家')" :showBtns="false" :showClose="true" :hide="hidedDialDialog">
+        <p class="ft-c-default f32 tc">{{'使用手机号{0}拨打'.format(sellerPhone)}}</p>
+        <p class="ft-c-default f48 mt20 tc">{{orderInfo.toUserMobile}}&nbsp;</p>
+        <a class="mint-button mt40 mint-button--primary mint-button--large" style="line-height: 0.9rem;" :href="`tel:${orderInfo.toUserMobile}`" v-tap="{methods:hidedDialDialog}">立即呼叫</a>
     </Dialog>
-    <Dialog :show="ccShow" :title="$t('确认取消订单')" :cancelText="'我再想想'" :hide="hideCCDialog" :submit="hideCCDialog">
-        <p class="ft-c-default f32">取消订单后不会退款，如您已付款，请勿取消订单！</p>
-        <p class="ft-c-red f28 mt40">提示：每天累计取消3次，当天无法再使用极速购买功能。</p>
-    </Dialog>
-    <Dialog :show="zfShow" :title="$t('确认支付订单')" :cancelText="'还未付款'" :showClose="true" :showBtns="false" :hide="hideZFDialog">
-        <div class="ft-c-default f32 tc lh17">请确认您已经向买家付款，无需备注任何信息!</div>
-        <div class="ft-c-note f24 mt25 tc">提示：恶意点击将你冻结账户</div>
-        <div class="payinfo rp mt40">
-          <i class="dotmask left"></i><i class="dotmask right"></i>
-          <div class="inner">
-            <table>
-              <tr>
-                <td>支付金额</td><td>： <strong class="f40 bold">500.00 CNY</strong></td>
-              </tr>
-              <tr>
-                <td>姓名</td><td>： 王大头</td>
-              </tr>
-              <tr>
-                <td>支付宝账号</td><td>： fla126@qq.com</td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        <div class="action ui-flex ui-flex-justify">
-          <mt-button type="grey" size="large" v-tap="{methods:hideZFDialog}">还未付款</mt-button>
-          <mt-button type="primary" size="large" class="ml30" v-tap="{methods:hideZFDialog}">确认</mt-button>
-        </div>
-    </Dialog>
-    <Dialog :show="dialShow" :title="$t('联系卖家')" :showBtns="false" :showClose="true" :hide="hidedDialDialog">
-        <p class="ft-c-default f32 tc">使用手机号131****5648拨打</p>
-        <p class="ft-c-default f48 mt20 tc">16795951649</p>
-        <a class="mint-button mt40 mint-button--primary mint-button--large" style="line-height: 0.9rem;" href="tel:13764567708" v-tap="{methods:hidedDialDialog}">立即呼叫</a>
-    </Dialog>
+    <mt-popup class="verify_popup" v-model="fbShow" position="bottom">
+      <vertify ref="vertify" :params="params" :mobileState="getUserInfo.mobileAuthEnable" :googleState="getUserInfo.googleAuthEnable" @removeDialog="hideFBDialog" @okCallback="finishOrder"></vertify>
+    </mt-popup>
   </div>
 </template>
 
@@ -89,40 +85,277 @@ import numUtils from '@/assets/js/numberUtils'
 import utils from '@/assets/js/utils'
 import Dialog from '@/components/common/dialog'
 import { Toast } from 'mint-ui'
+import otcConfig from '@/assets/js/otcconfig'
+import vertify from '@/views/wallet/vertify'
+
 
 
 export default {
   components: {
     Dialog,
-
+    vertify,
+  },
+  props: {
+    adInfo: {
+      type: Object,
+      default: {}
+    },
+    orderInfo: {
+      type: Object,
+      default: {}
+    },
+    serveTime:{
+      type: Number
+    }
   },
   data(){
     return {
-      qrShow:false,
-      ccShow:false,
-      zfShow:false,
+      fbShow:false,
       dialShow:false,
+      payInfo:null,
+      canAppeal:false,
+      appealTime:'00:00',
+      surplusTime: '00:00'
     }
   },
+  watch:{
+    orderInfo(){
+      console.log('orderInfo')
+    }
+  },
+  computed:{
+    ...mapGetters(['getUserInfo']),
+    params () {
+      return {
+        title:'放币确认',
+        desc:'请务必登录网上银行或第三方支付账号，确认收到该笔款项后，再进行放币。',
+        phoneNumber: this.getUserInfo.mobile,
+        countryCode: this.getUserInfo.countryCode || '+86',
+        email: this.getUserInfo.email || this.getUserInfo.username
+      }
+    },
+    payTrans(){
+      let _payTrans = {}
+      for(let item of otcConfig.payments){
+        _payTrans[item.id] = item.className
+      }
+      return _payTrans
+    },
+    sellerPhone(){
+      return utils.encryptStr(this.orderInfo.fromUserMobile, 3, 4)
+    },
+    isAppellant(){ //判断当前用户是否是申述发起者
+      return this.getUserInfo.userId==this.orderInfo.applyUserId
+    },
+    orderState () {
+      if (this.orderInfo.state === 1 && this.orderInfo.pay_state === 0) {
+        return {
+          state: 1,
+          title: this.$t('待收款') // 未付款(待收款)
+        }
+      } else if (this.orderInfo.state === 1 && this.orderInfo.pay_state === 1) {
+        if(this.orderInfo.appeal_manage_id){
+          if(this.isAppellant){
+            return {
+              state: 21,
+              title: this.$t('订单申诉中') // 已付款(订单申诉中)
+            }
+          } else {
+            return {
+              state: 22,
+              title: this.$t('订单已被申诉') // 已付款(订单已被申诉)
+            }
+          }
+        } else {
+          return {
+            state: 2,
+            title: this.$t('请放币') // 已付款(请放币)
+          }
+        }
+        
+      } else if (this.orderInfo.state === 2) {
+        if(this.orderInfo.appeal_state==3){
+          return {
+            state: 31,
+            title: this.isAppellant?this.$t('申诉成功，平台已强制放币'):this.$t('被申诉失败，平台已强制放币') // 已放币，交易完成(申诉成功，平台已强制放币:被申诉失败，平台已强制放币)
+          }
+        } else {
+          return {
+            state: 3,
+            title: this.$t('otc_ad.otc_ad_completed') // 已完成(已完成)
+          }
+        }
+      } else {
+        if(this.orderInfo.appeal_state==3){
+          return {
+            state: 0,
+            title: this.isAppellant?this.$t('申诉失败，订单已取消'):this.$t('被申诉成功，订单已被取消') // 申诉失败，订单已取消:被申诉成功，订单已被取消
+
+          }
+        } else {
+          return {
+            state: 0,
+            title: this.orderInfo.cancelType==1?this.$t('订单已被自动取消'):this.$t('已取消') // 订单已被自动取消:已取消
+          }
+        }
+      }
+    },
+    getStatusIcon(){
+      let _icon = 'pending'
+      switch(this.orderState.state){
+        case 0:
+        case 31:
+          _icon = 'cancel'
+          break
+        case 1:
+          _icon = 'pending'
+          break
+        case 2:
+          _icon = 'haspay'
+          break
+        case 21:
+          _icon = 'appealing'
+          break
+        case 22:
+          _icon = 'info'
+          break
+        case 3:
+          _icon = 'finished'
+          break
+        case 31:
+          _icon = 'appealSuccess'
+          break
+      }
+      return _icon
+    },
+    currentPayInfo () {
+      if (this.payInfo) {
+        switch (this.orderInfo.pay_type) {
+          case '1': // 银行卡
+            return {
+              label: this.$t(this.payTrans[1]), // 银行卡号
+              name: this.payInfo.real_name,
+              bank: this.payInfo.data.card_bank,
+              number: this.payInfo.data.card_number
+            }
+          case '2': // 支付宝
+            return {
+              label: this.$t(this.payTrans[2]), // 支付宝账号
+              name: this.payInfo.real_name,
+              number: this.payInfo.data.alipay_number,
+              url: this.payInfo.data.alipay_image_path
+            }
+          case '3': // 微信
+            return {
+              label: this.$t(this.payTrans[3]), // 微信账号
+              name: this.payInfo.real_name,
+              number: this.payInfo.data.wechat_number,
+              url: this.payInfo.data.wechat_image_path
+            }
+          case '4': // paypal
+            return {
+              label: this.$t(this.payTrans[4]), // PayPal账号
+              name: this.payInfo.real_name,
+              number: this.payInfo.data.paypal_number
+            }
+          default:
+            return {
+              label: null,
+              name: null,
+              bank: null,
+              number: null,
+              url: null
+            }
+        }
+      } else {
+        return {
+          label: null,
+          name: null,
+          bank: null,
+          number: null,
+          url: null
+        }
+      }
+    },
+  },
   created(){
-    
+    this.getAppealTime()
+    this.getSurplusTime()
+    this.getSellerPayInfo(this.orderInfo.from_user_id)
   },
   methods:{
-    hideQRDialog(){
-      this.qrShow = false
+    getSurplusTime(){
+      let interval = utils.countDown(this.orderInfo.surplus_Time, (time) => {
+        if (time === '00:00') {
+          this.$parent.data.orderInfo.isExpire = true
+        } else if (time === '05:00' && orderInfo.to_user_name === this.getUserInfo.username && orderInfo.pay_state === 0) {
+          // 您的付款确认时间还剩5分钟，5分钟后系统将自动取消订单！请付款并标记确认付款！
+          // 添加系统消息
+          this.$emit('addSystemMessage', orderInfo.order_number, 'PAYMENT_TIMEOUT_REMIND')
+        }
+        this.surplusTime = time
+      })
     },
-    hideCCDialog(){
+    getAppealTime(){ //缓存付款时间，判断申述按钮2分钟内是否可用
+      let _duration = 120000, _time = utils.formatDate(this.orderInfo.updated_at)
+      let _diff = this.serveTime - _time
+      _diff = (_diff-_duration) >= 0 ? 0 : Math.abs(_diff-_duration)
+      if(_diff){
+        this.canAppeal = true
+      }
+      utils.countDown(_diff/1000, (time) => {
+        this.appealTime = time
+        if (time === '00:00') {
+          this.canAppeal = false
+        }
+      })
+    },
+    getSellerPayInfo (id) { // 获取卖家支付方式
+      otcApi.getPaySettingsNoToken({user_id: id }, (res) => {
+        this.payInfo = res
+      }, (msg) => {
+        Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+      })
+    },
+    cancelOrder () { // 取消订单
       this.ccShow = false
+      otcApi.cancelOrder(this.orderInfo.order_id, {
+        system_cancel: false
+      }, (msg) => {
+        Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+        this.$router.replace({name: 'qotc'})
+      }, (msg) => {
+        Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+      })
     },
-    hideZFDialog(){
-      this.zfShow = false
+    finishOrder (data) { // 释放货币
+      if (this.orderInfo.state === 1 && this.orderInfo.pay_state === 1) {
+        if(data.constructor===String){
+            data = {
+                type: this.getUserInfo.googleAuthEnable === 1?2:1,
+                googleCode: data.split('$$')[1],
+                smsCode: data.split('$$')[0],
+            }
+        }
+        let _data = {
+            order_id: this.orderInfo.order_id,
+            secondaryValidateDTO:data
+        }
+        otcApi.finishOrder(_data, (msg) => {
+          this.orderInfo.state = 2
+          this.fbShow = false
+          Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+        }, (msg) => {
+          Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+        })
+      }
+    },
+    hideFBDialog(){
+      this.fbShow = false
     },
     hidedDialDialog(){
       this.dialShow = false
     },
-    copySuccess(){
-      Toast('复制成功')
-    }
   }
 }
 </script>
@@ -137,10 +370,16 @@ export default {
 
 .orderid {width: 0.22rem; height: 0.25rem; margin-right: 0.1rem; background-image: url('../../assets/img/icon_order.png');}
 .phone {width: 0.24rem; height: 0.24rem; margin-right: 0.1rem; background-image: url('../../assets/img/icon_phone.png');}
-.bgblock {background-color: #151C2C; padding: 0.4rem 0.25rem 0.7rem;}
+.bgblock {background-color: #151C2C; padding: 0.4rem 0.25rem 0.7rem; margin-bottom: 0.3rem;}
 .status {
   width: 0.44rem; height: 0.44rem; margin-right: 0.1rem;
   &.pending {background-image: url('../../assets/img/icon_status_pending.png');}
+  &.cancel {background-image: url('../../assets/img/icon_status_fail.png');}
+  &.haspay {background-image: url('../../assets/img/icon_status_release_token.png');}
+  &.finished {background-image: url('../../assets/img/icon_status_finished.png');}
+  &.appealing {background-image: url('../../assets/img/icon_status_in.png');}
+  &.info {background-image: url('../../assets/img/icon_status_info.png');}
+  &.appealSuccess {background-image: url('../../assets/img/icon_status_success_representations.png');}
 }
 .price_info {padding-top: 0.3rem; padding-bottom: 0.3rem; border-top: 1px solid #1D273C; border-bottom: 1px dashed rgba(12, 106, 201, .8); }
 .user_info {
@@ -191,5 +430,29 @@ export default {
 }
 .action {
   padding: 0.25rem 0 0;
+}
+.btns {margin-top: 2.5rem;}
+.icon_payment {
+  width: .4rem;
+  height: .4rem;
+  margin-right: .2rem;
+  &.paypal {
+    background-image:url('../../assets/img/icon-paypal-big.png');
+  }
+  &.alipay {
+    background-image:url('../../assets/img/icon-alipay-big.png');
+  }
+  &.bank {
+    background-image:url('../../assets/img/icon-bank-big.png');
+  }
+  &.wechat {
+    background-image:url('../../assets/img/icon-wechat-big.png');
+  }
+}
+.verify_popup{
+  width: 100%;
+  border-top-left-radius: 0.32rem;
+  border-top-right-radius: 0.32rem;
+  overflow: hidden;
 }
 </style>

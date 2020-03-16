@@ -13,7 +13,7 @@
         <template v-else>请勿再次付款</template>
       </div>
       <div class="tc f24 grey mt15" v-if="orderState.state==1">请于 <span class="blue">{{surplusTime}}</span> 分钟内付款给卖家</div>
-      <div class="tc f24 grey mt15" v-if="orderState.state==2">卖家将于 <span class="blue">{{orderInfo.surplus_Time}}</span>  分钟内完成放币</div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==2">卖家将于 <span class="blue">{{surplusTime}}</span>  分钟内完成放币</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==21">平台方将根据双方提供的资料进行核实，请耐心等待结果。</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==22">该订单已被卖方申诉，请尽快联系卖方或平台客服处理</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==3">卖家已放币，成功购买了 <span class="blue">{{orderInfo.symbol_count}} </span>{{orderInfo.symbol}}</div>
@@ -181,7 +181,7 @@ export default {
           title: this.$t('待付款') // 未付款(待付款)
         }
       } else if (this.orderInfo.state === 1 && this.orderInfo.pay_state === 1) {
-        if(this.orderInfo.appeal_state==0){
+        if(this.orderInfo.appeal_manage_id){
           if(this.isAppellant){
             return {
               state: 21,
@@ -312,6 +312,8 @@ export default {
   methods:{
     getSurplusTime(){
       let interval = utils.countDown(this.orderInfo.surplus_Time, (time) => {
+
+      console.log(time)
         if (time === '00:00') {
           this.$parent.data.orderInfo.isExpire = true
         } else if (time === '05:00' && orderInfo.to_user_name === this.getUserInfo.username && orderInfo.pay_state === 0) {
@@ -362,6 +364,8 @@ export default {
         }, (msg) => {
           this.orderInfo.pay_state = 1
           Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+          localStorage.setItem('otcOrderPayTime', new Date().getTime())
+          this.getAppealTime()
         }, (msg) => {
           Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
         })

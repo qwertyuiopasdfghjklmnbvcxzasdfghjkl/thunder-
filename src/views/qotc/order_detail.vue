@@ -4,7 +4,7 @@
       <i class="icon_service" slot="right" v-tap="{methods:goOnlineService}"></i>
     </top-back>
     <div class="page-main">
-      <component :is="isBuyer" :adInfo="adInfo" :orderInfo="orderInfo"></component>
+      <component :is="isBuyer" :adInfo="adInfo" :orderInfo="orderInfo" :serveTime="serveTime"></component>
     </div>
   </div>
 </template>
@@ -32,6 +32,9 @@ export default {
     isBuyer () {
       return this.data.orderInfo.to_user_name == this.getUserInfo.username ? OrderBuy:OrderSell
     },
+    serveTime(){
+      return utils.formatDate(this.data.cur_time).getTime()
+    },
     adInfo(){
       return this.data.adInfo || {}
     },
@@ -40,11 +43,11 @@ export default {
       orderInfo.total_price = utils.removeEndZero(utils.toFixed(orderInfo.currency_count,2)).toMoney()
       orderInfo.cur_price = utils.removeEndZero(utils.toFixed(orderInfo.cur_price,2)).toMoney()
       orderInfo.symbol_count = utils.removeEndZero(utils.toFixed(orderInfo.symbol_count,8)).toMoney()
-      let date = utils.formatDate(orderInfo.apply_time).getTime()
+      let date = utils.formatDate(orderInfo.updated_at).getTime()
       let ndate = utils.formatDate(this.data.cur_time).getTime()
       let diffTime = Math.floor((ndate - date) / 1000)
       let surplusTime = orderInfo.pay_apply_time * 60 - diffTime
-      orderInfo.surplus_Time = surplusTime
+      orderInfo.surplus_Time = surplusTime>0?surplusTime:0
       orderInfo.isExpire = surplusTime <= 0
       return orderInfo
     }
