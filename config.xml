@@ -39,7 +39,7 @@
         </edit-config>
     </platform>
     <chcp>
-        <config-file url="http://res.ssss.so/hotfix/ltpro/www/chcp.json" />
+        <config-file url="http://res.ssss.so/hotfix/thunder/www/chcp.json" />
         <auto-download enabled="false" />
         <auto-install enabled="false" />
         <native-interface version="1" />

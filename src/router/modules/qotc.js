@@ -11,9 +11,15 @@ export default [
 	  meta: {login: true}
 	},
 	{
-	  path: '/qotc/order/:orderId?',
+	  path: '/qotc/order/:orderId',
 	  name: 'orderDetail',
 	  component: () => import('@/views/qotc/order_detail'),
+	  meta: {login: true}
+	},
+	{
+	  path: '/qotc/appeal/:orderNumber',
+	  name: 'qotcAppeal',
+	  component: () => import('@/views/qotc/appeal'),
 	  meta: {login: true}
 	},
 

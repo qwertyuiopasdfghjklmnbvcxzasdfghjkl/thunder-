@@ -254,4 +254,16 @@ const validateStatus = function (status, success, error) {
 }
 user.validateStatus = validateStatus
 
+//图片上传接口
+const imageUpload = function (data, success, error) {
+  api.post(`${domain}api/v5/user/image/upload`, data, (res) => {
+    if (res.rst === 1) {
+      success && success(res.data)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+user.imageUpload = imageUpload
+
 export default user

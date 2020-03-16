@@ -596,4 +596,21 @@ const humanNum = (number) =>  {
 }
 utils.humanNum = humanNum
 
+// 保留小数位，非四舍五入
+const toFixed = function(data, num){
+  data = data + ''
+  data = data.substring(0, data.lastIndexOf(".") + num+1);
+  return data
+}
+utils.toFixed = toFixed
+
+//部分加密
+const encryptStr = function(value, start, end) {
+  value = value + ''
+  var _s = value.substring(0, start||3)
+  var _e = value.substring(value.length - end||3, value.length)
+  return `${_s}****${_e}`
+}
+utils.encryptStr = encryptStr
+
 export default utils

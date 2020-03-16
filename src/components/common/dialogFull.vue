@@ -48,7 +48,7 @@ export default {
 
 </script>
 <style lang="less" scoped="">
-.page {position: fixed;}
+.page {position: fixed; z-index: 100;}
 .btn-back {
     position: absolute;
     width: 15vw;

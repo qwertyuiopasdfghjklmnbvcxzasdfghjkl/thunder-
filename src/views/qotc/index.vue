@@ -22,21 +22,21 @@
 	    		<div class="mt50 amount-container">
 	    			<transition enter-active-class="animated short slideInLeft" leave-active-class="animated short slideOutLeft">
 	    			  	<div class="ui-flex ui-flex-justify" v-show="isToken">
-	    			  		<input type="number" name="amount" v-model="amount" class="ui-flex-1" :placeholder="type==1?'请输入购买数量':'请输入卖出数量'">
+	    			  		<numberbox :size="15" :accuracy="4" v-model="amount" class="ui-flex-1" :placeholder="type==1?'请输入购买数量':'请输入卖出数量'"/>
 	    			  		<span class="f30 grey">{{token}}</span>
-	    			  		<span class="f30 blue ml20" v-show="type==2" v-tap="allIn">{{'全部'}}</span>
+	    			  		<span class="f30 blue ml20" v-show="type==2" v-tap="{methods:allIn}">{{'全部'}}</span>
 	    			  	</div>
 	    			</transition>
 	    			<transition enter-active-class="animated short slideInRight" leave-active-class="animated short slideOutRight">
 	    				<div class="ui-flex ui-flex-justify" v-show="!isToken">
 	    					<span class="f52">￥ </span>
-	    			  		<input type="number" name="amount" v-model="amount" class="ui-flex-1" :placeholder="type==1?'请输入购买金额':'请输入卖出金额'">
-	    			  		<span class="f30 blue" v-show="type==2" v-tap="allIn">{{'全部'}}</span>
+	    			  		<numberbox :size="13" :accuracy="2" v-model="currencyCount" class="ui-flex-1" :placeholder="type==1?'请输入购买金额':'请输入卖出金额'"/>
+	    			  		<span class="f30 blue" v-show="type==2" v-tap="{methods:allIn}">{{'全部'}}</span>
 	    			  	</div>
 	    			</transition>
 	    		</div>
 	    		<div class="mt25 ui-flex ui-flex-justify f26">
-	    			<span class="grey">参考价格 {{refPrice}} CNY</span>
+	    			<span class="grey">参考价格 {{refPrice}} {{currency}}</span>
 	    			<span class="blue" v-tap="{methods:()=>{isToken = !isToken}}">{{type==1?(isToken?'按金额购买':'按数量购买'):(isToken?'按金额卖出':'按数量卖出')}} <i class="icon_exchange"></i></span>
 	    		</div>
 	    		<div class="mt10 grey f26" v-if="getApiToken">账户余额 {{balance}} {{token}}</div>
@@ -45,19 +45,19 @@
     			<p class="f26 grey">选择收款方式</p>
     			<ul class="mt25 payments">
     				<li v-tap="{methods:()=>{payType = 1}}" class="ui-flex ui-flex-justify" :class="{active:payType==1}" v-if="payments.card_number">
-    					<span><i class="icon_"></i> {{$t('otc_legal.oyc_legal_Bank_card')}}<!--银行卡--></span>
+    					<span><i class="icon_"></i> {{$t(payTrans[1])}}<!--银行卡--></span>
     					<span>{{payments.card_number}}</span>
     				</li>
     				<li v-tap="{methods:()=>{payType = 2}}" class="ui-flex ui-flex-justify" :class="{active:payType==2}" v-if="payments.alipay_number">
-    					<span><i class="icon_"></i> {{$t('public0.public199')}}<!--支付宝--></span>
+    					<span><i class="icon_"></i> {{$t(payTrans[2])}}<!--支付宝--></span>
     					<span>{{payments.alipay_number}}</span>
     				</li>
     				<li v-tap="{methods:()=>{payType = 3}}" class="ui-flex ui-flex-justify" :class="{active:payType==3}" v-if="payments.wechat_number">
-    					<span><i class="icon_"></i> {{$t('public0.public198')}}<!--微信--></span>
+    					<span><i class="icon_"></i> {{$t(payTrans[3])}}<!--微信--></span>
     					<span>{{payments.wechat_number}}</span>
     				</li>
     				<li v-tap="{methods:()=>{payType = 4}}" class="ui-flex ui-flex-justify" :class="{active:payType==4}" v-if="payments.paypal_number">
-    					<span><i class="icon_"></i> {{$t('public0.public219')}}<!--PayPal--></span>
+    					<span><i class="icon_"></i> {{$t(payTrans[4])}}<!--PayPal--></span>
     					<span>{{payments.paypal_number}}</span>
     				</li>
 
@@ -65,11 +65,11 @@
     			</ul>
     		</div>
     	</div>
-    	<span class="icon_ add-advertisement" v-if="getUserInfo.otc" v-tap="{methods:addAdvertisement}"></span>
+    	<router-link class="icon_ add-advertisement" v-if="'有权限发布广告'" tag="span" :to="{name:'qotcAddOrUpdate'}"></router-link>
     	<span class="icon_ online-service" v-tap="{methods:goOnlineService}"></span>
     	<div class="bottom-layer">
     		<template v-if="getApiToken">
-	    		<mt-button type="primary" size="large" v-tap="{methods:buyOrSell}">{{type==1?'立即购买':'立即卖出'}}</mt-button>
+	    		<mt-button type="primary" size="large" :disabled="locked" v-tap="{methods:buyOrSell}">{{type==1?'立即购买':'立即卖出'}}</mt-button>
     		</template>
     		<template v-else>
     			<mt-button type="primary" size="large" v-tap="{methods:$root.routeTo, to:'login', query:{curl:$route.fullPath}}">请登录</mt-button>
@@ -87,6 +87,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import otcApi from '@/api/otc'
+import walletApi from '@/api/wallet'
 import userApi from '@/api/user'
 import numUtils from '@/assets/js/numberUtils'
 import utils from '@/assets/js/utils'
@@ -94,9 +95,12 @@ import numberbox from '@/components/numberInput'
 import { Toast, MessageBox } from 'mint-ui'
 import Dialog from '@/components/common/dialog'
 import nikeNameForm from '@/views/my/center/nikeNameForm' // 修改昵称
+import store from '@/store'
+import otcConfig from '@/assets/js/otcconfig'
 
 export default {
 	components: {
+		numberbox,
         Dialog,
         nikeNameForm
     },
@@ -105,10 +109,12 @@ export default {
 			type:1,
 			token:'USDT',
 			amount:'',
+			currencyCount:'',
 			currency:'CNY',
 			isToken:true, //输入金额类型
 			payType:null, //pay_type: "1" 银行卡； "2" 支付宝； "3"微信支付； "4" Paypal；
 			tokens:[],
+			currencyList: [],
 			payments:{},
 			refPrice: 0, // 参考价格
 			swiperOption: {
@@ -120,11 +126,19 @@ export default {
       			freeMode: true
             },
             isShow:false,
-            notMatched:false
+            notMatched:false,
+            locked:false
 		}
 	},
 	computed:{
-		...mapGetters(['getApiToken','getSysParams','getUserInfo', 'getUserWallets']),
+		...mapGetters(['getApiToken','getUserInfo', 'getUserWallets']),
+		payTrans(){
+		  let _payTrans = {}
+		  for(let item of otcConfig.payments){
+		    _payTrans[item.id] = item.key
+		  }
+		  return _payTrans
+		},
 		hasAllPays(){
 			return !this.payments.card_number || !this.payments.alipay_number || !this.payments.wechat_number || !this.payments.paypal_number
 		},
@@ -146,28 +160,66 @@ export default {
 		    ad_type: this.type,
 		    symbol: this.token,
 		    currency: this.currency,
-		    bench_marking_id: 2
+		    bench_marking_id: otcConfig.benchMarkingId
 		  }
 		},
+		coinMinLimit(){
+		  let _coinMinLimit = 0
+		  for(let item of this.tokens){
+		    if (item.symbol == this.token) {
+		      _coinMinLimit = item.minLimit
+		      break
+		    }
+		  }
+		  return _coinMinLimit
+		},
+		currencyMinLimit(){
+		  let _currencyMinLimit = 0
+		  for(let item of this.currencyList){
+		    if (item.currency == this.currency) {
+		      _currencyMinLimit = item.minLimit
+		      break
+		    }
+		  }
+		  return _currencyMinLimit
+		}
 	},
 	watch:{
-		getSysParams(){
-			this.getOtcTokens()
-		},
+		currencyMinLimit(){},
+		coinMinLimit(){},
 		benchSymbolParams() {
 		  this.getBenchSymbolInfo()
 		},
 		isToken(){
 			this.amount = ''
+			this.currencyCount = ''
 		}
+	},
+	beforeRouteEnter (to, from, next) {
+	  if(process.env.NODE_ENV === 'development'){ //开发环境下跳过检测
+	  	next()
+	  	return
+	  }
+	  if(store.getters.getApiToken && store.getters.getUserInfo.mobileAuthEnable!=1){
+	    MessageBox.confirm(window.vm.$t('未绑定手机号，是否立即前往？'),window.vm.$t('确认'),{
+	      cancelButtonText:window.vm.$t('取消'),
+	      confirmButtonText:window.vm.$t('确认'),
+	    }).then(action => {
+	      window.vm.$router.push({name:'phoneVerify'})
+	    })
+	  } else {
+	    next()
+	  }
 	},
 	created(){
 		this.type = this.$route.params.type || 1
 		this.getOtcTokens()
+		this.getOtcCurrency()
 		this.getPaySettings()
+		this.getBenchSymbolInfo()
 	},
 	methods:{
-		...mapActions(['setUserInfo']),
+		...mapActions(['setUserInfo', 'setUserWallets']),
 		buyOrSell(){
 
 			if(!this.getUserInfo.nickname){
@@ -189,34 +241,67 @@ export default {
 				this.hasPay?Tip({type:'error', message:'请选择收款方式'}):Tip({type:'error', message:'请添加收款方式'})
 				return
 			}
-			if(Number(this.amount==0)){
-				Tip({type:'error', message:this.type==1?(this.isToken?'请输入购买数量':'请输入购买金额'):(this.isToken?'请输入卖出数量':'请输入卖出金额')})
-				return
+			if(this.isToken){
+				if(Number(this.amount)==0){ //币种模式则币种不能为空
+					Tip({type:'error', message:this.type==1?'请输入购买数量':'请输入卖出数量'})
+					return
+				}
+				if(Number(this.amount)<this.coinMinLimit){ //币种模式最低买卖不能低于币种设置的最小值
+					Tip({type:'error', message:this.type==1?'购买数量不能低于{0}{1}'.format(this.coinMinLimit, this.token):'卖出数量不能低于{0}{1}'.format(this.coinMinLimit, this.token)})
+					return
+				}
 			}
-			if(this.type==2 && this.isToken && numUtils.BN(this.balance).lt(this.amount)){
+			if(!this.isToken){
+				if(Number(this.currencyCount)==0){ //金额模式则总金额不能为空
+					Tip({type:'error', message:this.type==1?'请输入购买金额':'请输入卖出金额'})
+					return
+				}
+				if(Number(this.currencyCount)<this.currencyMinLimit){ //金额模式最低买卖不能低于法币设置的最小值
+					Tip({type:'error', message:this.type==1?'购买金额不能低于{0}{1}'.format(this.currencyMinLimit, this.currency):'卖出金额不能低于{0}{1}'.format(this.currencyMinLimit, this.currency)})
+					return
+				}
+				
+			}
+			if(this.type==2 && numUtils.BN(this.balance).lt(this.isToken?this.amount:numUtils.div(this.currencyCount, this.refPrice))){
 				Tip({type:'error', message:this.token+'账户余额不足'})
 				return
 			}
 			this.quickMatch()
 		},
 		quickMatch(){
+			this.locked = true
 			let _data = {
-	          amount: this.amount,
 	          currency: this.currency,
 	          symbol: this.token,
 	          direction: this.type,
-	          pay_type:this.payType
+	          bench_marking_id: otcConfig.benchMarkingId
 	        }
-	        otcApi.quickMatch(res=>{
-	        	// 待完善
+	        if(this.type==2){
+	        	_data.payType = this.payType
+	        }
+	        _data.amount = this.isToken ? this.amount : utils.toFixed(numUtils.div(this.currencyCount, this.refPrice), 8)
+	        otcApi.quickMatchAndCreate(_data, orderId=>{
+	        	this.locked = false
+	        	if(this.type==2){ //卖币成功刷新用户余额
+	        		this.getAssets()
+	        	}
+	        	this.$router.replace({name:'orderDetail', params:{orderId:orderId}})
 	        },msg=>{
-	        	if(true){ //未匹配成功提示
+	        	this.locked = false
+	        	if(msg=='AD_NO_ELIGIBLE'){ //未匹配成功提示
 	        		this.notMatched = true
 	        		window._matchTimer = setTimeout(()=>{
 	        			this.notMatched = false
 	        		},4000)
 	        	}
 	        })
+		},
+		getOtcCurrency () {
+		  otcApi.getCurrencys((data) => { // 获取法币信息
+		    this.currencyList = data
+		  }, (msg) => {
+		    console.error(msg)
+		  })
 		},
 		getOtcTokens(){
 			otcApi.getCoinsList((data) => { // 获取币种信息
@@ -235,12 +320,13 @@ export default {
 			this.type = args.type
 		},
 		allIn(){
-
+			if(this.isToken){
+				this.amount = this.balance
+			} else {
+				this.currencyCount = utils.toFixed(numUtils.mul(this.balance, this.refPrice), 2)
+			}
 		},
 		goOnlineService(){
-
-		},
-		addAdvertisement(){
 
 		},
         hideDialog(key){
@@ -276,7 +362,18 @@ export default {
         			this.payType = 2
         		}
         	})
-        }
+        },
+        getAssets() {
+            walletApi.myAssets({}, (res) => {
+                res = res.filter(item => {
+                    return item.type === 1
+                })
+                res.forEach((item) => {
+                    item.frozenBalance = numUtils.add(item.frozenBalance, item.adFrozenBalance).add(item.loanBalance).toString()
+                })
+                this.setUserWallets(res)
+            })
+        },
 	}
 }
 </script>

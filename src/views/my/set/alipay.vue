@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import config from '@/api/config'
 import utils from '@/assets/js/utils'
 import otcApi from '@/api/otc'
@@ -54,16 +55,18 @@ export default {
       },
     }
   },
+  computed:{
+    ...mapGetters(['getUserInfo']),
+  },
   created () {
     this.loadData()
   },
   methods: {
     loadData () {
       otcApi.getPaySettings((res) => {
-        console.log(res)
         // 支付宝
         this.alipayData = {
-          alipay_name: res.real_name,
+          alipay_name: this.getUserInfo.userRealName,
           alipay_number: res.data.alipay_number,
           alipay_QRcode: res.data.alipay_image_path
         }
