@@ -158,7 +158,16 @@ TVjsApi.prototype.init = function() {
                 document.querySelector('#price').innerHTML = tar.innerHTML
                 self.isClicked = true
                 window.VM.active = ''
-                console.log(window, tar)
+
+                let postion = e.pageX, viewWidth = this.innerWidth
+
+                if(Number(postion) > Number(viewWidth)/2){
+                    document.querySelector('#price').style.left = '10px'
+                    document.querySelector('#price').style.right = 'inherit'
+                }else{
+                    document.querySelector('#price').style.right = '10px'
+                    document.querySelector('#price').style.left = 'inherit'
+                }
             });
             window.VM.setMA(true)
 
