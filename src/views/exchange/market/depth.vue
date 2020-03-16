@@ -20,7 +20,7 @@
             <p class="">
                 <span class="" :class="{sell:(getLast24h.direction!=1)}">{{toFixed(getLast24h.close)}}</span>
                 <small class="f24 pt8 ft-c-dark">
-                    ≈ {{getCoinSign}} {{curCNYPrice}}
+                    <!--≈ {{getCoinSign}} {{curCNYPrice}}-->
                     <!--<valuation :lastPrice="getLast24h.close" :symbol="currentSymbol" :curCNYPrice="curCNYPrice"/>-->
                 </small>
             </p>

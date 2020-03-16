@@ -30,11 +30,11 @@
         /*.price p span + span {margin-left: 0.1rem;}*/
         .price_box{
             position: fixed;
-            top: 40px;
+            top: 50px;
             right: 5px;
             width: 110px;
             background: #101724;
-            /*padding: 5px;*/
+            padding: 5px 0;
             /*display: flex;*/
         }
         .price_box > span{
@@ -67,10 +67,21 @@
             <!--<span>开= n/a</span><span>高= n/a</span><span>低= n/a</span><span>收= n/a</span>-->
         </p>
     </div>
-    <div id="trade-view"></div>
+    <div id="trade-view" ></div>
 </div>
 <script>
+
+    // let box = document.getElementById('trade-view')
+    //
+    // function touchs(e){
+    //     console.log(e)
+    // }
+    //
+    // box.addEventListener('touchs',touchs,false);
+
 document.addEventListener('DOMContentLoaded', function() {
+
+
     // new VConsole()
     window.VM = new Vue({
         el:'#app',

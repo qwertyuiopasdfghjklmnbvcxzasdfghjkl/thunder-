@@ -179,9 +179,11 @@
             },
             procedureFee() {
                 if (this.withdrawalType === 2) {
-                    if (this.symbolInfo.stationFeeType == 0) {
+                    if (this.symbolInfo.stationFeeType == 1) {
                         return this.symbolInfo.stationFee
-                    } else {
+                    } else if (this.symbolInfo.stationFeeType == 3){
+                        return this.$t('market.fee')
+                    }else{
                         return !!Number(this.form.amount) ? utils.removeEndZero(numUtils.mul(this.symbolInfo.stationFee, this.form.amount).toFixed(8)) : '--'
                     }
                 } else {

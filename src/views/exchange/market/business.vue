@@ -19,13 +19,13 @@
         </div>
         <cp-adjust v-model="formData.price" v-if="!isMarket" :accuracy="accuracy.fixedNumber" class="mt30" @keyDown="showPercent=false"></cp-adjust>
         <p class="price-placeholder mt30" v-if="isMarket">{{$t('exchange.exchange_market_price')}}</p>
-        <p class="mt20">
-            {{$t('home.home47')}}:
-            <valuation
-                    :lastPrice="formData.price"
-                    :symbol="currentSymbol"
-                    :curCNYPrice="curCNYPrice"
-                    :unitPrice="unitPrice"/>
+        <p class="mt60">
+            <!--{{$t('home.home47')}}:-->
+            <!--<valuation-->
+                    <!--:lastPrice="formData.price"-->
+                    <!--:symbol="currentSymbol"-->
+                    <!--:curCNYPrice="curCNYPrice"-->
+                    <!--:unitPrice="unitPrice"/>-->
         </p>
         <div class=" mt20">
             <!-- <numberbox v-model="formData.amount" :accuracy="accuracy.quantityAccu" :placeholder="$t('exchange.exchange_amount')" v-focus></numberbox>

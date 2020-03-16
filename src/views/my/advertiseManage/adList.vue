@@ -75,7 +75,7 @@
                     show: 6,
                     ad_type: 0,
                     symbol: null,
-                    status: null
+                    status: null,
                 },
                 messageList: [], // 消息列表
                 unReadLength: 0, // 未读消息长度
