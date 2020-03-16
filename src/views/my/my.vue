@@ -128,11 +128,11 @@
                         icon: require('@/assets/img/icon_yjjl.png'),
                         name: this.$t('trade_record.my_trade_record'),
                     },
-                    // {
-                    //     route: 'adManage',  // otc 功能 我的广告
-                    //     icon: require('@/assets/img/icon_ad.png'),
-                    //     name: this.$t('otc_ad.otc_ad_management'),
-                    // },
+                    {
+                        route: 'adManage',  // otc 功能 我的广告
+                        icon: require('@/assets/img/icon_ad.png'),
+                        name: this.$t('otc_ad.otc_ad_management'),
+                    },
                     {
                         route: 'referral',  // 邀请好友
                         icon: require('@/assets/img/invite.png'),
