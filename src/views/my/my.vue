@@ -86,7 +86,7 @@
                     coinState: 0,
                     googleState: 0,
                     nickname: null,
-                    verifyState: 0,
+                    verifyState: null,
                     verifyTimes: 0
                 },
                 data1: [
@@ -113,11 +113,11 @@
                         icon: require('@/assets/img/ic_aqzx@3x.png'),
                         name: this.$t('user.safety')
                     },
-                    // {
-                    //     route: 'myMapping', // otc的功能 我的订单
-                    //     icon: require('@/assets/img/icon_wddd.png'),
-                    //     name: this.$t('usercontent.user60'),
-                    // },
+                    {
+                        route: 'myMapping', // otc的功能 我的订单
+                        icon: require('@/assets/img/icon_wddd.png'),
+                        name: this.$t('usercontent.user60'),
+                    },
                     {
                         route: 'history',
                         icon: require('@/assets/img/icon_ctjl.png'),
@@ -128,11 +128,11 @@
                         icon: require('@/assets/img/icon_yjjl.png'),
                         name: this.$t('trade_record.my_trade_record'),
                     },
-                    // {
-                    //     route: 'adManage',  // otc 功能 我的广告
-                    //     icon: require('@/assets/img/icon_ad.png'),
-                    //     name: this.$t('otc_ad.otc_ad_management'),
-                    // },
+                    {
+                        route: 'adManage',  // otc 功能 我的广告
+                        icon: require('@/assets/img/icon_ad.png'),
+                        name: this.$t('otc_ad.otc_ad_management'),
+                    },
                     {
                         route: 'referral',  // 邀请好友
                         icon: require('@/assets/img/invite.png'),

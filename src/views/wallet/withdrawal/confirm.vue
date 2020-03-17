@@ -70,7 +70,7 @@
                 },
                 formData: {
                     verifyCode: '',
-                    safetyCode: ''
+                    // safetyCode: ''
                 },
                 disabled: false,
                 time: 60
@@ -86,10 +86,10 @@
                     }, // 请输入验证码
                     password: {required: this.$t('login_register.password')}, // 请输入密码
                     smsCode: {required: this.$t('login_register.verify_code'), pInteger: this.$t('error_code.NUMERIC')}, // 请输入验证码
-                    safetyCode: {
-                        required: this.$t('account.safety_code_required'),
-                        pInteger: this.$t('error_code.NUMERIC')
-                    } // 请输入安全验证码
+                    // safetyCode: {
+                    //     required: this.$t('account.safety_code_required'),
+                    //     pInteger: this.$t('error_code.NUMERIC')
+                    // } // 请输入安全验证码
                 }
             }
         },
@@ -186,7 +186,9 @@
                 })
             },
             auth() {
+
                 this.$validator.validateAll().then((valid) => {
+                    console.log(valid)
                     if (!valid) {
                         let items = this.errors.items
                         if (items && items.length && items[0]) {
