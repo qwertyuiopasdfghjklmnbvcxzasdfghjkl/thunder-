@@ -79,7 +79,7 @@
                         for(let v in res){
                             list[v] = Number(res[v])
                         }
-                        console.log(list)
+                        // console.log(list)
                         // this.setBtcPrice(list)
                         this.setBTCValuation(numUtils.BN(res.totalAmount).toFixed(8)) // 当前转换人民币
                     }
@@ -145,7 +145,7 @@
                             list.push(d) //隐藏虚拟市场
                         }
                     })
-                    console.log(list)
+                    // console.log(list)
                     this.setMarketList(list)
                     this.setInitMarket(list[0].currencySymbol+'_'+list[0].baseSymbol)
                     this.setBtcValues(list)
@@ -213,7 +213,7 @@
                     for(let v in res){
                         list[v] = Number(res[v])
                     }
-                    console.log(list)
+                    // console.log(list)
                     this.setBtcPrice(list)
                     this.setBTCValuation(numUtils.BN(res.btcAmount).toFixed(8)) // 当前转换人民币
                 })

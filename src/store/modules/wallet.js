@@ -106,7 +106,7 @@ const actions = {
         btcValues[item.currencySymbol] = item.lastPrice
       // }
     })
-    console.log(btcValues)
+    // console.log(btcValues)
     context.commit('updateBtcValues', btcValues)
   },
   setUserWallets (context, userWallets) {

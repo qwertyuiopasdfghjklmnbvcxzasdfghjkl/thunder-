@@ -4,7 +4,7 @@
       <i class="icon_service" slot="right" v-tap="{methods:goOnlineService}"></i>
     </top-back>
     <div class="page-main">
-      <component :is="isBuyer" :adInfo="adInfo" :orderInfo="orderInfo"></component>
+      <component :is="isBuyer" :adInfo="adInfo" :orderInfo="orderInfo" :serveTime="serveTime"></component>
     </div>
   </div>
 </template>
@@ -15,6 +15,7 @@ import OrderBuy from './order_buy'
 import OrderSell from './order_sell'
 import otcApi from '@/api/otc'
 import utils from '@/assets/js/utils'
+import { MessageBox } from 'mint-ui'
 
 
 export default {
@@ -32,6 +33,9 @@ export default {
     isBuyer () {
       return this.data.orderInfo.to_user_name == this.getUserInfo.username ? OrderBuy:OrderSell
     },
+    serveTime(){
+      return utils.formatDate(this.data.cur_time).getTime()
+    },
     adInfo(){
       return this.data.adInfo || {}
     },
@@ -40,11 +44,11 @@ export default {
       orderInfo.total_price = utils.removeEndZero(utils.toFixed(orderInfo.currency_count,2)).toMoney()
       orderInfo.cur_price = utils.removeEndZero(utils.toFixed(orderInfo.cur_price,2)).toMoney()
       orderInfo.symbol_count = utils.removeEndZero(utils.toFixed(orderInfo.symbol_count,8)).toMoney()
-      let date = utils.formatDate(orderInfo.apply_time).getTime()
+      let date = utils.formatDate(orderInfo.updated_at).getTime()
       let ndate = utils.formatDate(this.data.cur_time).getTime()
       let diffTime = Math.floor((ndate - date) / 1000)
       let surplusTime = orderInfo.pay_apply_time * 60 - diffTime
-      orderInfo.surplus_Time = surplusTime
+      orderInfo.surplus_Time = surplusTime>0?surplusTime:0
       orderInfo.isExpire = surplusTime <= 0
       return orderInfo
     }
@@ -124,5 +128,5 @@ export default {
 .grey {color: @grey;}
 .blue {color: @blue;}
 
-.icon_service {width: 0.38rem; height: 0.9rem; background-image: url('../../assets/img/icon_service_min.png'); background-position: center;}
+.icon_service {width: 100%; height: 0.9rem; background-image: url('../../assets/img/icon_service_min.png'); background-position: center; background-size: 0.38rem auto;}
 </style>

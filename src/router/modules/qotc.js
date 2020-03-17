@@ -22,5 +22,17 @@ export default [
 	  component: () => import('@/views/qotc/appeal'),
 	  meta: {login: true}
 	},
+	{
+	  path: '/qotc/manage',
+	  name: 'qotcManage',
+	  component: () => import('@/views/qotc/manage'),
+	  meta: {login: true}
+	},
+	{
+	  path: '/qotc/orders',
+	  name: 'qotcOrders',
+	  component: () => import('@/views/qotc/order_list'),
+	  meta: {login: true}
+	},
 
 ]
