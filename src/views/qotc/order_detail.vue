@@ -15,6 +15,7 @@ import OrderBuy from './order_buy'
 import OrderSell from './order_sell'
 import otcApi from '@/api/otc'
 import utils from '@/assets/js/utils'
+import { MessageBox } from 'mint-ui'
 
 
 export default {
@@ -127,5 +128,5 @@ export default {
 .grey {color: @grey;}
 .blue {color: @blue;}
 
-.icon_service {width: 0.38rem; height: 0.9rem; background-image: url('../../assets/img/icon_service_min.png'); background-position: center;}
+.icon_service {width: 100%; height: 0.9rem; background-image: url('../../assets/img/icon_service_min.png'); background-position: center; background-size: 0.38rem auto;}
 </style>

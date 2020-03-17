@@ -8,7 +8,7 @@
 	    				<span :class="{active:type==1}" v-tap="{methods:setType, type:1}">极速购买</span>
 	    				<span :class="{active:type==2}" v-tap="{methods:setType, type:2}">极速卖出</span>
 	    			</div>
-	    			<div><span>OTC管理</span></div>
+	    			<div><router-link :to="{name:'qotcManage'}" tag="span">OTC管理</router-link></div>
 	    		</div>
 	    		<swiper :options="swiperOption" class="tokens mt30">
 	    		    <!-- 幻灯内容 -->
@@ -61,7 +61,7 @@
     					<span>{{payments.paypal_number}}</span>
     				</li>
 
-    				<router-link v-if="hasAllPays" :to="{name:'set-payway'}" class="active" tag="li">{{'添加收款方式'}}</router-link>
+    				<router-link v-if="hasAllPays" :to="{name:'set-payway'}" class="active mt20" tag="li">{{'添加收款方式'}}</router-link>
     			</ul>
     		</div>
     	</div>
@@ -414,7 +414,7 @@ export default {
 .bgblock { background-color: #151C2C; padding: 0.3rem; }
 .payments {
 	li {
-		line-height: 0.7rem;
+		line-height: 0.8rem;
 		i {width: 0.3rem; height: 0.32rem; margin-right: 0.1rem; background-image: url('../../assets/img/icon_unchecked.png');}
 		&.active {
 			color: @blue;

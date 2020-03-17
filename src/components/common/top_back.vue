@@ -77,7 +77,7 @@
 
         .btn-back {
             position: absolute;
-            width: 0.8rem;
+            width: 15vw;
             height: 0.5rem;
             left: 0;
             background: url('../../assets/img/icon_back_b@3x.png') no-repeat 0.3rem center;

@@ -6,10 +6,10 @@
     </div>
     <div class="mt30 bgblock">
       <div class="tc f36"><i class="icon_ status" :class="getStatusIcon"></i> {{orderState.title}}</div>      
-      <div class="tc f24 grey mt15" v-if="orderState.state==0">
+      <div class="tc f24 grey mt15" v-if="orderState.state==0 || orderState.state==41">
         <template v-if="orderInfo.appeal_state==3">{{'放置有申述或被申诉，但交易失败的审批原因'}}</template>
         <template v-else-if="orderInfo.cancelType==1">超出 <span class="blue">{{orderInfo.pay_apply_time}}</span> 分钟未付款，订单已被系统自动取消</template>
-        <template v-else>请勿再次付款</template>
+        <template v-else>商家已取消订单</template>
       </div>
       <div class="tc f24 grey mt15 lh17" v-if="orderState.state==1">
         <p>对方正在付款，剩余 <span class="blue">{{surplusTime}}</span> 分钟</p>
@@ -20,7 +20,7 @@
         <p>请务必登录收款账户，并确认收到该笔款项后的 <span class="blue">{{surplusTime}}</span> 分钟内进行放币</p>
       </div>
       <div class="tc f24 grey mt15" v-if="orderState.state==21">平台方将根据双方提供的资料进行核实，请耐心等待结果。</div>
-      <div class="tc f24 grey mt15" v-if="orderState.state==22">该订单已被卖方申诉，请尽快联系卖方或平台客服处理</div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==22">该订单已被商家申诉，请尽快联系买方或平台客服处理</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==3">成功卖出了 <span class="blue">{{orderInfo.symbol_count}} </span>{{orderInfo.symbol}}</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==31">{{'放置有申述或被申诉，但交易成功的审批原因'}}</div>
       <div class="price_info ui-flex ui-flex-justify f24 mt40 grey">
@@ -34,7 +34,7 @@
           <p class="white f32 tc mt30">{{orderInfo.cur_price}}</p>
         </div>
       </div>
-      <div class="user_info grey f32" v-if="orderInfo.cancelType!=2">
+      <div class="user_info grey f32">
         <div class="ui-flex ui-flex-justify">
           <span>收款方式</span>
           <span class="white">
@@ -54,7 +54,7 @@
       </div>
 
       <div class="ui-flex ui-flex-justify btns" v-if="orderState.state==2">
-        <mt-button type="cancel" size="large" :disabled="canAppeal" v-tap="{methods:$root.routeTo, to:'qotcAppeal', params:{orderNumber:orderInfo.order_number}}">{{canAppeal?'申诉({0})'.format(appealTime):'申诉'}}</mt-button>
+        <mt-button type="cancel" size="large" :disabled="canAppeal" v-tap="{methods:$root.routeTo, to:'qotcAppeal', params:{orderNumber:orderInfo.order_number}}">{{canAppeal?'申诉{0}'.format(appealTime):'申诉'}}</mt-button>
         <mt-button type="primary" size="large" class="ml30" v-tap="{methods:()=>{fbShow = true}}">放币</mt-button>
       </div>
       <div class="btns" v-if="orderState.state==21">
@@ -177,7 +177,7 @@ export default {
         if(this.orderInfo.appeal_state==3){
           return {
             state: 31,
-            title: this.isAppellant?this.$t('申诉成功，平台已强制放币'):this.$t('被申诉失败，平台已强制放币') // 已放币，交易完成(申诉成功，平台已强制放币:被申诉失败，平台已强制放币)
+            title: this.isAppellant?this.$t('申诉失败，平台已强制放币'):this.$t('被申诉成功，平台已强制放币') // 已放币，交易完成(申诉失败，平台已强制放币:被申诉成功，平台已强制放币)
           }
         } else {
           return {
@@ -188,8 +188,8 @@ export default {
       } else {
         if(this.orderInfo.appeal_state==3){
           return {
-            state: 0,
-            title: this.isAppellant?this.$t('申诉失败，订单已取消'):this.$t('被申诉成功，订单已被取消') // 申诉失败，订单已取消:被申诉成功，订单已被取消
+            state: 41,
+            title: this.isAppellant?this.$t('申诉成功，订单已取消'):this.$t('被申诉失败，订单已被取消') // 申诉成功，订单已取消:被申诉失败，订单已被取消
 
           }
         } else {
@@ -222,7 +222,7 @@ export default {
         case 3:
           _icon = 'finished'
           break
-        case 31:
+        case 41:
           _icon = 'appealSuccess'
           break
       }
@@ -287,11 +287,7 @@ export default {
     getSurplusTime(){
       let interval = utils.countDown(this.orderInfo.surplus_Time, (time) => {
         if (time === '00:00') {
-          this.$parent.data.orderInfo.isExpire = true
-        } else if (time === '05:00' && orderInfo.to_user_name === this.getUserInfo.username && orderInfo.pay_state === 0) {
-          // 您的付款确认时间还剩5分钟，5分钟后系统将自动取消订单！请付款并标记确认付款！
-          // 添加系统消息
-          this.$emit('addSystemMessage', orderInfo.order_number, 'PAYMENT_TIMEOUT_REMIND')
+          this.orderInfo.isExpire = true
         }
         this.surplusTime = time
       })
