@@ -88,11 +88,7 @@
                 otc.getMyAdvertisementList(this.param, res => {
                     if (this.sport === 'bottom') { // 加载更多数据
                         this.allLoaded = false
-                        res.data.filter(d => {
-                            if (d.state === 1) {
-                                this.list.push(d)
-                            }
-                        })
+                        this.list = res.data
                         this.$refs.loadmore.onBottomLoaded();
                         if (this.list.length >= res.total) { // 没有更多数据
                             this.noMoreData = true
@@ -100,20 +96,14 @@
                         }
                     } else if (this.sport === 'top') { // 下拉刷新
                         this.list = []
-                        res.data.filter(d => {
-                            if (d.state === 1) {
-                                this.list.push(d)
-                            }
-                        })
+                        this.list = res.data
+                        this.noMoreData = false
+                        this.allLoaded = false
 
                         this.$refs.loadmore.onTopLoaded();
                     } else {
                         this.list = []
-                        res.data.filter(d => {
-                            if (d.state === 1) {
-                                this.list.push(d)
-                            }
-                        })
+                        this.list = res.data
                     }
                 }, msg => {
                     Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
