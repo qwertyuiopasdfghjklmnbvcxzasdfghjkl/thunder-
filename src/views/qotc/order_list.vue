@@ -52,6 +52,7 @@
               </div>
             </li>
           </ul>
+          <noData v-if="!datas.length"/>
         </mt-loadmore>
       </div>
     </div>
@@ -59,9 +60,9 @@
       <p class="ft-c-default f36">OTC管理</p>
       <p class="mt60 ft-c-note f26">状态</p>
       <ul class="mt30 options">
-        <li>1</li>
-        <li>1</li>
-        <li>1</li>
+        <li :class="{active:state==1}" v-tap="{methods:setState, state:1}">未完成</li>
+        <li :class="{active:state==2}" v-tap="{methods:setState, state:2}">已完成</li>
+        <li :class="{active:state==3}" v-tap="{methods:setState, state:3}">已取消</li>
       </ul>
     </mt-popup>
   </div>
@@ -82,7 +83,7 @@ export default {
       datas:[],
       page:1,
       state:2,
-      size:3,
+      size:4,
       totalPage:1,
       intervals: [],
       isShow:false
@@ -106,7 +107,11 @@ export default {
     }
   },
   watch: {
-    
+    state(){
+      this.page = 1
+      this.allLoaded = false
+      this.getOrderList()
+    }
   },
   created () {
     this.state = this.$route.query.state || 2
@@ -118,6 +123,9 @@ export default {
   },
   methods: {
     ...mapActions(['addOtcSocketEvent', 'removeOtcSocketEvent']),
+    setState(args){
+      this.state = args.state
+    },
     clearIntervals(){
       for(let item of this.intervals){
         clearInterval(item)
@@ -133,7 +141,9 @@ export default {
       // load more data
       if(this.totalPage == 1){
         this.allLoaded = true
-        this.$refs.loadmore.onBottomLoaded()
+        setTimeout(()=>{
+          this.$refs.loadmore.onBottomLoaded()
+        },1000)
         return
       }
       this.page += 1
@@ -299,7 +309,30 @@ export default {
   margin-left: -0.15rem;
   margin-right: -0.15rem;
   display: flex;
-  li {margin-left: 0.15rem; margin-right: 0.15rem; width: 33.3%; height: 0.72rem; margin-bottom: 0.2rem; background-color: #F5F8F9; color: #333; line-height: 0.72rem; text-align: center; border-radius: 0.1rem;}
+  li {margin-left: 0.15rem; margin-right: 0.15rem; width: 33.3%; height: 0.72rem; padding: 0 0.1rem; margin-bottom: 0.2rem; background-color: #F5F8F9; color: #333; line-height: 0.72rem; text-align: center; border-radius: 0.1rem; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; position: relative;}
   li.active {border: 1px solid #0B69C8;}
+  li.active::before {
+    content: '';
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #0B69C8;
+    border-radius: 100%;
+    bottom: -0.25rem;
+    right: -0.2rem;
+    z-index: 1;
+  }
+  li.active::after {
+    content: '';
+    position: absolute;
+    width: 0.1rem;
+    height: 0.16rem;
+    border-bottom:0.04rem solid #fff;
+    border-right:0.04rem solid #fff;
+    bottom: 0.04rem;
+    right: 0.06rem;
+    z-index: 2;
+    transform: rotate(45deg);
+  }
 }
 </style>
