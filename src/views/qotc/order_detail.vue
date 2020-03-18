@@ -53,6 +53,13 @@ export default {
       return orderInfo
     }
   },
+  watch:{
+    data(){
+      if(this.data.orderInfo.state==1){
+        setTimeout(this.getOrdersDetail, 10000)
+      }
+    }
+  },
   beforeRouteEnter (to, from, next) {
     Indicator.open()
     otcApi.ordersDetail(to.params.orderId, (data) => {
@@ -75,6 +82,13 @@ export default {
     ...mapActions(['addOtcSocketEvent', 'removeOtcSocketEvent']),
     goOnlineService(){
       
+    },
+    getOrdersDetail(){
+      otcApi.ordersDetail(this.$route.params.orderId, (data) => {
+        this.data = data
+      }, (msg) => {
+        Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+      })
     },
     cancelApeal (appealManageId) { // 取消申诉
       otcApi.cancelAppeal(appealManageId, (msg) => {
