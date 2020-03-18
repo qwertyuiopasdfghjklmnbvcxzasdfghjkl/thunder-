@@ -37,6 +37,7 @@
     import down from './adDetail/down.vue'
     import btnAd from './adDetail/btnAd.vue'
     import otcConfig from '../../../assets/js/otcconfig'
+    import otc from '../../../api/otc'
 
     export default {
         name: "adDetail",
@@ -58,6 +59,20 @@
                 }
                 return _payTrans
             },
+        },
+        beforeRouteEnter (to, from, next) {
+          if(process.env.NODE_ENV === 'development'){ //开发环境下跳过检测
+            next()
+            return
+          }
+          otc.getAdPermission((res) => { //检测是否商家用户，否则无权限进入此页面
+            let _isMerchant = res.otcMerchantsPermission==1?true:false
+            if(_isMerchant){
+              next()
+            } else {
+              Tip({type:'danger', message:'抱歉，非商家用户无法进入此页面！'})
+            }
+          })
         },
         created() {
             this.item = this.$route.query
