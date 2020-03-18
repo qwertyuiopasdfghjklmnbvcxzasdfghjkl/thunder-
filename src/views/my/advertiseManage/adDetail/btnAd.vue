@@ -2,7 +2,7 @@
     <div class="btn">
         <label class="edit" v-tap="{methods:edit}">{{$t('market.edit_ad')}}</label>
         <label class="back" v-tap="{methods:del}">{{$t('market.backout_ad')}}</label>
-        <label class="put">{{$t('market.putaway_ad')}}</label>
+        <!--<label class="put">{{$t('market.putaway_ad')}}</label>-->
     </div>
 </template>
 
@@ -20,12 +20,15 @@
         },
         methods: {
             edit(){
-                this.$router.push({name: 'qotcAddOrUpdate',query: this.item})
+                this.$router.push({name: 'qotcAddOrUpdate',query: {id:this.item.ad_id}})
             },
             del(){
                 MessageBox({
                     title: this.$t('public0.public242'),
                     message: this.$t('public0.public3')+'?', // 删除?
+                    confirmButtonText: this.$t('public0.ok'),
+                    cancelButtonText: this.$t('usercontent.user31'),
+                    showCancelButton: true
                 }).then(action => {
                     if (action === 'confirm') {
                         this.api()
@@ -34,7 +37,7 @@
 
             },
             api(){
-                otc.deleteAdvertisement(this.item.ad_id,res=>{
+                otc.deleteAdv(this.item.ad_id,res=>{
                     Tip({type: 'success', message: this.$t(`error_code.${res}`)})
                     this.$router.back()
                 },msg=>{

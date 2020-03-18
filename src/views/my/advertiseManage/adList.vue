@@ -15,7 +15,7 @@
         </ul>
 
         <div class="page-main">
-            <div class="loadmore-wrapper">
+            <div class="loadmore-wrapper full">
                 <mt-loadmore
                         :top-method="loadTop"
                         :bottom-method="loadBottom"
@@ -58,8 +58,8 @@
                 navList: [
                     {name: this.$t('home.home59'), val: 9},
                     {name: this.$t('public0.public51'), val: 1},
-                    {name: this.$t('public0.public52'), val: 2},
-                    {name: this.$t('public0.public156'), val: 3},
+                    {name: this.$t('public0.public52'), val: 0},
+                    {name: this.$t('public0.public156'), val: 2},
                 ],
                 param: {
                     page: 1,

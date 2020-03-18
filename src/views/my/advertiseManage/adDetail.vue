@@ -23,7 +23,9 @@
                     </p>
                     <p><span>{{$t('otc_ad.otc_ad_Minimum_limit')}}</span><span>{{item.min_amount}} {{item.ad_type === 2 ? item.currency : item.symbol}}</span></p>
                     <p><span>{{$t('otc_ad.otc_ad_Maximum_limit')}}</span><span>{{item.max_amount}} {{item.ad_type === 2 ? item.currency : item.symbol}}</span></p>
-                    <p><span>{{$t('otc_ad.otc_ad_Payment_method')}}</span><span>{{item.symbol_count}} {{item.symbol}}</span></p>
+                    <p><span>{{$t('otc_ad.otc_ad_Payment_method')}}</span>
+                        <span><i class="icon_payment" v-for="data in item.pay_type.split(',')" :class="[payTrans[data]]"></i></span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -34,6 +36,7 @@
 <script>
     import down from './adDetail/down.vue'
     import btnAd from './adDetail/btnAd.vue'
+    import otcConfig from '../../../assets/js/otcconfig'
     import otc from '../../../api/otc'
 
     export default {
@@ -48,6 +51,13 @@
         computed:{
             type(){
                 return this.$t(this.item.ad_type === 2 ? 'exchange.exchange_sell' : 'exchange.exchange_buy')
+            },
+            payTrans(){
+                let _payTrans = {}
+                for(let item of otcConfig.payments){
+                    _payTrans[item.id] = item.className
+                }
+                return _payTrans
             },
         },
         beforeRouteEnter (to, from, next) {
@@ -113,6 +123,26 @@
                     color: #4C5A74;
                 }
             }
+        }
+    }
+    .buy {color: #E01C37;}
+    .sell {color: #0EB574;}
+
+    .icon_payment {
+        width: .4rem;
+        height: .4rem;
+        margin-right: .2rem;
+        &.paypal {
+            background-image:url('../../../assets/img/icon-paypal-big.png');
+        }
+        &.alipay {
+            background-image:url('../../../assets/img/icon-alipay-big.png');
+        }
+        &.bank {
+            background-image:url('../../../assets/img/icon-bank-big.png');
+        }
+        &.wechat {
+            background-image:url('../../../assets/img/icon-wechat-big.png');
         }
     }
 </style>
