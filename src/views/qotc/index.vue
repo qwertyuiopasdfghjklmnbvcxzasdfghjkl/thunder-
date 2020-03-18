@@ -41,7 +41,7 @@
 	    		</div>
 	    		<div class="mt10 grey f26" v-if="getApiToken">账户余额 {{balance}} {{token}}</div>
     		</div>
-    		<div class="full bgblock mt20" v-show="getApiToken && type==2">
+    		<div class="full bgblock mt20" v-show="getApiToken">
     			<p class="f26 grey">选择收款方式</p>
     			<ul class="mt25 payments">
     				<li v-tap="{methods:()=>{payType = 1}}" class="ui-flex ui-flex-justify" :class="{active:payType==1}" v-if="payments.card_number">
@@ -65,7 +65,7 @@
     			</ul>
     		</div>
     	</div>
-    	<router-link class="icon_ add-advertisement" v-if="'有权限发布广告'" tag="span" :to="{name:'qotcAddOrUpdate'}"></router-link>
+    	<router-link class="icon_ add-advertisement" v-if="isMerchant" tag="span" :to="{name:'qotcAddOrUpdate'}"></router-link>
     	<span class="icon_ online-service" v-tap="{methods:goOnlineService}"></span>
     	<div class="bottom-layer">
     		<template v-if="getApiToken">
@@ -127,7 +127,8 @@ export default {
             },
             isShow:false,
             notMatched:false,
-            locked:false
+            locked:false,
+            isMerchant:false
 		}
 	},
 	computed:{
@@ -159,8 +160,7 @@ export default {
 		  return {
 		    ad_type: this.type,
 		    symbol: this.token,
-		    currency: this.currency,
-		    bench_marking_id: otcConfig.benchMarkingId
+		    currency: this.currency
 		  }
 		},
 		coinMinLimit(){
@@ -188,7 +188,7 @@ export default {
 		currencyMinLimit(){},
 		coinMinLimit(){},
 		benchSymbolParams() {
-		  this.getBenchSymbolInfo()
+		  this.getReferencePrice()
 		},
 		isToken(){
 			this.amount = ''
@@ -216,7 +216,8 @@ export default {
 		this.getOtcTokens()
 		this.getOtcCurrency()
 		this.getPaySettings()
-		this.getBenchSymbolInfo()
+		this.getReferencePrice()
+		this.getAdPermission()
 	},
 	methods:{
 		...mapActions(['setUserInfo', 'setUserWallets']),
@@ -237,8 +238,12 @@ export default {
 			    })
 			    return
 			}
-			if(this.type==2 && !this.payType){ //如果是卖需添加收款支付方式
-				this.hasPay?Tip({type:'error', message:'请选择收款方式'}):Tip({type:'error', message:'请添加收款方式'})
+			if(!this.hasPay){ //买卖需添加收款支付方式
+				Tip({type:'error', message:'请添加支付方式'})
+				return
+			}
+			if(this.type==2 && !this.payType){ //如果是卖需选择收款方式
+				Tip({type:'error', message:'请选择收款方式'})
 				return
 			}
 			if(this.isToken){
@@ -347,9 +352,17 @@ export default {
                 this.setUserInfo(res)
             })
         },
-        getBenchSymbolInfo () { // 获取对标交易所币种价格
-          otcApi.getBenchSymbolInfo(this.benchSymbolParams, (res) => {
-            this.refPrice = numUtils.BN(res.cur_price || 0).toFixed(2)
+        getReferencePrice () { // 获取币种买卖参考价格
+          otcApi.getReferencePrice(this.benchSymbolParams, (res) => {
+            this.refPrice = numUtils.BN(res || 0).toFixed(2)
+          })
+        },
+        getAdPermission () { // 获取是否有商家权限
+          if(!this.getApiToken){
+          	return
+          }
+          otcApi.getAdPermission((res) => {
+            this.isMerchant = res.otcMerchantsPermission?true:false
           })
         },
         getPaySettings(){ //获取用户支付方式

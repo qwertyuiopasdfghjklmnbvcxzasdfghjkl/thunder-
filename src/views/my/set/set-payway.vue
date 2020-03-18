@@ -5,6 +5,7 @@
     <div class="page-main">
       <div class="mt20">
         <!--1-1已设置银行卡-->
+        <template v-if="false">
         <section v-if="bankData.card_number" class="item block" v-tap="{methods: checkVerifyState, to: 'bank-pay'}">
             <h3><img :src="bankimg">{{$t('otc_legal.oyc_legal_Bank_card')}}<!--银行卡--><span class="right-icon"></span></h3>
             <p> <span>{{$t('otc_legal.otc_legal_Name')}}：<!--姓名--></span><span>{{bankData.card_name}}</span></p>
@@ -28,6 +29,7 @@
             <h3><img :src="wechatimg">{{$t('public0.public198')}}<!--微信--><span class="right-icon"></span></h3>
             <p><span>{{$t('public0.public197')}}<!--请设置微信账号及收款码，收付款更便捷--></span><span></span></p>
         </section>
+        </template>
 
         <!--3-1已设置支付宝-->
         <section v-if="alipayData.alipay_number" class="item block" v-tap="{methods:checkVerifyState, to:'alipay-pay'}">
@@ -40,7 +42,7 @@
             <h3><img :src="alipayimg">{{$t('public0.public199')}}<!--支付宝--><span class="right-icon"></span></h3>
             <p><span>{{$t('public0.public261')}}<!--请设置支付宝账号及收款码，收付款更便捷--></span><span></span></p>
         </section>
-
+        <template v-if="false">
         <!--4-1已设置PayPal-->
         <section v-if="paypalData.paypal_number" class="item block" v-tap="{methods:checkVerifyState, to:'paypal-pay'}">
             <h3><img :src="paypalimg">{{$t('public0.public219')}}<!--PayPal--><span class="right-icon"></span></h3>
@@ -52,6 +54,7 @@
             <h3><img :src="paypalimg">{{$t('public0.public219')}}<!--PayPal--><span class="right-icon"></span></h3>
             <p><span>{{$t('public0.public220')}}<!--请设置PayPal信息--></span><span></span></p>
         </section>
+        </template>
       </div>
     </div>
   </div>

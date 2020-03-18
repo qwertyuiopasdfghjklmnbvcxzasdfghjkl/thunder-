@@ -22,7 +22,7 @@
       <div class="ui-flex ui-flex-justify">
         <div class="kuan ui-flex-3">
           <select v-model="formData.price_type">
-            <option :value="2">固定价格</option>
+            <option :value="2" v-if="false">固定价格</option>
             <option :value="1">溢价价格</option>
           </select>
         </div>
@@ -122,7 +122,7 @@ export default {
         currency: 'CNY',
         bench_marking_id: otcConfig.benchMarkingId,
         price_rate: '',
-        price_type: 2, //price_type: 1 浮动价格； 2 固定价格；
+        price_type: 1, //price_type: 1 浮动价格； 2 固定价格；
         lowest_price: '',
         symbol_count: '',
         min_amount: '',
@@ -144,7 +144,7 @@ export default {
         min_amount: {required: this.$t('otc_ad.otc_ad_minimum_amount')}, // 请输入最小限额
         max_amount: {required: this.$t('otc_ad.otc_ad_maximum_amount')}, // 请输入最大限额
         symbol_count: {required: this.$t('请输入交易数量')}, // 请输入交易数量
-        pay_type: {required: this.$t(this.formData.ad_type==1?'请选择付款方式':'请选择收款方式')}, // 请选择付款\收款方式
+        pay_type: {required: this.hasPay?this.$t(this.formData.ad_type==1?'请选择付款方式':'请选择收款方式'):'请添加支付方式'}, // 请选择付款\收款方式：请添加支付方式
       }
     },
     payTrans(){
@@ -181,8 +181,7 @@ export default {
       return {
         ad_type: this.formData.ad_type,
         symbol: this.formData.symbol,
-        currency: this.formData.currency,
-        bench_marking_id: this.formData.bench_marking_id,
+        currency: this.formData.currency
       }
     },
     tradeLimitAccuracy () {
@@ -219,7 +218,7 @@ export default {
     currencyMinLimit(){},
     coinMinLimit(){},
     benchSymbolParams() {
-      this.getBenchSymbolInfo()
+      this.getReferencePrice()
     },
     'formData.price_type'(){
       this.formData.lowest_price = ''
@@ -231,16 +230,23 @@ export default {
       next()
       return
     }
-    if(store.getters.getUserInfo.mobileAuthEnable!=1){
-      MessageBox.confirm(window.vm.$t('未绑定手机号，是否立即前往？'),window.vm.$t('确认'),{
-        cancelButtonText:window.vm.$t('取消'),
-        confirmButtonText:window.vm.$t('确认'),
-      }).then(action => {
-        window.vm.$router.push({name:'phoneVerify'})
-      })
-    } else {
-      next()
-    }
+    otcApi.getAdPermission((res) => { //检测是否商家用户，否则无权限进入此页面
+      let _isMerchant = res.otcMerchantsPermission?true:false
+      if(_isMerchant){
+        if(store.getters.getUserInfo.mobileAuthEnable!=1){
+          MessageBox.confirm(window.vm.$t('未绑定手机号，是否立即前往？'),window.vm.$t('确认'),{
+            cancelButtonText:window.vm.$t('取消'),
+            confirmButtonText:window.vm.$t('确认'),
+          }).then(action => {
+            window.vm.$router.push({name:'phoneVerify'})
+          })
+        } else {
+          next()
+        }
+      } else {
+        Tip({type:'danger', message:'抱歉，非商家用户无法进入此页面！'})
+      }
+    })
   },
   created(){
     /*if('没有权限发布广告'){
@@ -253,7 +259,7 @@ export default {
     this.getPaySettings().then(()=>{
       this.fnGetAdvertisementDetail()
     })
-    this.getBenchSymbolInfo()
+    this.getReferencePrice()
     
   },
   methods:{
@@ -318,6 +324,10 @@ export default {
             let msg = this.msgs[name] && this.msgs[name][this.errors.firstRule(name)] ? this.msgs[name][this.errors.firstRule(name)] : this.$t(this.errors.first(name))
             Tip({type:'danger', message: msg})
           }
+          return
+        }
+        if(numUtils.BN(this.formData.symbol_count).gt(this.balance)){
+          Tip({type:'danger', message: `${this.formData.symbol}余额不足`})
           return
         }
         this.locked = true
@@ -420,9 +430,9 @@ export default {
         })
       })
     },
-    getBenchSymbolInfo () { // 获取对标交易所币种价格
-      otcApi.getBenchSymbolInfo(this.benchSymbolParams, (res) => {
-        this.refPrice = numUtils.BN(res.cur_price || 0).toFixed(2)
+    getReferencePrice () { // 获取对标交易所币种价格
+      otcApi.getReferencePrice(this.benchSymbolParams, (res) => {
+        this.refPrice = numUtils.BN(res || 0).toFixed(2)
       })
     },
     getAssets() {

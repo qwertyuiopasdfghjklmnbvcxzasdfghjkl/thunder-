@@ -8,7 +8,7 @@
     <div class="mt30 bgblock">
       <div class="tc f36"><i class="icon_ status" :class="getStatusIcon"></i> {{orderState.title}}</div>      
       <div class="tc f24 grey mt15" v-if="orderState.state==0">
-        <template v-if="orderInfo.appeal_state==3">{{'放置有申述或被申诉，但交易失败的审批原因'}}</template>
+        <template v-if="orderInfo.appeal_state==3"><!-- {{'放置有申述或被申诉，但交易失败的审批原因'}} --></template>
         <template v-else-if="orderInfo.cancelType==1">超出 <span class="blue">{{orderInfo.pay_apply_time}}</span> 分钟未付款，订单已被系统自动取消</template>
         <template v-else>订单已取消，请勿再次付款</template>
       </div>
@@ -17,7 +17,7 @@
       <div class="tc f24 grey mt15" v-if="orderState.state==21">平台方将根据双方提供的资料进行核实，请耐心等待结果。</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==22">该订单已被商家申诉，请尽快联系卖方或平台客服处理</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==3">卖家已放币，成功购买了 <span class="blue">{{orderInfo.symbol_count}} </span>{{orderInfo.symbol}}</div>
-      <div class="tc f24 grey mt15" v-if="orderState.state==31">{{'放置有申述或被申诉，但交易成功的审批原因'}}</div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==31"><!-- {{'放置有申述或被申诉，但交易成功的审批原因'}} --></div>
       <div class="price_info ui-flex ui-flex-justify f24 mt40 grey">
         <div>交易金额({{orderInfo.currency}})
           <p class="white f32 tc mt30">{{orderInfo.currency_count}}</p>
@@ -85,7 +85,7 @@
         <p class="ft-c-red f28 mt40">提示：每天累计取消3次，当天无法再使用极速购买功能。</p>
     </Dialog>
     <Dialog :show="zfShow" :title="$t('确认支付订单')" :cancelText="'还未付款'" :showClose="true" :showBtns="false" :hide="hideZFDialog">
-        <div class="ft-c-default f32 tc lh17">请确认您已经向买家付款，无需备注任何信息!</div>
+        <div class="ft-c-default f32 tc lh17">请确认您已经向卖家付款，无需备注任何信息!</div>
         <div class="ft-c-note f24 mt25 tc">提示：恶意点击将冻结你的账户</div>
         <div class="payinfo rp mt40">
           <i class="dotmask left"></i><i class="dotmask right"></i>

@@ -232,7 +232,7 @@ otc.cancelOrder = cancelOrder
 
 // 完成订单
 const finishOrder = function (data, success, error) {
-  api.put(`${domain}api/v2/otc/orders/finish/`, data, (res) => {
+  api.put(`${domain}api/v2/otc/orders/finish/${data.id}`, data, (res) => {
     if (res.rst === 1) {
       success && success(res.msg)
     } else {
@@ -540,6 +540,28 @@ const quickMatchAndCreate = function (data, success, error) {
 }
 otc.quickMatchAndCreate = quickMatchAndCreate
 
+// 获取参考价
+const getReferencePrice = function (data, success, error) {
+  api.post(`${domain}api/v2/otc/order/referenceprice`, data, (res) => {
+    if (res.rst === 1) {
+      success && success(res.referencePrice)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+otc.getReferencePrice = getReferencePrice
 
+// 获取OTC商家权限
+const getAdPermission = function (success, error) {
+  api.get(`${domain}api/v2/otc/query/permission`, (res) => {
+    if (res.rst === 1) {
+      success && success(res.data)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+otc.getAdPermission = getAdPermission
 
 export default otc

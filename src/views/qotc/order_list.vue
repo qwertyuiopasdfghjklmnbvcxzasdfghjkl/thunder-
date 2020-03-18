@@ -52,6 +52,7 @@
               </div>
             </li>
           </ul>
+          <noMoreData v-if="allLoaded"/>
           <noData v-if="!datas.length"/>
         </mt-loadmore>
       </div>
@@ -75,8 +76,12 @@ import otcApi from '@/api/otc'
 import utils from '@/assets/js/utils'
 import numUtils from '@/assets/js/numberUtils'
 import { MessageBox } from 'mint-ui'
+import noMoreData from '@/components/common/noMoreData'
 
 export default {
+  components: {
+    noMoreData
+  },
   data () {
     return {
       allLoaded:false,

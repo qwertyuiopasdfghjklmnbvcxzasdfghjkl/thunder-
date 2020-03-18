@@ -7,7 +7,7 @@
     <div class="mt30 bgblock">
       <div class="tc f36"><i class="icon_ status" :class="getStatusIcon"></i> {{orderState.title}}</div>      
       <div class="tc f24 grey mt15" v-if="orderState.state==0 || orderState.state==41">
-        <template v-if="orderInfo.appeal_state==3">{{'放置有申述或被申诉，但交易失败的审批原因'}}</template>
+        <template v-if="orderInfo.appeal_state==3"><!-- {{'放置有申述或被申诉，但交易失败的审批原因'}} --></template>
         <template v-else-if="orderInfo.cancelType==1">超出 <span class="blue">{{orderInfo.pay_apply_time}}</span> 分钟未付款，订单已被系统自动取消</template>
         <template v-else>商家已取消订单</template>
       </div>
@@ -22,7 +22,7 @@
       <div class="tc f24 grey mt15" v-if="orderState.state==21">平台方将根据双方提供的资料进行核实，请耐心等待结果。</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==22">该订单已被商家申诉，请尽快联系买方或平台客服处理</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==3">成功卖出了 <span class="blue">{{orderInfo.symbol_count}} </span>{{orderInfo.symbol}}</div>
-      <div class="tc f24 grey mt15" v-if="orderState.state==31">{{'放置有申述或被申诉，但交易成功的审批原因'}}</div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==31"><!-- {{'放置有申述或被申诉，但交易成功的审批原因'}} --></div>
       <div class="price_info ui-flex ui-flex-justify f24 mt40 grey">
         <div>交易金额({{orderInfo.currency}})
           <p class="white f32 tc mt30">{{orderInfo.currency_count}}</p>
@@ -86,7 +86,7 @@ import utils from '@/assets/js/utils'
 import Dialog from '@/components/common/dialog'
 import { Toast } from 'mint-ui'
 import otcConfig from '@/assets/js/otcconfig'
-import vertify from '@/views/wallet/vertify'
+import vertify from './vertify'
 
 
 
@@ -326,18 +326,8 @@ export default {
     },
     finishOrder (data) { // 释放货币
       if (this.orderInfo.state === 1 && this.orderInfo.pay_state === 1) {
-        if(data.constructor===String){
-            data = {
-                type: this.getUserInfo.googleAuthEnable === 1?2:1,
-                googleCode: data.split('$$')[1],
-                smsCode: data.split('$$')[0],
-            }
-        }
-        let _data = {
-            order_id: this.orderInfo.order_id,
-            secondaryValidateDTO:data
-        }
-        otcApi.finishOrder(_data, (msg) => {
+        data.id = this.orderInfo.order_id
+        otcApi.finishOrder(data, (msg) => {
           this.orderInfo.state = 2
           this.fbShow = false
           Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
