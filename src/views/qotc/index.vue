@@ -242,8 +242,8 @@ export default {
 				Tip({type:'error', message:'请添加支付方式'})
 				return
 			}
-			if(this.type==2 && !this.payType){ //如果是卖需选择收款方式
-				Tip({type:'error', message:'请选择收款方式'})
+			if(!this.payType){ //如果是卖需选择收款方式
+				Tip({type:'error', message:this.type==1?'请选择付款方式':'请选择收款方式'})
 				return
 			}
 			if(this.isToken){
@@ -298,6 +298,8 @@ export default {
 	        		window._matchTimer = setTimeout(()=>{
 	        			this.notMatched = false
 	        		},4000)
+	        	} else {
+	        		Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
 	        	}
 	        })
 		},

@@ -247,6 +247,6 @@ TVjsApi.prototype.getBars = function(symbolInfo, resolution, rangeStartDate, ran
         this.getBarTimer = setTimeout(function() {
             self.getBars(symbolInfo, resolution, rangeStartDate, rangeEndDate, onLoadedCallback)
         },
-        10)
+        1000)
     }
 }
