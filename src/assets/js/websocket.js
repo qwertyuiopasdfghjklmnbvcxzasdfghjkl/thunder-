@@ -1,24 +1,16 @@
 import JsCookies from 'js-cookie'
-import Config from '@/api/config'
-
-/*subscribe 订阅值
-* @param kline K线图
-* @param account 帐户信息
-* @param market 市场信息
-* @param depth 深度
-* @param last_price 24小时最新价
-* @param user_new_orderbook 用户当前委托
-* @param user_history_orderbook 用户历史委托
-* @param new_transaction 最新成交
-* @param valuation 估值
-* @param symbol_volumes 币种成交量*/
-
-export default function (opts) {
+import Config from './config'
+(function (KLineWebSocket) {
+  if (typeof module === 'object') {
+    module.exports = KLineWebSocket
+  } else {
+    window.KLineWebSocket = KLineWebSocket
+  }
+})(function (opts) {
   let apiToken = ''
   opts = opts || {}
   let symbol = opts.symbol || 'ETHBTC'
   let period = opts.period || '1m'
-  let subscribe = opts.subscribe || []
   let port = '9501'
   let isLeavePage = false
 
@@ -36,8 +28,7 @@ export default function (opts) {
       return
     }
     if (webSocket && webSocket.readyState === webSocket.OPEN) {
-      let params = {"event":"addChannel","channel":"kline","api_token":apiToken,"is_mobile":true,"period":period === 'line' ? '1m' : period,"symbol":symbol,"isZip":false,"subscribe":subscribe}
-      webSocket.send(JSON.stringify(params))
+      webSocket.send(`{"event":"addChannel","channel":"kline","api_token":"${apiToken}","period":"${period === 'line' ? '1m' : period}","symbol":"${symbol}","isZip":"false"}`)
     }
   }
   let curTime = null
@@ -128,4 +119,4 @@ export default function (opts) {
       sendMessage()
     }
   }
-}
+})

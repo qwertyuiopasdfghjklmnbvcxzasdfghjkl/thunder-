@@ -9,7 +9,7 @@
  * onAsksAndBidsCallback: {function} 深度回调函数，默认空
  * onLastTradesCallback: {function} 最新买卖信息回调函数，默认空
  * }
- *
+ * 
  * 横向轴文字 TimelinePlotter.prototype.Draw
  * 纵向轴文字和线 RangePlotter.prototype.Draw
  * 划分区域线(实线) TableLayout.prototype.drawGrid
@@ -26,21 +26,21 @@
  * 横向轴文字区域高度 TemplateMeasuringHandler.onMeasuring
  * 横向选择显示信息 TimelineSelectionPlotter.prototype.Draw
  * 纵向选择显示信息 RangeSelectionPlotter.prototype.Draw
- *
+ * 
  * theme 参数
  * {
  * Positive: 涨柱图颜色
  * Negative: 跌柱图颜色
- * PositiveDark:
- * NegativeDark:
- * Unchanged:
+ * PositiveDark: 
+ * NegativeDark: 
+ * Unchanged: 
  * Background: mainCanvas背景色
  * Cursor: 光标滑动线颜色
  * RangeMark: 右侧范围标记字体颜色
  * Indicator0: MA5字体颜色
  * Indicator1: MA10字体颜色
  * Indicator2: MA30字体颜色
- * Indicator3:
+ * Indicator3: 
  * Indicator4: 未使用
  * Indicator5: 未使用
  * Grid0: mainCanvas表格线颜色
@@ -61,23 +61,29 @@
  * CircleColorStroke: 工具线圆圈边框色
  * }
  */
-export default function (opts) {
+(function (KLineChart) {
+  if (typeof module === 'object') {
+    module.exports = KLineChart
+  } else {
+    window.KLineChart = KLineChart
+  }
+})(function (opts) {
   String.prototype.getDecimalDigits = function () {
     let a = this.split('.')[1]
     return a ? a.length : 0
   }
 
   // polyfill 提供了这个方法用来获取设备的 pixel ratio
-  function getPixelRatio () {
-    var context = document.createElement("canvas");
-    var backingStore = context.backingStorePixelRatio ||
-      context.webkitBackingStorePixelRatio ||
-      context.mozBackingStorePixelRatio ||
-      context.msBackingStorePixelRatio ||
-      context.oBackingStorePixelRatio ||
-      context.backingStorePixelRatio || 1;
+	function getPixelRatio () {
+		var context = document.createElement("canvas");
+		var backingStore = context.backingStorePixelRatio ||
+			context.webkitBackingStorePixelRatio ||
+			context.mozBackingStorePixelRatio ||
+			context.msBackingStorePixelRatio ||
+			context.oBackingStorePixelRatio ||
+			context.backingStorePixelRatio || 1;
 
-    return (window.devicePixelRatio || 1) / backingStore;
+		return (window.devicePixelRatio || 1) / backingStore;
   }
 
   var klineType = opts.klineType || 'eosbtc';
@@ -116,7 +122,7 @@ export default function (opts) {
   container.appendChild(chart_overlayCanvas);
 
   let fontFamily = `${12 * GLOBAL_VAR.ratio}px Microsoft YaHei`
-
+  
   var classId = 0
   function createClass () {
     var j = arguments.length
@@ -222,6 +228,7 @@ export default function (opts) {
         return d.substring(0, b + 1);
       }
     }
+    return d;
   };
   var ExprEnv = createClass();
   ExprEnv.get = function() {
@@ -2795,7 +2802,7 @@ export default function (opts) {
     this.drawArea(a, b, d);
     b.setChanged(false);
   };
-
+  
   ChartManager.prototype.drawAreaOverlay = function(a, b) {
     var c = this._dataSources[b.getDataSourceName()];
     var d;
@@ -3077,7 +3084,7 @@ export default function (opts) {
   };
   ChartManager.prototype.onMouseMove = function(f, k, h, g) {
     k *= GLOBAL_VAR.ratio;
-    h *= GLOBAL_VAR.ratio;
+		h *= GLOBAL_VAR.ratio;
     var c = this.getFrame(f);
     if (c === undefined) {
       return;
@@ -3110,7 +3117,7 @@ export default function (opts) {
   };
   ChartManager.prototype.onMouseLeave = function(c, a, e, b) {
     a *= GLOBAL_VAR.ratio;
-    e *= GLOBAL_VAR.ratio;
+		e *= GLOBAL_VAR.ratio;
     var d = this.getFrame(c);
     if (d == undefined) {
       return;
@@ -3126,7 +3133,7 @@ export default function (opts) {
   };
   ChartManager.prototype.onMouseDown = function(d, b, j) {
     b *= GLOBAL_VAR.ratio;
-    j *= GLOBAL_VAR.ratio;
+		j *= GLOBAL_VAR.ratio;
     var h = this.getFrame(d);
     if (h == undefined) {
       return;
@@ -3147,7 +3154,7 @@ export default function (opts) {
   };
   ChartManager.prototype.onMouseUp = function(b, a, d) {
     a *= GLOBAL_VAR.ratio;
-    d *= GLOBAL_VAR.ratio;
+		d *= GLOBAL_VAR.ratio;
     var c = this.getFrame(b);
     if (c == undefined) {
       return;
@@ -4020,7 +4027,6 @@ export default function (opts) {
   PercentageRange.prototype.__construct = function(a) {
     PercentageRange.__super.__construct.call(this, a);
   };
-  // KDJ
   PercentageRange.prototype.updateGradations = function() {
     this._gradations = [];
     var e = ChartManager.getInstance();
@@ -4389,17 +4395,17 @@ export default function (opts) {
   DarkTheme.prototype.__construct = function() {
     let ThemeColor = opts.ThemeColor || {}
     this._colors = [];
-    this._colors[Theme.Color.Positive] = ThemeColor.Positive || "#439B64"; // #ff6203
-    this._colors[Theme.Color.Negative] = ThemeColor.Negative || "#DC6041"; // #44ea37
+    this._colors[Theme.Color.Positive] = ThemeColor.Positive || "#03c087"; // #ff6203
+    this._colors[Theme.Color.Negative] = ThemeColor.Negative || "#e76d42"; // #44ea37
     this._colors[Theme.Color.PositiveDark] = ThemeColor.PositiveDark || "#03c087";
-    this._colors[Theme.Color.NegativeDark] = ThemeColor.NegativeDark || "#DC6041";
+    this._colors[Theme.Color.NegativeDark] = ThemeColor.NegativeDark || "#e76d42";
     this._colors[Theme.Color.Unchanged] = ThemeColor.Unchanged || "#283149";
     this._colors[Theme.Color.Background] = ThemeColor.Background || "#181b2a"; //"#080808"
-    this._colors[Theme.Color.Cursor] = ThemeColor.Cursor || "#fff";
-    this._colors[Theme.Color.RangeMark] = ThemeColor.RangeMark || "#F6B400";
-    this._colors[Theme.Color.Indicator0] = ThemeColor.Indicator0 || "#fff"; //#ddd
-    this._colors[Theme.Color.Indicator1] = ThemeColor.Indicator1 || "#F6B400";
-    this._colors[Theme.Color.Indicator2] = ThemeColor.Indicator2 || "#A7003B";
+    this._colors[Theme.Color.Cursor] = ThemeColor.Cursor || "#aaa";
+    this._colors[Theme.Color.RangeMark] = ThemeColor.RangeMark || "#f9ee30";
+    this._colors[Theme.Color.Indicator0] = ThemeColor.Indicator0 || "#888"; //#ddd
+    this._colors[Theme.Color.Indicator1] = ThemeColor.Indicator1 || "#f9ee30";
+    this._colors[Theme.Color.Indicator2] = ThemeColor.Indicator2 || "#f600ff";
     this._colors[Theme.Color.Indicator3] = ThemeColor.Indicator3 || "#6bf";
     this._colors[Theme.Color.Indicator4] = ThemeColor.Indicator4 || "#a5cf81";
     this._colors[Theme.Color.Indicator5] = ThemeColor.Indicator5 || "#e18b89";
@@ -5617,6 +5623,15 @@ export default function (opts) {
       c = f - 7 * GLOBAL_VAR.ratio;
       b = f - 3 * GLOBAL_VAR.ratio;
       i = c - 4 * GLOBAL_VAR.ratio;
+      // 当文字超出左边画图则显示在右边
+      let width = d.measureText(parseFloat(k).toFixed(GLOBAL_VAR.fixedNumber)).width;
+      if (i - width < 0) {
+        d.textAlign = "left";
+        f = l.toItemCenter(h) + 4 * GLOBAL_VAR.ratio;
+        c = f + 7 * GLOBAL_VAR.ratio;
+        b = f + 3 * GLOBAL_VAR.ratio;
+        i = c + 4 * GLOBAL_VAR.ratio;
+      }
     } else {
       d.textAlign = "left";
       f = l.toItemCenter(h) + 4 * GLOBAL_VAR.ratio;
@@ -5624,6 +5639,13 @@ export default function (opts) {
       b = f + 3 * GLOBAL_VAR.ratio;
       i = c + 4 * GLOBAL_VAR.ratio;
     }
+    Plotter.drawLine = function(d, b, e, a, c) {
+      d.beginPath();
+      d.lineWidth = 1 * GLOBAL_VAR.ratio;
+      d.moveTo((b << 0) + 0.5, (e << 0) + 0.5);
+      d.lineTo((a << 0) + 0.5, (c << 0) + 0.5);
+      d.stroke();
+    };
     Plotter.drawLine(d, f, j, c, j);
     Plotter.drawLine(d, f, j, b, j + 2 * GLOBAL_VAR.ratio);
     Plotter.drawLine(d, f, j, b, j - 2 * GLOBAL_VAR.ratio);
@@ -6209,10 +6231,10 @@ export default function (opts) {
     var h = g.toY(j);
     var d = a.getLeft() + 1;
     Plotter.createPolygon(b, [
-      {x: a.getLeft(), y: h},
-      {x: a.getLeft() + 5 * GLOBAL_VAR.ratio, y: h + 10 * GLOBAL_VAR.ratio},
-      {x: a.getRight() - 3 * GLOBAL_VAR.ratio, y: h + 10 * GLOBAL_VAR.ratio},
-      {x: a.getRight() - 3 * GLOBAL_VAR.ratio, y: h - 10 * GLOBAL_VAR.ratio},
+      {x: a.getLeft(), y: h}, 
+      {x: a.getLeft() + 5 * GLOBAL_VAR.ratio, y: h + 10 * GLOBAL_VAR.ratio}, 
+      {x: a.getRight() - 3 * GLOBAL_VAR.ratio, y: h + 10 * GLOBAL_VAR.ratio}, 
+      {x: a.getRight() - 3 * GLOBAL_VAR.ratio, y: h - 10 * GLOBAL_VAR.ratio}, 
       {x: a.getLeft() + 5 * GLOBAL_VAR.ratio, y: h - 10 * GLOBAL_VAR.ratio}]
     );
     var e = k.getTheme(this.getFrameName());
@@ -6302,7 +6324,7 @@ export default function (opts) {
       h = `${TimelineSelectionPlotter.MonthConvert[o]} ${d}  ${k}:${p}`;
     }
     var diff = Math.max(g - 52.5 * GLOBAL_VAR.ratio, 2 * GLOBAL_VAR.ratio) - (g - 52.5 * GLOBAL_VAR.ratio);
-    diff = diff === 2 ? 0 : diff;
+		diff = diff === 2 ? 0 : diff;
     b.fillText(h, diff + g, l.getMiddle() - 4 * GLOBAL_VAR.ratio);
   };
   var RangeSelectionPlotter = createClass(NamedObject);
@@ -7993,7 +8015,7 @@ export default function (opts) {
     var a = ChartSettings.get()
     a.language = b
     ChartSettings.save()
-  }
+  }  
   //切换主题(Dark|Light)
   ChartManager.prototype.switch_theme = function(theme) {
     ChartManager.getInstance().setThemeName("frame0", theme);
@@ -8181,89 +8203,89 @@ export default function (opts) {
 
   function KLineMouseEvent(){
     if ('ontouchstart' in document) {
-      function getTouchDist(e) {
-        var x1 = 0, y1 = 0, x2 = 0, y2 = 0,
-          x3 = 0, y3 = 0, result = {};
-        x1 = e.touches[0].pageX;
-        x2 = e.touches[1].pageX;
-        y1 = e.touches[0].pageY;
-        y2 = e.touches[1].pageY;
-        if (!x1 || !x2) return;
+			function getTouchDist(e) {
+				var x1 = 0, y1 = 0, x2 = 0, y2 = 0,
+					x3 = 0, y3 = 0, result = {};
+				x1 = e.touches[0].pageX;
+				x2 = e.touches[1].pageX;
+				y1 = e.touches[0].pageY;
+				y2 = e.touches[1].pageY;
+				if (!x1 || !x2) return;
 
-        if (x1 <= x2) {
-          x3 = (x2 - x1) / 2 + x1;
-        } else {
-          x3 = (x1 - x2) / 2 + x2;
-        }
-        if (y1 <= y2) {
-          y3 = (y2 - y1) / 2 + y1;
-        } else {
-          y3 = (y1 - y2) / 2 + y2;
-        }
+				if (x1 <= x2) {
+					x3 = (x2 - x1) / 2 + x1;
+				} else {
+					x3 = (x1 - x2) / 2 + x2;
+				}
+				if (y1 <= y2) {
+					y3 = (y2 - y1) / 2 + y1;
+				} else {
+					y3 = (y1 - y2) / 2 + y2;
+				}
 
-        result = {
-          dist: Math.round(Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))),
-          x: Math.round(x3),
-          y: Math.round(y3)
-        };
+				result = {
+					dist: Math.round(Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))),
+					x: Math.round(x3),
+					y: Math.round(y3)
+				};
 
-        return result;
-      }
-      var startFingerDist, startFingerX, startFingerY, prevRatio = 1,
-        touchTimeId = null;
+				return result;
+			}
+			var startFingerDist, startFingerX, startFingerY, prevRatio = 1,
+				touchTimeId = null;
       chart_overlayCanvas.addEventListener("touchstart", function (d) {
-        d.preventDefault();
+				d.preventDefault();
         var cm = ChartManager.getInstance();
-        if (d.touches.length === 2) {
-          var touchPos = getTouchDist(d);
-          startFingerDist = touchPos.dist;
-          cm.onMouseUp("frame0", touchPos.x, touchPos.y);
-          cm.redraw("All")
-          cm.onMouseMove("frame0", touchPos.x, touchPos.y, false);
-          cm.redraw("OverlayCanvas");
-          return;
-        }
-        var c = d.target.getBoundingClientRect();
-        var b = d.touches[0].clientX - c.left;
-        var f = d.touches[0].clientY - c.top;
-        touchTimeId = setTimeout(function () {
-          cm.onMouseDown("frame0", b, f);
-        }, 10);
-        cm.onMouseMove("frame0", b, f, true);
-        cm.redraw("All", false);
-      });
-      chart_overlayCanvas.addEventListener("touchmove", function (f) {
-        f.preventDefault();
-        if (f.touches.length === 2) {
-          var nowFingerDist = getTouchDist(f).dist, //获得当前长度
-            ratio = nowFingerDist / startFingerDist; //计算缩放比
-          if (ratio - prevRatio === 0) {
-            prevRatio = 1;
-            return;
+				if (d.touches.length === 2) {
+					var touchPos = getTouchDist(d);
+					startFingerDist = touchPos.dist;
+					cm.onMouseUp("frame0", touchPos.x, touchPos.y);
+					cm.redraw("All")
+					cm.onMouseMove("frame0", touchPos.x, touchPos.y, false);
+					cm.redraw("OverlayCanvas");
+					return;
+				}
+				var c = d.target.getBoundingClientRect();
+				var b = d.touches[0].clientX - c.left;
+				var f = d.touches[0].clientY - c.top;
+				touchTimeId = setTimeout(function () {
+					cm.onMouseDown("frame0", b, f);
+				}, 10);
+				cm.onMouseMove("frame0", b, f, true);
+				cm.redraw("All", false);
+			});
+			chart_overlayCanvas.addEventListener("touchmove", function (f) {
+				f.preventDefault();
+				if (f.touches.length === 2) {
+					var nowFingerDist = getTouchDist(f).dist, //获得当前长度
+						ratio = nowFingerDist / startFingerDist; //计算缩放比
+					if (ratio - prevRatio === 0) {
+						prevRatio = 1;
+						return;
           }
-          ChartManager.getInstance().scale(ratio - prevRatio > 0 ? 1 : -1);
-          ChartManager.getInstance().redraw("All", true);
-          prevRatio = ratio;
-          return;
-        }
-        var c = f.target.getBoundingClientRect();
-        var b = f.touches[0].clientX - c.left;
-        var g = f.touches[0].clientY - c.top;
-        var d = ChartManager.getInstance();
-        d.onMouseMove("frame0", b, g, true);
-        d.redraw("All", false);
-      });
-      chart_overlayCanvas.addEventListener("touchend", function (f) {
-        var c = f.target.getBoundingClientRect();
-        var b = f.clientX - c.left;
-        var g = f.clientY - c.top;
-        var d = ChartManager.getInstance();
-        d.onMouseUp("frame0", b, g);
-        d.redraw("All");
-        clearTimeout(touchTimeId);
-      });
-      return;
-    }
+					ChartManager.getInstance().scale(ratio - prevRatio > 0 ? 1 : -1);
+					ChartManager.getInstance().redraw("All", true);
+					prevRatio = ratio;
+					return;
+				}
+				var c = f.target.getBoundingClientRect();
+				var b = f.touches[0].clientX - c.left;
+				var g = f.touches[0].clientY - c.top;
+				var d = ChartManager.getInstance();
+				d.onMouseMove("frame0", b, g, true);
+				d.redraw("All", false);
+			});
+			chart_overlayCanvas.addEventListener("touchend", function (f) {
+				var c = f.target.getBoundingClientRect();
+				var b = f.clientX - c.left;
+				var g = f.clientY - c.top;
+				var d = ChartManager.getInstance();
+				d.onMouseUp("frame0", b, g);
+				d.redraw("All");
+				clearTimeout(touchTimeId);
+			});
+			return;
+		}
     chart_overlayCanvas.addEventListener('contextmenu', function(b) {
       b.cancelBubble = true;
       b.returnValue = false;
@@ -8327,4 +8349,4 @@ export default function (opts) {
     readCookie();
   })();
   return ChartManager.getInstance();
-}
+});

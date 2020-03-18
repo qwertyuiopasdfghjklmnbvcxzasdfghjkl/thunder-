@@ -1,4 +1,4 @@
-require((('@/assets/js/bignumber.min')))
+import BigNumber from '@/assets/js/bignumber.min'
 /**
  * 币种深度图
  * asks: 卖
@@ -10,18 +10,24 @@ require((('@/assets/js/bignumber.min')))
  * fallColor: 跌
  * }
  */
-export default function (opts) {
+(function (KLineDepth) {
+  if (typeof module === 'object') {
+    module.exports = KLineDepth
+  } else {
+    window.KLineDepth = KLineDepth
+  }
+})(function (opts) {
   opts = opts || {}
   opts.container = opts.container || document.body
-  let riseColor = opts.riseColor || '#01C89F' // 红跌
-  let fallColor = opts.fallColor ||'#F43148' // 绿涨
-  let fontColor = opts.fontColor || '#6C6F8B' // 字体颜色
-  let gridLineColor = opts.gridLineColor  || '#1c2a40' // 表格线颜色
-  let middleLineColor = opts.middleLineColor || '#1c2a40' // 中间线颜色
-  let tpFillStyle = opts.tpFillStyle || '#131e30' // 提示背景色
-  let tpStrokeStyle = opts.tpStrokeStyle || '#6C6F8B' // 提示文字边框
-  let tpTextColor = opts.tpTextColor || '#6C6F8B' // 提示文字"Price"颜色
-  let tpTextPriceColor = opts.tpTextPriceColor || '#6C6F8B' // 提示文字价格颜色
+  let riseColor = opts.riseColor || '#0ee7a5' // 绿涨
+  let fallColor = opts.fallColor || '#e76d42' // 红跌
+  let fontColor = opts.fontColor || '#d6dff9' // 字体颜色
+  let gridLineColor = opts.gridLineColor  || '#313c5a' // 表格线颜色
+  let middleLineColor = opts.middleLineColor || '#cbd4ec' // 中间线颜色
+  let tpFillStyle = opts.tpFillStyle || '#2d344e' // 提示背景色
+  let tpStrokeStyle = opts.tpStrokeStyle || '#d6dff9' // 提示文字边框
+  let tpTextColor = opts.tpTextColor || '#fff' // 提示文字"Price"颜色
+  let tpTextPriceColor = opts.tpTextPriceColor || '#fff' // 提示文字价格颜色
   let isOpacity = opts.isOpacity !== false // 背景是否半透明，默认半透明
   let fontFamily = opts.fontFamily || 'Microsoft YaHei' // 字体
   let ySplitLen = Math.min(Math.max(opts.ySplitLen || 30, 30), 50) // 纵向切割间距
@@ -31,18 +37,18 @@ export default function (opts) {
   let zoomRatio = new BigNumber(1)
 
   // polyfill 提供了这个方法用来获取设备的 pixel ratio
-  var getPixelRatio = function () {
-    var context = document.createElement("canvas");
-    var backingStore = context.backingStorePixelRatio ||
-      context.webkitBackingStorePixelRatio ||
-      context.mozBackingStorePixelRatio ||
-      context.msBackingStorePixelRatio ||
-      context.oBackingStorePixelRatio ||
-      context.backingStorePixelRatio || 1;
+	var getPixelRatio = function () {
+		var context = document.createElement("canvas");
+		var backingStore = context.backingStorePixelRatio ||
+			context.webkitBackingStorePixelRatio ||
+			context.mozBackingStorePixelRatio ||
+			context.msBackingStorePixelRatio ||
+			context.oBackingStorePixelRatio ||
+			context.backingStorePixelRatio || 1;
 
-    return (window.devicePixelRatio || 1) / backingStore
+		return (window.devicePixelRatio || 1) / backingStore
   }
-  let _ratio = 1
+  let _ratio = 3 || getPixelRatio()
 
   var container = opts.container
   var cWidth = container.clientWidth * _ratio
@@ -139,13 +145,13 @@ export default function (opts) {
         var sColorChange = []
         for(var i = 1; i < 7; i += 2){
           sColorChange.push(parseInt('0x' + sColor.slice(i, i + 2)))
-        }
+        }  
         return 'rgba(' + sColorChange.join(',') + ',' + (alpha === undefined ? 1 : alpha) + ')'
     } else {
       return sColor
     }
   }
-
+  
   // 获取自然数
   function getNaturalNumber() {
     let s = this.split('.')
@@ -176,7 +182,7 @@ export default function (opts) {
     s[0] = arr.join(',')
     return s.join('.')
   }
-
+  
   function ChartManager () {
     this._rightWidth = (isAmountShowLeft ? 0 : 100) * _ratio
     this._bottomHeight = 30 * _ratio
@@ -186,7 +192,7 @@ export default function (opts) {
     this._grid = gridCanvas.getContext('2d')
     this._depth = depthCanvas.getContext('2d')
     this._mark = markCanvas.getContext('2d')
-
+    
     let self = this
     markCanvas.addEventListener('mousemove', function (e) {
       let p = markCanvas.getBoundingClientRect ? markCanvas.getBoundingClientRect() : {x: 0, y: 0}
@@ -271,7 +277,7 @@ export default function (opts) {
     // 右边
     ctx.moveTo(this._right + 0.5, 0.5)
     ctx.lineTo(this._right + 0.5, this._bottom + 0.5)
-
+    
     // y分割线
     ySplit.call(this, (y) => {
       ctx.moveTo(0.5, y + 0.5)
@@ -342,7 +348,6 @@ export default function (opts) {
     // 买
     let bids = mergeDepthAmounts(res.bids)
     this.bids = bids
-    // console.log(this.asks,this.bids)
 
     // 量
     let askAmounts = asks.data.length ? asks.data[asks.data.length - 1].amounts : new BigNumber(0)
@@ -383,7 +388,6 @@ export default function (opts) {
       centerPrice = pxPrice.mul(this._right / 2)
     }
     this._centerPrice = centerPrice
-    // console.log('centerPrice=',centerPrice.toString(),JSON.stringify(asks.data),JSON.stringify(bids.data))
 
     // 计算买单最大没像素的价格
     let bidPxPrice = BigNumber.max(centerPrice, bids.max).minus(bids.min).div(this._right / 2).toFixed()
@@ -391,18 +395,12 @@ export default function (opts) {
     // 计算卖卖单没像素的价格
     let askPxPrice = asks.max.minus(BigNumber.min(centerPrice, asks.min)).div(this._right / 2).toFixed()
     askPxPrice = (new BigNumber(askPxPrice)).toFixed(getNaturalNumber.call(askPxPrice))
-    let avgPxPrice = BigNumber.max(bidPxPrice, askPxPrice)
+    let avgPxPrice = BigNumber.min(bidPxPrice, askPxPrice)
     if (!avgPxPrice.equals(0)) {
       pxPrice = avgPxPrice
     }
     pxPrice = pxPrice.mul(zoomRatio)
     this._pxPrice = pxPrice
-    if(bids.max.lt(this._centerPrice)){
-      bids.data.unshift({"price":this._centerPrice,"amounts":new BigNumber(0)})
-    }
-    if(asks.min.gt(this._centerPrice)){
-      asks.data.unshift({"price":this._centerPrice,"amounts":new BigNumber(0)})
-    }
 
     // X轴Price信息
     ctx.textAlign = 'center'
@@ -463,7 +461,7 @@ export default function (opts) {
       }
       if (dataType === 'bid') {
         // 买
-        x = Math.min(this._right, x)
+        x = Math.min(this._right, x) 
       } else if (dataType === 'ask') {
         // 卖
         x = Math.max(0, x)
@@ -575,4 +573,4 @@ export default function (opts) {
   var cm = new ChartManager()
 
   return cm
-}
+})

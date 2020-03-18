@@ -7,48 +7,10 @@ import uuid from 'uuid/v1'
 let domain = ''
 let market = {}
 
-// 获取币币交易公告
-const noticeList = function (success, error) {
-  api.get(`${domain}api/v3/kline/announcement`, (res) => {
-    if (res.rst === 1) {
-      success && success(res.data)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-market.noticeList = noticeList
-
-// 首页手续费率
-const rateSysparams = function (success, error) {
-  api.get(`${domain}api/v2/trade/sys_params`, (res) => {
-    if (res.rst === 1) {
-      success && success(res.data)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-market.rateSysparams = rateSysparams
-
 // 市场列表 获取所有产品
 const marketList = function (success, error) {
   api.get(`${domain}api/v3/trade/market`, (res) => {
-
     if (res.rst === 1) {
-      if(res.data){
-        let marketOrder = {}, marketIcon = {}, marketCollection = {}, marketCategory = {}
-        res.data.forEach(item=>{
-          marketOrder[item.market] = item.idx
-          marketIcon[item.market] = item.iconBase64
-          marketCollection[item.market] = item.collection
-          marketCategory[item.market] = item.marketCategory
-        })
-        window.marketOrder = marketOrder
-        window.marketIcon = marketIcon
-        window.marketCollection = marketCollection
-        window.marketCategory = marketCategory
-      }
       success && success(res.data)
     } else {
       error && error(res.msg)
@@ -142,7 +104,7 @@ const cancelAllOrder = function (market, success, error) {
 market.cancelAllOrder = cancelAllOrder
 
 // 取消所有市场所有订单
-const cancelAll = function (success, error) {
+const cancelAll = function (market, success, error) {
   api.get(`${domain}api/v2/trade/my/orderBook/cancelAll`, (res) => {
     if (res.rst === 1) {
       success && success(res.data)
@@ -202,7 +164,7 @@ const exportHistory = function (date, success, error) {
 market.exportHistory = exportHistory
 // 根据Symbol获取当前委托
 const getCurrentEntrustBySymbol = function (history, market, success, error) {
-  api.get(`${domain}api/v3/trade/my/orderBook?history=${history}`, (res) => {
+  api.get(`${domain}api/v3/trade/my/orderBook?history=${history}&market=${market}`, (res) => {
     if (res.rst === 1) {
       success && success(res.data)
     } else {
@@ -214,7 +176,7 @@ market.getCurrentEntrustBySymbol = getCurrentEntrustBySymbol
 
 // 历史成交
 const getHistoryDeal = function (history, market, success, error) {
-  api.get(`${domain}api/v3/trade/my/orderBook?history=${history}`, (res) => {
+  api.get(`${domain}api/v3/trade/my/orderBook?history=${history}&market=${market}`, (res) => {
     if (res.rst === 1) {
       success && success(res.data)
     } else {
@@ -240,8 +202,6 @@ market.getBalance = getBalance
 const getDepths = function (market, success, error) {
   api.get(`${domain}api/v3/trade/market/${market}/depth`, (res) => {
     if (res.rst === 1) {
-      res.data.asks = res.data.asks.slice(0,20)
-      res.data.bids = res.data.bids.slice(0,20)
       success && success(res.data)
     } else {
       error && error(res.msg)
@@ -327,7 +287,7 @@ market.getKlineTestData = getKlineTestData
 
 // 首页市场推荐
 const marketListCom = function (recommand, success, error) {
-  api.get(`${domain}api/v2/trade/market?recommand=${recommand}`, (res) => {
+  api.get(`${domain}api/v3/trade/market?recommand=${recommand}`, (res) => {
     if (res.rst === 1) {
       success && success(res.data)
     } else {
@@ -349,9 +309,33 @@ const getSymbolIntroduce = function (symbol, success, error) {
 }
 market.getSymbolIntroduce = getSymbolIntroduce
 
+// 首页手续费率
+const rateSysparams = function (success, error) {
+  api.get(`${domain}api/v2/trade/sys_params`, (res) => {
+    if (res.rst === 1) {
+      success && success(res.data)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+market.rateSysparams = rateSysparams
+
+// BTC估值
+const BTCValuation = function (success, error) {
+  api.get(`${domain}api/v3/kline/valuation`, (res) => {
+    if (res.rst === 1) {
+      success && success(res.data)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+market.BTCValuation = BTCValuation
+
 // 查询BTC汇率价格
 const getBtcPrice = function (success, error) {
-  api.get(`${domain}api/v2/account2/btcPrice`, (res) => {
+  api.get(`${domain}api/v2/account2/btcPrice `, (res) => {
     if (res.rst === 1) {
       success && success(res)
     } else {
@@ -360,41 +344,5 @@ const getBtcPrice = function (success, error) {
   }, error)
 }
 market.getBtcPrice = getBtcPrice
-
-// 查询今日待解锁
-const getToUnlock = function (success, error) {
-  api.get(`${domain}api/v2/account2/miner/record/toUnlock`, (res) => {
-    if (res.rst === 1) {
-      success && success(res.data)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-market.getToUnlock = getToUnlock
-
-// 查询今日交易统计
-const getStatisticsTodayTrade = function (success, error) {
-  api.get(`${domain}api/v2/account2/miner/record/statisticsTodayTrade`, (res) => {
-    if (res.rst === 1) {
-      success && success(res.data)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-market.getStatisticsTodayTrade = getStatisticsTodayTrade
-
-// 深度数据
-const getDepth = function (market, success, error) {
-  api.get(`${domain}api/v3/trade/market/${market}/depth`, (res) => {
-    if (res.rst === 1) {
-      success && success(res.data)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-market.getDepth = getDepth
 
 export default market

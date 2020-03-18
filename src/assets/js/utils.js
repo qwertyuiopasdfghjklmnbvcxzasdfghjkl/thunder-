@@ -1,12 +1,12 @@
 import Vue from 'vue'
-import store from 'vuex'
-import QRCode from './qrcode'
-import config from '@/api/config'
+import store from '@/vuex'
+import QRCode from '@/assets/js/qrcode'
+import config from '@/assets/js/config'
 import userApi from '@/api/user'
 
-String.prototype.trim = function(){
-  return this.replace(/(^\s*)|(\s*$)/g, "");
-}
+String.prototype.trim = function(){  
+  return this.replace(/(^\s*)|(\s*$)/g, "");  
+} 
 
 String.prototype.format = function () {
   var args = arguments
@@ -75,7 +75,18 @@ const setDialog = function (component, opts) {
 }
 utils.setDialog = setDialog
 
-
+/**
+ * var qrcode = new QRCode(document.getElementById("qrcode"), {
+ * text: "http://jindo.dev.naver.com/collie",
+ * width: 128,
+ * height: 128,
+ * colorDark : "#000000",
+ * colorLight : "#ffffff",
+ * correctLevel : QRCode.CorrectLevel.H
+ * })
+ * qrcode.clear()
+ * qrcode.makeCode("http://naver.com")
+ */
 const qrcode = function (dom, opts) {
   if (!dom) {
     return
@@ -131,7 +142,7 @@ const countDown = function (t, callbackFun) {
   var db = function (m) {
     return m < 10 ? '0' + m : m
   }
-  function a () {
+  function a() {
     t = Math.max(t - 1, 0)
     t <= 0 && clearInterval(interval)
     let m = db(Math.floor(t / 60))
@@ -148,19 +159,24 @@ utils.countDown = countDown
 
 // 获取支付类型ICON
 const getPayType = function (payType) {
+  payType = Number(payType)
   if (payType === 1) {
     return 'icon-bank'
   } else if (payType === 2) {
     return 'icon-alipay'
   } else if (payType === 3) {
     return 'icon-wechat'
+  } else if (payType === 4) {
+    return 'icon-paypal'
   }
 }
 utils.getPayType = getPayType
 
 // 移除结尾0
 const removeEndZero = function (str) {
-  // str = Number(str)
+  if (!str) {
+    return str
+  }
   str = str.toString().split('.')
   if (str[1]) {
     str[1] = str[1].replace(/[0]+$/, '')
@@ -171,11 +187,10 @@ utils.removeEndZero = removeEndZero
 
 // 限制上传图片大小，默认2M
 const limitUploadImage = function (file, error, size) {
-  let imgSize = 2 // 设置图片默认大小
-  let limitSize = (size || imgSize) * 1024 * 1024
+  let limitSize = (size || 2) * 1024 * 1024
   if (file.nodeName !== 'INPUT' && file.name && file.size) {
     if (file.size > limitSize) {
-      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_`)
+      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_${size || 2}`)
       return false
     } else {
       return true
@@ -185,7 +200,7 @@ const limitUploadImage = function (file, error, size) {
   for (let i = 0; i < files.length; i++) {
     let f = files.item(i)
     if (f.size > limitSize) {
-      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_`)
+      typeof error === 'function' && error(`error_code.IMAGE_EXCEED_${size || 2}`)
       return false
     }
   }
@@ -249,7 +264,7 @@ const getCursortPosition = function (dom) {
     var selectRange = document.selection.createRange()
     selectRange.moveStart ('character', -dom.value.length)
     cursorPos = selectRange.text.length;
-  } else if (dom.selectionStart || dom.selectionStart == '0') {
+  }else if (dom.selectionStart || dom.selectionStart == '0') {
     // Firefox support
     cursorPos = dom.selectionStart;
   }
@@ -258,12 +273,12 @@ const getCursortPosition = function (dom) {
 utils.getCursortPosition = getCursortPosition
 
 // 设置光标位置
-const setCursortPosition = function (dom, pos) {
-  if (dom.setSelectionRange) {
+const setCursortPosition = function (dom, pos){
+  if(dom.setSelectionRange) {
     // IE Support
     dom.focus()
     dom.setSelectionRange(pos, pos)
-  } else if (dom.createTextRange) {
+  }else if (dom.createTextRange) {
     // Firefox support
     var range = dom.createTextRange()
     range.collapse(true)
@@ -282,12 +297,12 @@ const uploadImage = function (e, size) {
   let imgCon = target.parentNode.previousElementSibling
   var imageUrl = null
   if (config.imageType.test(target.files.item(0).name) === false) {
-    Tip({type: 'danger', message: this.$t('public0.public43')}) // 请上传JPG、PNG、JPEG、BMP格式的图片
+    Vue.$koallTipBox({icon: 'notification', message: this.$t('public0.public43')}) // 请上传JPG、PNG、JPEG、BMP格式的图片
     target.value = ''
     return
   }
   let isTrue = utils.limitUploadImage(target, (msg) => {
-    Tip({type: 'danger', message: this.$t(msg)})
+    Vue.$koallTipBox({icon: 'notification', message: this.$t(msg)})
   }, size)
   if (!isTrue) {
     target.value = ''
@@ -311,21 +326,38 @@ const formatSystemMessage = function (msg, isI18n) {
   if (isI18n === false) {
     return msg
   }
+  let lang = this.$store.getters['getLang']
+  let errorCodes = window.$i18n.getLocaleMessage(lang)['error_code']
+  if (!errorCodes) {
+    return msg
+  }
   msg = (msg || '').split(' ')
   let joinSplit = ' '
-  if (msg.length === 1) {
-    joinSplit = ''
-    msg[0] = this.$t('error_code.' + msg[0])
-  } else if (msg.length === 2) {
-    msg[1] = this.$t('error_code.' + msg[1])
-  } else if (msg.length === 3) {
-    msg[0] = this.$t('error_code.' + msg[0])
-    msg[2] = this.$t('error_code.' + msg[2])
-  }
+  msg.forEach((m, index) => {
+    if (errorCodes[m]) {
+      msg[index] = errorCodes[m]
+    }
+  })
   return msg.join(joinSplit)
 }
 utils.formatSystemMessage = formatSystemMessage
 
+/* 全局过滤器时间 时间截转 2018-12-02 10：10：12 */
+Vue.filter('date',function(inputTime){
+  var date = new Date(Number(inputTime));
+  var y = date.getFullYear();
+  var m = date.getMonth() + 1;
+  m = m < 10 ? ('0' + m) : m;
+  var d = date.getDate();
+  d = d < 10 ? ('0' + d) : d;
+  var h = date.getHours();
+  h = h < 10 ? ('0' + h) : h;
+  var minute = date.getMinutes();
+  var second = date.getSeconds();
+  minute = minute < 10 ? ('0' + minute) : minute;
+  second = second < 10 ? ('0' + second) : second;
+  return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
+});
 
 utils.operateDepth = function (datas) {
   let aar = {asks: [], bids: []}
@@ -342,12 +374,12 @@ utils.operateDepth = function (datas) {
 }
 
 /* 数字三位用豆号隔开 */
-Vue.filter('numbean', function (n) {
-  var b = parseInt(n).toString();
-  var len = b.length;
-  if (len <= 3) {return b;}
-  var r = len % 3;
-  return r > 0 ? b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : b.slice(r, len).match(/\d{3}/g).join(",");
+Vue.filter('numbean',function(n){
+  var b=parseInt(n).toString();
+  var len=b.length;
+  if(len<=3){return b;}
+  var r=len%3;
+  return r>0?b.slice(0,r)+","+b.slice(r,len).match(/\d{3}/g).join(","):b.slice(r,len).match(/\d{3}/g).join(",");
 });
 
 // 获取时间范围
@@ -421,7 +453,7 @@ const gtValidate = function (okCallback, endCallback) {
     if (!gtCaptcha) {
       gtIsInitTip = true
       // 请耐心等待滑块初始化完成。
-      Tip({type: 'danger', message: window.$i18n.t('public0.public277')})
+      Vue.$koallTipBox({icon: 'notification', message: window.$i18n.t('public0.public277')})
     }
     typeof endCallback === 'function' && endCallback()
     return
@@ -445,7 +477,7 @@ const gtValidate = function (okCallback, endCallback) {
       if (gtIsInitTip) {
         gtIsInitTip = false
         // 滑块初始化完成，请点击重试。
-        Tip({type: 'danger', message: window.$i18n.t('public0.public277')})
+        Vue.$koallTipBox({icon: 'success', message: window.$i18n.t('public0.public278')})
       }
     })
     typeof captcha.onSuccess === 'function' && captcha.onSuccess(() => {
@@ -467,7 +499,6 @@ const gtValidate = function (okCallback, endCallback) {
     typeof captcha.onError === 'function' && captcha.onError((error) => {
       isGtDialogOpen = false
       if (error && error.code === 'error_21') {
-        $('.geetest_wind.geetest_panel').remove()
         gtCaptcha = null
         gtValidate(gtOkCallback, gtEndCallback)
       } else {
@@ -478,7 +509,7 @@ const gtValidate = function (okCallback, endCallback) {
   // 调用 initGeetest 初始化参数
   // 参数1：配置参数
   // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它调用相应的接口
-  let lang = window.localStorage.getItem('lang') || 'zh-CN'
+  let lang = window.localStorage.getItem('lang')
   if (lang === 'zh-CN') {
     lang = 'zh-cn'
   } else if (lang === 'cht') {
@@ -501,14 +532,14 @@ const gtValidate = function (okCallback, endCallback) {
       height: '44px',
       lang: lang
     }, handler)
-  }, () => {
+  }, (msg) => {
     isGtDialogOpen = false
     typeof gtEndCallback === 'function' && gtEndCallback()
-    Tip({type: 'danger', message: window.$i18n.t('error_code.SERVER_ERROR')})
+    Vue.$koallTipBox({icon: 'notification', message: window.$i18n.t(`error_code.${msg}`)})
   })
 }
 utils.gtValidate = gtValidate
-
+gtValidate()
 
 /**
  * 加密密码
@@ -523,94 +554,12 @@ const encryptPwd = function (publickey, pwd) {
 }
 utils.encryptPwd = encryptPwd
 
-const getPhonePlatform = () => {
-  var isAndroid = navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Linux') > -1;
-  if (isAndroid) {
-      return 'android';
-  }
-  var isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-  if (isiOS) {
-      return 'ios';
-  }
-  return false;
+//截取小数位数
+const setDigit = function (stringNumber, digit){
+  let _temp = stringNumber.split('.')
+  let _digit = _temp[1]?_temp[1]:''+'0'.repeat(100)
+  return _temp[0]+'.'+_digit.substring(0,digit)
 }
-utils.getPhonePlatform = getPhonePlatform
-
-// 复制
-const copyText = (str) => {
-  if (getPhonePlatform() !== 'ios') {
-      var save = function (e) {
-          e.clipboardData.setData('text/plain', str);
-          e.preventDefault();
-      }
-      document.addEventListener('copy', save);
-      document.execCommand('copy');
-      document.removeEventListener('copy', save);
-      return;
-  }
-  var copyDOM = document.createElement("div");
-  copyDOM.id = "copy_clipboard";
-  copyDOM.innerHTML = str;
-  document.body.appendChild(copyDOM);
-  var range = document.createRange();
-  range.selectNode(copyDOM);
-  window.getSelection().addRange(range);
-  document.execCommand('copy');
-  window.getSelection().removeAllRanges();
-  document.body.removeChild(copyDOM);
-}
-utils.copyText = copyText
-
-// 数字人性化显示
-const humanNum = (number) =>  {
-  try {
-    let _n = parseFloat(number), rst, unit = '';
-    if (_n / 1000000000000 > 1) {
-      rst = _n / 1000000000000;
-      unit = '万亿';
-    } else if (_n / 100000000000 > 1) {
-      rst = _n / 100000000000;
-      unit = '千亿';
-    } else if (_n / 10000000000 > 1) {
-      rst = _n / 10000000000;
-      unit = '百亿';
-    } else if (_n / 100000000 > 1) {
-      rst = _n / 100000000;
-      unit = '亿';
-    } else if (_n / 10000000 > 1) {
-      rst = _n / 10000000;
-      unit = '千万';
-    } else if (_n / 1000000 > 1) {
-      rst = _n / 1000000;
-      unit = '百万';
-    } else if (_n / 10000 > 1) {
-      rst = _n / 10000;
-      unit = '万';
-    } else {
-      rst = _n;
-    }
-    return rst.toFixed(2) + unit;
-  } catch (e) {
-    return number;
-  }
-}
-utils.humanNum = humanNum
-
-// 保留小数位，非四舍五入
-const toFixed = function(data, num){
-  data = data + ''
-  data = data.substring(0, data.lastIndexOf(".") + num+1);
-  return data
-}
-utils.toFixed = toFixed
-
-//部分加密
-const encryptStr = function(value, start, end) {
-  value = value + ''
-  var _s = value.substring(0, start||3)
-  var _e = value.substring(value.length - end||3, value.length)
-  return `${_s}****${_e}`
-}
-utils.encryptStr = encryptStr
+utils.setDigit = setDigit
 
 export default utils

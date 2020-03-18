@@ -1,68 +1,30 @@
-# etv-app
+# CDCC-web
 
-## Project setup
-```
+> A Vue.js project
+
+## Build Setup
+
+``` bash
+# install dependencies
 npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+# serve with hot reload at localhost:8080
+npm run dev
 
-### Compiles and minifies for production
-```
+# build for production with minification
 npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+
+# run unit tests
+npm run unit
+
+# run e2e tests
+npm run e2e
+
+# run all tests
+npm test
 ```
 
-### Prepare app
-```
-cordova prepare
-```
-
-### Build Android app
-```
-cordova build android
-```
-
-
-### Build iOS app ( macOS required)
-```
-cordova build ios
-```
-
-
-
-
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-### Setting app icon 
-```
-$ sudo apt-get install imagemagick
-$ # on Mac: brew install imagemagick
-$ # on Windows: http://www.imagemagick.org/script/binary-releases.php#windows (check "Legacy tools")
-
-$ sudo npm install cordova-icon -g
-
-$ cordova-icon
-
-
-### launch page
-```
-$ sudo npm install cordova-splash -g
-$ cordova-splash 或 
-$ cordova-splash --config=config.xml --splash=splash.png
-```
-
-alias key0
-password ltprovip
-
-cordova-hcp build
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

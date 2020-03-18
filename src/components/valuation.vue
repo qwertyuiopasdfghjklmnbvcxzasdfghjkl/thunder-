@@ -5,33 +5,34 @@
 <script>
 import { mapGetters } from 'vuex'
 import numUtils from '@/assets/js/numberUtils'
-import otc from '../api/otc'
 export default {
-  props: ['lastPrice', 'symbol', 'curCNYPrice', 'unitPrice'],
-  data(){
-    return {
-      noMore: null,
-    }
-  },
+  props: ['lastPrice', 'baseSymbol'],
   computed: {
-    ...mapGetters(['getCoinSign']),
-    curPrice(){
-      let i = this.curCNYPrice
-      if(this.lastPrice){
-        i = numUtils.mul(this.lastPrice,this.unitPrice).toFixed(2)
+    ...mapGetters(['getCoinSign', 'getUSDCNY', 'getUsdRate', 'getBtcValues', 'getLang']),
+    curPrice () {
+      let lastPrice = this.lastPrice
+      if (lastPrice && this.getUSDCNY) {
+        if (this.baseSymbol === 'USDT') {
+          if (this.getLang === 'en') {
+            return numUtils.BN(lastPrice).toFixed(6).toMoney()
+          }
+          return numUtils.div(lastPrice, this.getUsdRate).toFixed(6).toMoney()
+        } else if (this.baseSymbol === 'VE') {
+          if (this.getLang === 'en') {
+            return numUtils.mul(lastPrice, this.getUsdRate).toFixed(6).toMoney()
+          }
+          return numUtils.BN(lastPrice).toFixed(6).toMoney()
+        }
+        let curMarketBtc = this.getBtcValues[this.baseSymbol]
+        if (!curMarketBtc && this.baseSymbol !== 'BTC') {
+          return '--'
+        }
+        let curMarketPrice = curMarketBtc ? numUtils.mul(curMarketBtc, this.getUSDCNY).toFixed(6) : this.getUSDCNY
+        return numUtils.mul(lastPrice, curMarketPrice).toFixed(6).toMoney()
+      } else {
+        return '0.000000'
       }
-      // console.log(this.lastPrice, this.unitPrice)
-      return i || '--'
     }
-  },
-  watch:{
-
   }
 }
 </script>
-<style>
-  font{
-    display: inline-block;
-    height: 0.32rem;
-  }
-</style>

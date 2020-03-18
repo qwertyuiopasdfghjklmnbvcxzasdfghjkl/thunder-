@@ -1,22 +1,20 @@
 import axios from 'axios'
 import JsCookies from 'js-cookie'
-import config from './config'
-import userApi from '@/api/user'
+import config from '@/assets/js/config'
+import userApi from './user'
+import Vue from 'vue'
 
-const DOMAIN = config.url
+const DOMAIN = process.env.NODE_ENV === 'development' ? `http://${config.domain}:80/` : '/'
 
 axios.defaults.baseURL = DOMAIN
-axios.defaults.timeout =  30000
+axios.defaults.timeout = 30000
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
   var apiToken = JsCookies.get('api_token')
-  var lang = localStorage.getItem('lang') || 'zh-CN'
   apiToken && (config.headers.common['api_token'] = apiToken)
   config.headers.common['uuid'] = userApi.uuid
-  config.headers.common['lang'] = lang
   // 在发送请求之前做些什么
-
   return config
 }, function (error) {
   // 对请求错误做些什么
@@ -29,22 +27,27 @@ axios.interceptors.response.use(function (response) {
     let error = {response: response}
     return Promise.reject(error)
   }
-  if (response.data && response.data.rst === 401 || response.data && response.data.rst === 403) {
+  if (response.data && response.data.rst === 401) {
     console.error(response.config.url)
     console.log('用户不存在，退出登录')
     // 用户不存在，退出登录
     window.localStorage.removeItem('userInfo')
     JsCookies.remove('api_token')
-    window.location.reload()
-    Indicator.close();
+    Vue.$confirmDialog({
+      id: 'please_login_again',
+      showCancel: false,
+      content: window.$i18n.t(`error_code.LOGIN_AGAIN`), // 请重新登录
+      okCallback: () => {
+        window.location.hash = 'login'
+        window.location.reload()
+      }
+    })
     return null
   }
   // 对响应数据做点什么
-  Indicator.close();
   return response
 }, function (error) {
   // 对响应错误做点什么
-  Indicator.close();
   return Promise.reject(error)
 })
 

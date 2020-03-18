@@ -1,4 +1,4 @@
-require('./bignumber.min')
+import BigNumber from './bignumber.min'
 
 let utils = {}
 

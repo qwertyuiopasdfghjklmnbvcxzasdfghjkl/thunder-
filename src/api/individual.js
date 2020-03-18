@@ -1,35 +1,10 @@
 /**
  * 个人中心API接口
  */
-import config from '@/api/config'
 import api from '@/api'
 
 let domain = ''
 let individual = {}
-
-// 使用SATOX支付交易手续费
-const switchSATOXChargeState = function (success, error) {
-  api.get(`${domain}api/v2/individual/coinState`, (res) => {
-    if (res.rst === 1) {
-      success && success(res.data)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-individual.switchSATOXChargeState = switchSATOXChargeState
-
-// 获取用户银行卡信息
-const getBank = function (success, error) {
-  api.get(`${domain}api/v2/account2/bank`, (res) => {
-    if (res.rst === 1) {
-      success && success(res.data)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-individual.getBank = getBank
 
 // 登录之后添加一条登录记录
 const addLoginHistory = function () {
@@ -106,7 +81,6 @@ const loginTwo = function (data, success, error) {
   }, error)
 }
 individual.loginTwo = loginTwo
-
 
 /**
  * 登录谷歌验证
@@ -185,8 +159,8 @@ const getUserState = function (success, error) {
 }
 individual.getUserState = getUserState
 
-// 使用BARK支付交易手续费
-const switchBarkChargeState = function (success, error) {
+// 使用CDCC支付交易手续费
+const switchCDCCChargeState = function (success, error) {
   api.get(`${domain}api/v2/individual/coinState`, (res) => {
     if (res.rst === 1) {
       success && success(res.data)
@@ -195,7 +169,7 @@ const switchBarkChargeState = function (success, error) {
     }
   }, error)
 }
-individual.switchBarkChargeState = switchBarkChargeState
+individual.switchCDCCChargeState = switchCDCCChargeState
 
 // 编辑昵称
 const editNickname = function (data, success, error) {
@@ -271,7 +245,7 @@ individual.uploadHeader = uploadHeader
 const downloadHeader = function (success, error) {
   api.get(`${domain}api/v2/individual/download/header`, (res) => {
     if (res.rst === 1) {
-      success && success(`${res.url ? config.url + res.url + '?' + Date.now() : ''}`)
+      success && success(`${res.url ? res.url + '?' + Date.now() : ''}`)
     } else {
       error && error(res.msg)
     }
@@ -283,7 +257,7 @@ individual.downloadHeader = downloadHeader
 const downloadHeaderOther = function (id, success, error) {
   api.get(`${domain}api/v2/individual/download/header?user_id=${id}`, (res) => {
     if (res.rst === 1) {
-      success && success(`${res.url ? config.url + res.url + '?' + Date.now() : ''}`)
+      success && success(`${res.url ? res.url + '?' + Date.now() : ''}`)
     } else {
       error && error(res.msg)
     }
@@ -317,7 +291,7 @@ individual.unbindMobile = unbindMobile
 
 // 发送授权短信验证码（6位）
 const sendAuthSMSCode = function (data, success, error) {
-  let lang = window.localStorage.getItem('lang') || 'zh-CN'
+  let lang = window.localStorage.getItem('lang') || 'en'
   switch(lang){
     case 'zh-CN':
       lang = 'CN'
@@ -377,5 +351,41 @@ const invitedAwardRank = function (success, error) {
   }, error)
 }
 individual.invitedAwardRank = invitedAwardRank
+
+// 获取首页banner数据
+const getBannersList = function (success, error) {
+  api.get(`${domain}api/v2/individual/promotionActivity`, (res) => {
+    if (res.rst === 1) {
+      success && success(res.data)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+individual.getBannersList = getBannersList
+
+// 获取社区列表
+const getCommunityList = function (success, error) {
+  api.get(`${domain}api/v3/individual/community/list`, (res) => {
+    if (res.rst === 1) {
+      success && success(res.data)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+individual.getCommunityList = getCommunityList
+
+// 修改社区
+const changeCommunity = function (data, success, error) {
+  api.post(`${domain}api/v3/individual/community/change`, data, (res) => {
+    if (res.rst === 1) {
+      success && success(res.msg)
+    } else {
+      error && error(res.msg)
+    }
+  }, error)
+}
+individual.changeCommunity = changeCommunity
 
 export default individual

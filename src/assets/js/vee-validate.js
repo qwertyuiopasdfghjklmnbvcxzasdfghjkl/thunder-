@@ -1,10 +1,10 @@
 import { Validator } from 'vee-validate'
-import reg from './regex'
-import config from '@/api/config'
+import reg from '@/assets/js/regex'
+import config from '@/assets/js/config'
 
 Validator.extend('email', {
   getMessage: (field, args) => {
-    return 'public0.emailFormatError' // 邮箱格式错误
+    return 'exchange.exchange_Email_format_error' // 邮箱格式错误
   },
   validate: (value, args) => {
     return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test( value )
@@ -13,22 +13,22 @@ Validator.extend('email', {
 
 Validator.extend('password', {
   getMessage: (field, args) => {
-    return 'login_register.lintonPWReg' // 密码至少8位，包括大、小写字母及数字
+    return 'public0.public123' // 请输入6~16位数字+字母组合的密码
   },
   validate: (value, args) => {
-    return /^(?=.*\d)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/.test(value)
+    return /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/.test(value)
   }
 })
 
 Validator.extend('passwordAgain', {
   getMessage: (field, args) => 'public0.public124', // 密码不匹配，请重新输入
   validate: (value, args) => {
-    return value === document.querySelector('input[uid="common-password"]').value
+    return value === document.querySelector('input[uid="CDCC-password"]').value
   }
 })
 
 Validator.extend('IdCard', {
-  getMessage: (field, args) => 'public0.InvalidIDNumber', // 请输入有效的身份证号码
+  getMessage: (field, args) => 'public0.public125', // 请输入有效的身份证号码
   validate: (value, args) => {
     if (!/^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/.test(value)) {
       return false
@@ -44,7 +44,7 @@ Validator.extend('IdCard', {
 })
 
 Validator.extend('imageFormat', {
-  getMessage: (field, args) => 'public0.noSupportFileType', // 请上传支持格式的文件
+  getMessage: (field, args) => 'public0.public214', // 请上传支持格式的文件
   validate: (files, args) => {
     if (typeof files === 'string') {
       return config.imageType.test(files)
@@ -61,7 +61,7 @@ Validator.extend('passport', {
 })
 
 Validator.extend('telphone', {
-  getMessage: (field, args) => 'public0.public128', // 请输入有效的手机号码
+  getMessage: (field, args) => 'public0.public128', // 手机号码需要是9~11为数字
   validate: (value, args) => {
     return /^\d{8,11}$/.test(value)
   }
@@ -94,27 +94,29 @@ Validator.extend('pInteger', {
 Validator.extend('minamount', {
   getMessage: (field, args) => 'public0.public132', // 最小限额不能大于最大限额
   validate: (value, args) => {
-    var max = document.getElementById('ads_max_amount').value
-    if (!max) {
+    let maxElement = document.getElementById('ads_max_amount')
+    if (maxElement && maxElement.value) {
+      return parseFloat(value) <= parseFloat(maxElement.value)
+    } else {
       return true
     }
-    return parseFloat(value) <= parseFloat(max)
   }
 })
 
 Validator.extend('maxamount', {
   getMessage: (field, args) => 'public0.public133', // 最大限额不能小于最小限额
   validate: (value, args) => {
-    var min = document.getElementById('ads_min_amount').value
-    if (!min) {
+    let minElement = document.getElementById('ads_min_amount')
+    if (minElement && minElement.value) {
+      return parseFloat(value) >= parseFloat(minElement.value)
+    } else {
       return true
     }
-    return parseFloat(value) >= parseFloat(min)
   }
 })
 
 Validator.extend('premiumPriceValid', {
-  getMessage: (field, args) => 'public0.public134', // 溢价限制最低-50%最高100%
+  getMessage: (field, args) => 'public0.public134', // 溢价限制最低-50最高100
   validate: (value, args) => {
     return parseFloat(value) >= -50 && parseFloat(value) <= 100
   }
@@ -127,7 +129,6 @@ Validator.extend('ratingValid', {
   }
 })
 
-// 银行卡账号验证
 Validator.extend('bankCardValid', {
   getMessage: (field, args) => `public0.public135`, // 请输入有效的银行卡号
   validate: (value, args) => {
@@ -135,19 +136,19 @@ Validator.extend('bankCardValid', {
   }
 })
 
-// 请输入整数1~5
 Validator.extend('otcProcessNumValid', {
-  getMessage: (field, args) => 'public0.public163', // 请输入整数1~5
+  getMessage: (field, args) => {
+    return window.$i18n.t('public0.public163').format(args[0], args[1]) // 请输入整数{0}~{1}
+  },
   validate: (value, args) => {
-    return parseFloat(value) >= 1 && parseFloat(value) <= 5
+    return parseInt(value) >= parseInt(args[0]) && parseInt(value) <= parseInt(args[1])
   }
 })
 
-// 最大值为{0}
 Validator.extend('maxInputValue', {
   getMessage: (field, args) => {
-    return window.$i18n.t(args[1] || 'public0.public257').format(args[0])
-  }, // 最大值为{0}
+    return window.$i18n.t(args[1] || 'public0.public257').format(args[0]) // // 最大值为{0}
+  },
   validate: (value, args) => {
     return parseFloat(value) <= parseFloat(args[0])
   }

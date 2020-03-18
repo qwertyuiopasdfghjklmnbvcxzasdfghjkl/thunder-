@@ -1,7 +1,6 @@
 /**
  * OTC接口
  */
-import config from '@/api/config'
 import api from '@/api'
 
 let domain = ''
@@ -23,7 +22,7 @@ otc.getAdvertisementList = getAdvertisementList
 const getMyAdvertisementList = function (formData, success, error) {
   api.post(`${domain}api/v2/otc/ads/mylist`, formData, (res) => {
     if (res.rst === 1) {
-      success && success(res)
+      success && success(res.data)
     } else {
       error && error(res.msg)
     }
@@ -91,18 +90,6 @@ const deleteAdvertisement = function (id, success, error) {
 }
 otc.deleteAdvertisement = deleteAdvertisement
 
-// 删除广告
-const deleteAdv = function (id, success, error) {
-  api.delete(`${domain}api/v2/otc/ads/del/${id}`, (res) => {
-    if (res.rst === 1) {
-      success && success(res.msg)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-otc.deleteAdv = deleteAdv
-
 // 上传图片
 const uploadImage = function (type, formData, success, error) {
   // type 2:支付宝，3:微信
@@ -121,7 +108,7 @@ const downloadImage = function (type, success, error) {
   // type 2:支付宝，3:微信
   api.get(`${domain}api/v2/otc/download/code/${type}`, (res) => {
     if (res.rst === 1) {
-      success && success(`${res.url ? config.url + res.url + '?' + Date.now() : ''}`)
+      success && success(`${res.url ? res.url + '?' + Date.now() : ''}`)
     } else {
       error && error(res.msg)
     }
@@ -134,7 +121,7 @@ const downloadImageByUserId = function (type, formData, success, error) {
   // type 2:支付宝，3:微信
   api.post(`${domain}api/v2/otc/download/commonCode/${type}`, formData, (res) => {
     if (res.rst === 1) {
-      success && success(`${res.url ? config.url + res.url + '?' + Date.now() : ''}`)
+      success && success(res.url)
     } else {
       error && error(res.msg)
     }
@@ -158,9 +145,7 @@ otc.savePaySettings = savePaySettings
 const getPaySettings = function (success, error) {
   api.get(`${domain}api/v2/otc/paytypes`, (res) => {
     if (res.rst === 1) {
-      res.data.alipay_image_path = res.data.alipay_image_path ? config.url + res.data.alipay_image_path + '?' + Date.now() : null
-      res.data.wechat_image_path = res.data.wechat_image_path ? config.url + res.data.wechat_image_path + '?' + Date.now() : null
-      success && success(res)
+      success && success(res || {})
     } else {
       error && error(res)
     }
@@ -172,9 +157,7 @@ otc.getPaySettings = getPaySettings
 const getPaySettingsNoToken = function (formData, success, error) {
   api.post(`${domain}api/v2/otc/paytypes/common`, formData, (res) => {
     if (res.rst === 1) {
-      res.data.alipay_image_path = res.data.alipay_image_path ? config.url + res.data.alipay_image_path + '?' + Date.now() : null
-      res.data.wechat_image_path = res.data.wechat_image_path ? config.url + res.data.wechat_image_path + '?' + Date.now() : null
-      success && success(res)
+      success && success(res || {})
     } else {
       error && error(res)
     }
@@ -231,8 +214,8 @@ const cancelOrder = function (id, data, success, error) {
 otc.cancelOrder = cancelOrder
 
 // 完成订单
-const finishOrder = function (data, success, error) {
-  api.put(`${domain}api/v2/otc/orders/finish/`, data, (res) => {
+const finishOrder = function (id, success, error) {
+  api.put(`${domain}api/v2/otc/orders/finish/${id}`, (res) => {
     if (res.rst === 1) {
       success && success(res.msg)
     } else {
@@ -527,19 +510,5 @@ const exportOTCTradeRecord = function (formData, success, error) {
   }, error)
 }
 otc.exportOTCTradeRecord = exportOTCTradeRecord
-
-// 快速买卖
-const quickMatchAndCreate = function (data, success, error) {
-  api.post(`${domain}api/v2/otc/orders/matchAndCreate`, data, (res) => {
-    if (res.rst === 1) {
-      success && success(res.order_id)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-otc.quickMatchAndCreate = quickMatchAndCreate
-
-
 
 export default otc

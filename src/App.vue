@@ -1,282 +1,220 @@
 <template>
-    <div id="app">
-        <transition enter-active-class="animated short myFadeIn" leave-active-class="animated short fadeOut">
-            <router-view :class="{wrap:$route.meta.nav}"/>
-        </transition>
-        <update ref="update"></update>
-        <download v-if="system === 0" :phone="phone"></download>
-        <nav-footer v-show="$route.meta.nav"></nav-footer>
-         <init-slides></init-slides>
+  <div id="app">
+    <template v-if="$route.name !== 'login'">
+      <!--屏蔽用户名/密码自动填写：创建假的用户名/密码input让chrome浏览器填充，在autocomplete=off不起作用时适用-->
+      <input class="fake-input" type="text" name="fakeusernameremembered">
+      <input class="fake-input" type="password" name="fakepasswordremembered"/>
+    </template>
+    <bheader v-if="$route.name !== 'homephone' && $route.name !== 'maintenance'"/>
+    <div v-if="isIE" class="compatible" v-show="browser">
+      <div class="compatible-w">{{$t('public0.public239').format('BILE')}}<!--建议您使用Chrome浏览器获取CDCC最佳体验。如使用360或QQ浏览器，可切换至极速模式。--><span @click="closeCompa">×</span></div>
     </div>
+    <router-view/>
+  </div>
 </template>
 
 <script>
-    import navFooter from '@/components/common/nav'
-    import update from '@/components/update'
-    import {mapGetters, mapActions} from 'vuex'
-    import GlobalWebSocket from '@/assets/js/websocket'
-    import OtcWebSocket from '@/assets/js/websocket-otc'
-    import utils from '@/assets/js/utils'
-    import numUtils from '@/assets/js/numberUtils'
-    import cordovaUtils from '@/assets/js/cordovaUtils'
-    import marketApi from '@/api/market'
-    import walletApi from '@/api/wallet'
-    import Download from "@/components/download";
-    import userApi from '@/api/user'
-    import initSlides from '@/components/initSlides'
+import { mapGetters, mapActions } from 'vuex'
+import utils from '@/assets/js/utils'
+import numUtils from '@/assets/js/numberUtils'
+import GlobalWebSocket from '@/assets/js/websocket'
+import OtcWebSocket from '@/assets/js/websocket-otc'
+import bheader from '@/components/header'
+import userApi from '@/api/user'
+import marketApi from '@/api/market'
 
-    export default {
-        components: {
-            navFooter,
-            update,
-            Download,
-            initSlides
-        },
-        data(){
-            return{
-              gws:null,
-              otcws:null,
-              system: 1,
-              phone: null
-            }
-        },
-        computed: {
-            ...mapGetters(['getApiToken', 'getOtcSocketEvents', 'getMarketList'])
-        },
-        watch: {
-            getApiToken(newVal) {
-                this.loadLoginInfo()
-                this.queryMarketList()
-                this.getBtcPrice()
-                this.gws && this.gws.changeLogin()
-            },
-        },
-        created() {
-            utils.gtValidate()
-            this.queryMarketList()
-            this.getSysparams()
-            this.getBtcPrice()
-            this.loadLoginInfo()
-            this.checkDeviceready()
-            window.setMarketList = this.queryMarketList //全局市场数据处理函数
-            //建立全局推送，初始化数据
-            this.gws = new GlobalWebSocket({
-                type: 'global',
-                checkNetWork: (signal) => {
-                    this.setNetworkSignal(signal)
-                },
-                onClose: () => {
-                    this.setNetworkSignal(3)
-                },
-                callback: (res) => {
-                    if (res.dataType === 'LastValuation') {
-                        this.setUSDCNY({
-                            USD: numUtils.BN(res.USD).toFixed(8),
-                            CNY: numUtils.BN(res.USDCNY).toFixed(8),
-                            USDT: numUtils.BN(res.USDT).toFixed(8),
-                        })
-                        let list = {}
-                        for(let v in res){
-                            list[v] = Number(res[v])
-                        }
-                        // console.log(list)
-                        // this.setBtcPrice(list)
-                        this.setBTCValuation(numUtils.BN(res.totalAmount).toFixed(8)) // 当前转换人民币
-                    }
-                }
-            })
-            
-            //建立OTC推送，初始化数据
-            this.otcws = new OtcWebSocket({
-              onMessage: (data) => {
-                let events = this.getOtcSocketEvents
-                for (let i = 0; i < events.length; i++) {
-                  let ev = events[i]
-                  ev(data)
-                }
-              }
-            })
-
-
-            if(!window['cordova']){
-                this.system = 0
-                this.phone = utils.getPhonePlatform()
-            }
-
-        },
-        mounted() {
-            $('#app').on('click', 'input', (e) => {
-                e.target.focus()
-            })
-        },
-        beforeDestory(){
-            this.stopServer()
-        },
-        methods: {
-            ...mapActions(['setBTCValuation', 'setUSDCNY', 'setNetworkSignal', 'setBtcValues', 'setMarketList',
-                'setUserWallets', 'setMarketConfig', 'setApiToken', 'setUserInfo', 'setVersion', 'setSysParams',
-                'setInitMarket', 'setBtcPrice']),
-            getSysparams(){
-              marketApi.rateSysparams(res=>{
-                let params = {}
-                for(let item of res){
-                  params[item.code] = item
-                }
-                this.setSysParams(params)
-                setTimeout(()=>{
-                    this.$refs.update.getLatestVersion() //检测全量更新
-                },3000)
-              })
-            },
-            queryMarketList(data) {
-                //获取市场列表并初始化BTC币种与其它币种最新交易价格
-                let fun = (res)=>{
-                    if(!res){
-                        return
-                    }
-                    if (!this.getApiToken) {
-                        res.forEach((item) => {
-                            item.collection = false
-                        })
-                    }
-                    let list = []
-                    res.filter((d) => {
-                        if(d.marketType === '1'){
-                            list.push(d) //隐藏虚拟市场
-                        }
-                    })
-                    // console.log(list)
-                    this.setMarketList(list)
-                    this.setInitMarket(list[0].currencySymbol+'_'+list[0].baseSymbol)
-                    this.setBtcValues(list)
-                    let config = {}
-                    list.forEach((item) => {
-                        config[item.market] = {
-                            minAmount: item.minAmount,
-                            minQuantity: item.minQuantity
-                        }
-                    })
-                    this.setMarketConfig(utils.isPlainEmpty(config) ? null : config)
-                }
-                if(!data){
-                    if(this.getMarketList && this.getMarketList.length){
-                        return
-                    }
-                    marketApi.marketList((res) => {
-                        fun(res)
-                    }, msg=>{
-                        setTimeout(()=>{
-                            this.queryMarketList()
-                        }, 100)
-                    })
-                } else {
-                    fun(data)
-                }
-            },
-            loadLoginInfo() {
-                // console.log('getApiToken===', this.getApiToken)
-                if (this.getApiToken) {
-                    this.getInfo()
-                    walletApi.myAssets({}, (res) => {
-                        if(res.length==0){
-                            setTimeout(this.loadLoginInfo,2000)
-                            return
-                        }
-                        res = res.filter(item => {
-                            return item.type === 1
-                        })
-                        res.forEach((item) => {
-                            item.frozenBalance = numUtils.add(item.frozenBalance, item.adFrozenBalance).add(item.loanBalance).toString()
-                        })
-                        this.setUserWallets(res)
-                    })
-                } else {
-                    this.setUserWallets([])
-                }
-            },
-            getInfo() {
-                userApi.getUserInfo(res => {
-                    this.setUserInfo(res)
-                })
-            },
-            getBtcPrice() {
-                if (!this.getApiToken) {
-                    return
-                }
-                marketApi.getBtcPrice(res => {
-                    this.setUSDCNY({
-                        USD: numUtils.BN(res.USD).toFixed(8),
-                        CNY: numUtils.BN(res.CNY).toFixed(8),
-                        USDT: numUtils.BN(res.USDT).toFixed(8),
-                    })
-                    let list={}
-                    for(let v in res){
-                        list[v] = Number(res[v])
-                    }
-                    // console.log(list)
-                    this.setBtcPrice(list)
-                    this.setBTCValuation(numUtils.BN(res.btcAmount).toFixed(8)) // 当前转换人民币
-                })
-            },
-            checkDeviceready() {
-                if (window['deviceready']) {
-                    console.log('AppVersion = ', AppVersion.version)
-                    this.setVersion(AppVersion.version)
-                    this.startServer('kline')
-                } else {
-                    setTimeout(this.checkDeviceready, 100)
-                }
-            }, //检测壳连接状态
-            stopServer() {
-                if ( window.httpd ) {
-                    window.httpd.stopServer(()=>{},(error)=>{});
-                }
-            },
-            startServer( wwwroot ) { //启动本地http服务
-                window.httpd = window['cordova'] && window['cordova'].plugins && window['cordova'].plugins.CorHttpd ? window['cordova'].plugins.CorHttpd : null
-                if ( window.httpd ) {
-                    window.httpd.getURL((url)=>{
-                        if(url.length > 0) {
-                            window.httpdURL = 'http://127.0.0.1:8080'
-                        } else {
-                            window.httpd.startServer({
-                                'www_root' : wwwroot,
-                                'port' : 8080
-                            }, (url)=>{
-                                window.httpdURL = 'http://127.0.0.1:8080'
-                            }, (error)=>{
-                                Tip({type:'error', message:'failed to start server: '+ error});
-                            });
-                        }
-
-                    },()=>{});
-                }
-            },
-        }
+export default {
+  name: 'app',
+  components: {
+    bheader
+  },
+  data () {
+    return {
+      ws: null,
+      gws: null,
+      browser: true,
+      fromRoute: null
     }
+  },
+  computed: {
+    ...mapGetters(['getApiToken', 'getOtcSocketEvents', 'getLang']),
+    isIE () {
+      // (true = IE9) || true >= IE10
+      return (document.all && document.addEventListener && !window.atob) || (document.body.style.msTouchAction !== undefined)
+    }
+  },
+  watch: {
+    getLang () {
+      utils.gtValidate()
+    },
+    getApiToken (val) {
+      if (val) {
+        this.getUserInfoMethod()
+        this.getBtcPrice()
+      }
+      try {
+        this.gws.changeLogin()
+      } catch (ex) {
+        console.warn(ex)
+      }
+      if (val) {
+        // 登录跳转
+        let tempName = null
+        if (this.fromRoute) {
+          if (this.fromRoute.meta.goHome) {
+            tempName = 'home'
+          } else {
+            tempName = this.fromRoute.name === 'login' ? 'home' : this.fromRoute.name
+          }
+        } else {
+          tempName = 'home'
+        }
+        this.$router.push({name: tempName})
+        try {
+          this.ws && this.ws.open()
+        } catch (ex) {
+          window.console.warn(ex)
+        }
+      } else {
+        this.$route.meta.login ? this.$router.push({name: 'home'}) : void 0
+        try {
+          this.ws && this.ws.close()
+        } catch (ex) {
+          window.console.warn(ex)
+        }
+      }
+    },
+    '$route' (to, from) {
+      this.fromRoute = from
+      this.checkRouteChange(to)
+    }
+  },
+  created () {
+    this.getBtcPrice()
+    this.getSysparams()
+    // this.getBTCValuation()
+    this.getUserInfoMethod()
+    this.checkRouteChange(this.$route)
+    this.ws = new OtcWebSocket({
+      onMessage: (data) => {
+        let events = this.getOtcSocketEvents
+        for (let i = 0; i < events.length; i++) {
+          let ev = events[i]
+          ev(data)
+        }
+      }
+    })
+    this.gws = new GlobalWebSocket({
+      type: 'global',
+      checkNetWork: (signal) => {
+        this.setNetworkSignal(signal)
+      },
+      onClose: () => {
+        this.setNetworkSignal(3)
+      },
+      callback: (res) => {
+        if (res.dataType === 'LastValuation') {
+          this.setUSDCNY({
+            USD: numUtils.BN(res.USD).toFixed(2),
+            CNY: numUtils.BN(res.USDCNY).toFixed(2),
+            USDT: numUtils.BN(res.USDT).toFixed(2)
+          })
+          this.setBTCValuation(numUtils.BN(res.totalAmount).toFixed(8)) // 当前转换人民币
+        }
+      }
+    })
+    if (utils.isMobile) {
+      var f = Math.min(window.screen.width, window.screen.height)
+      document.documentElement.className = 'phone'
+      document.documentElement.style.fontSize = f / 7.5 + 'px'
+    }
+  },
+  beforeDestroy () {
+    this.ws && this.ws.close()
+  },
+  methods: {
+    ...mapActions(['setBTCValuation', 'setUSDCNY', 'setNetworkSignal', 'setUserInfo','setSysParams']),
+    getBtcPrice(){
+      if (!this.getApiToken) {
+        return
+      }
+      marketApi.getBtcPrice(res=>{
+        this.setUSDCNY({
+          USD: numUtils.BN(res.USD).toFixed(2),
+          CNY: numUtils.BN(res.CNY).toFixed(2),
+          USDT: numUtils.BN(res.USDT).toFixed(2)
+        })
+        this.setBTCValuation(numUtils.BN(res.btcAmount).toFixed(8)) // 当前转换人民币
+      })
+    },
+    getSysparams(){
+      marketApi.rateSysparams(res=>{
+        let params = {}
+        for(let item of res){
+          params[item.code] = item
+        }
+        this.setSysParams(params)
+      })
+    },
+    getBTCValuation(){
+      marketApi.BTCValuation(data=>{
+        this.setUSDCNY({
+          USD: numUtils.BN(data.USD).toFixed(2),
+          CNY: numUtils.BN(data.USDCNY).toFixed(2),
+          USDT: numUtils.BN(res.USDT).toFixed(2)
+        })
+        this.setBTCValuation(numUtils.BN(data.totalAmount).toFixed(8)) // 当前转换人民币
+      })
+    },
+    checkRouteChange (currentRoute) {
+      if (this.getApiToken) {
+        currentRoute.meta.noEntry ? this.$router.push({name: 'home'}) : void 0
+      } else {
+        currentRoute.meta.login ? this.$router.push({name: 'home'}) : void 0
+      }
+    },
+    closeCompa () {
+      this.browser = false
+    },
+    getUserInfoMethod () {
+      if (!this.getApiToken) {
+        return
+      }
+      userApi.getUserInfo((userInfo) => {
+        if (this.getApiToken) {
+          this.setUserInfo(userInfo)
+        }
+      }, (res) => {
+        console.warn(res)
+        setTimeout(() => {
+          this.getUserInfoMethod()
+        }, 1000)
+      })
+    }
+  }
+}
 </script>
 
-<style lang="less">
-    @import './assets/css/style.css';
-    @import './assets/css/common.less';
-    @import './assets/css/fonts.css';
-
-    #app {
-        font-family: SFUIText-Regular, PingFang-SC, 'Microsoft YaHei', sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    .page.wrap {
-        height: -webkit-calc(~'100vh - 0.98rem');
-        height: calc(~'100vh - 0.98rem');
-    }
+<style scoped>
+.fake-input{position: absolute;clip: rect(0, 0, 0, 0);}
+.mycenter{position: fixed;z-index: 9999;top: 50%;width: 24px;height: 50px;margin-top: -25px;background: url(./assets/images/slide.png) no-repeat center center;}
+.mycenter.arrow-left{right: 0;}
+.mycenter.arrow-right{left: 0;transform: rotate(180deg);}
+.mycenter.arrow-left:hover{animation: arrowAnimation 500ms infinite;}
+.mycenter.arrow-right:hover{animation: arrowAnimation 500ms infinite;}
+@keyframes arrowAnimation{
+  0% {background-position: center;}
+  50% {background-position: left;}
+  100% {background-position: center;}
+}
+.dialog{position: absolute;z-index: 999;top: 60px;left: 0;right: 0;min-width: 1200px;min-height: calc(100% - 60px);background-color: #404b69;transition: opacity .5s ease, transform .5s ease;}
+.dialog.fadeAndSlide-enter-active{opacity: 0;transform: translate(100%, 0);}
+.dialog.fadeAndSlide-enter-to{opacity: 1;transform: translate(0, 0);}
+.dialog.fadeAndSlide-leave-active{opacity: 1;transform: translate(0, 0);}
+.dialog.fadeAndSlide-leave-to{opacity: 0;transform: translate(100%, 0);}
+.dialog-container{width: 1200px;margin-left: auto;margin-right: auto;}
+.compatible{height: 46px;line-height: 46px; background-color:#3d99d2;color: #fff; }
+.compatible-w{width: 1200px;margin: 0 auto;text-align: center;font-size: 16px;position: relative;}
+.compatible-w span{font-size: 24px;position: absolute;right: 2px;cursor: pointer;}
 </style>
-<style type="text/css">
-    @media screen and (min-aspect-ratio: 13/9) {
-        .tip {
-            padding: 0.08rem !important;
-            font-size: 0.16rem !important;
-        }
-    }
-</style>
+

@@ -97,7 +97,7 @@ user.forgetPwdSendEmail = forgetPwdSendEmail
 const forgetPwdChangePwd = function (data, success, error) {
   api.post(`${domain}api/v2/user/resetPwd`, data, (res) => {
     if (res.rst === 1) {
-      success && success(res)
+      success && success()
     } else {
       let msg = ''
       if (res.error) {
@@ -141,9 +141,9 @@ const getGtInfo = function (success, error) {
 }
 user.getGtInfo = getGtInfo
 
-// 发送验证码（6位）
+// 发送验证码（4位）
 const sendSMSCode = function (data, success, error) {
-  let lang = window.localStorage.getItem('lang') || 'zh-CN'
+  let lang = window.localStorage.getItem('lang') || 'en'
   switch(lang){
     case 'zh-CN':
       lang = 'CN'
@@ -182,8 +182,7 @@ const sendSMSCode = function (data, success, error) {
       lang = 'EN'
   }
   data.lang = lang
-  // 4位 api/v3/user/sendSms
-  api.post(`${domain}api/v3/individual/sendAuthSms`, data, (res) => {
+  api.post(`${domain}api/v3/user/sendSms`, data, (res) => {
     if (res.rst === 1) {
       success && success(res.msg)
     } else {
@@ -216,54 +215,5 @@ const getRsaPublicKey = function (success, error) {
   }, error)
 }
 user.getRsaPublicKey = getRsaPublicKey
-
-// 获取用户级别
-const getUserLevel = function (success, error) {
-  api.get(`${domain}api/v2/account2/userLevel/queryLevel`, (res) => {
-    if (res.rst === 1) {
-      success && success(res.data)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-user.getUserLevel = getUserLevel
-
-
-// 绑定邮箱
-const bindEmail = function (data, success, error) {
-  api.post(`${domain}api/v1/gcox/user/bindEmail`, data, (res) => {
-    if (res.rst === 1) {
-      success && success(res.msg)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-user.bindEmail = bindEmail
-
-// 手机解绑绑定验证
-const validateStatus = function (status, success, error) {
-  api.post(`${domain}api/v1/safety/validateStatus/${status}`, (res) => {
-    if (res.rst === 1) {
-      success && success(res.msg)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-user.validateStatus = validateStatus
-
-//图片上传接口
-const imageUpload = function (data, success, error) {
-  api.post(`${domain}api/v5/user/image/upload`, data, (res) => {
-    if (res.rst === 1) {
-      success && success(res.data)
-    } else {
-      error && error(res.msg)
-    }
-  }, error)
-}
-user.imageUpload = imageUpload
 
 export default user

@@ -1,7 +1,13 @@
 import JsCookies from 'js-cookie'
-import Config from '@/api/config'
+import Config from '@/assets/js/config'
 
-export default function (opts) {
+(function (OtcWebSocket) {
+  if (typeof module === 'object') {
+    module.exports = OtcWebSocket
+  } else {
+    window.OtcWebSocket = OtcWebSocket
+  }
+})(function (opts) {
   opts = opts || {}
   let port = '9502'
   let isInit = false
@@ -90,4 +96,4 @@ export default function (opts) {
       sendMessage()
     }
   }
-}
+})
