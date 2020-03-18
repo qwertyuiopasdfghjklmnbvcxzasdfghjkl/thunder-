@@ -2,29 +2,16 @@
     <div class="page">
         <top-back style="background: #151C2C" :backPage="'home'">
             {{$t('nav.my')}}
-            <!-- <router-link to="/ucenter/set" slot="right">
-                <img class="icon_setting" src="../../assets/img/ic_sz@3x.png">
-            </router-link> -->
         </top-back>
         <div class="page-main">
             <div class="full user">
                 <div class="user_head">
                     <div class="info" v-tap="{methods:$root.routeTo, to:'center'}">
                         <label>
-                            <!--{{orignal+getUserInfo.headerImagePath}}-->
-                            <!--dev  ? `${http}${domain}/ceph-data/dev/user/` : -->
                             <img src="../../assets/img/user_img@2x.png" v-if="!getUserInfo.headerImagePath">
                             <img :src="orignal+getUserInfo.headerImagePath" @error="setDefaultIcon($event)" v-else>
                         </label>
                         <div>
-                            <!--<p>-->
-                            <!--<span v-if="getUserInfo.nickname">{{getUserInfo.nickname}}</span>-->
-                            <!--<a class="yellow" v-else>{{$t('public0.public40')}}&lt;!&ndash;修改昵称&ndash;&gt;</a>-->
-                            <!--<span class="state entrance" v-if="showVerifyState(0)"-->
-                            <!--v-tap="{methods:$root.routeTo, to:'kyc'}">{{$t('account.user_Real_name_verification')}}</span>-->
-                            <!--&lt;!&ndash;实名认证&ndash;&gt;-->
-
-                            <!--</p>-->
                             <p class="f36">{{getUserInfo.username}}</p>
                             <p class="f28">UID：{{getUserInfo.uidSort}}</p>
                         </div>
@@ -34,12 +21,6 @@
                     </div>
                 </div>
             </div>
-            <!--<ul class="block sublist ui-flex mt20">-->
-            <!--<router-link class="ui-flex-1" v-for="item in data1" tag="li" :to="{name:item.route}">-->
-            <!--<img :src="item.icon"/>-->
-            <!--<p class="ellipsis">{{item.name}}</p>-->
-            <!--</router-link>-->
-            <!--</ul>-->
             <div class="mt20 box full">
                 <rail-bar :item="kyc">
                     <div>
@@ -180,14 +161,11 @@
             this.getMessageList();
             this.getInfo()
             this.getAdPermission()
-            // this.data4[1].small = `<span class="ft-c-lightGray">${this.getVersion}</span>`
-            // console.log(window)
         },
         methods: {
             ...mapActions(['setApiToken', 'setUserInfo', 'setUserState']),
             getAdPermission() { // 获取是否有商家权限
                 otcApi.getAdPermission((res) => {
-                    // this.isMerchant = res.otcMerchantsPermission==1?true:false
                     let nav = {
                         route: 'adManage',  // otc 功能 我的广告
                         icon: require('@/assets/img/icon_ad.png'),
@@ -246,11 +224,6 @@
                 // 参数为空时获取所有未读消息
                 userApi.getMessages({}, (res) => {
                     let i = res.unread;
-                    // (res.data||[]).filter(res=>{
-                    //     if(res.messageState === 0){
-                    //         i++
-                    //     }
-                    // })
                     if (i) {
                         this.data3[0].small = `<span class="ft-c-lightGray">${this.$t('account.unread_message')}</span>
                     <span class="mint-badge is-error is-size-small">${i}</span>`

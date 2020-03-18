@@ -100,10 +100,6 @@
                         this.allLoaded = false
                         this.list = res.data
                         this.$refs.loadmore.onBottomLoaded();
-                        if (this.list.length >= res.total) { // 没有更多数据
-                            this.noMoreData = true
-                            this.allLoaded = true
-                        }
                     } else if (this.sport === 'top') { // 下拉刷新
                         this.list = []
                         this.list = res.data
@@ -114,6 +110,10 @@
                     } else {
                         this.list = []
                         this.list = res.data
+                    }
+                    if (this.list.length >= res.total) { // 没有更多数据
+                        this.noMoreData = true
+                        this.allLoaded = true
                     }
                 }, msg => {
                     Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
