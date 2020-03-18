@@ -196,10 +196,6 @@ export default {
 		}
 	},
 	beforeRouteEnter (to, from, next) {
-	  if(process.env.NODE_ENV === 'development'){ //开发环境下跳过检测
-	  	next()
-	  	return
-	  }
 	  if(store.getters.getApiToken && store.getters.getUserInfo.mobileAuthEnable!=1){
 	    MessageBox.confirm(window.vm.$t('未绑定手机号，是否立即前往？'),window.vm.$t('确认'),{
 	      cancelButtonText:window.vm.$t('取消'),
