@@ -17,7 +17,7 @@
         </div>
       </div>
       <ul class="bgblock mt20 list">
-        <router-link :to="{name:'adManage'}" tag="li" >
+        <router-link :to="{name:'adManage'}" tag="li" v-if="isMerchant">
           我的广告
           <i class="allow-right"></i>
         </router-link>
@@ -44,7 +44,8 @@ export default {
   data(){
     return {
       succeed:0,
-      inprocess:0
+      inprocess:0,
+      isMerchant:false
     }
   },
   computed:{
@@ -67,7 +68,12 @@ export default {
       otcApi.getOrdersList({page:1 ,show:1, state:1}, (res, serverTime, total) => {
         this.inprocess = total
       })
-    }
+    },
+    getAdPermission () { // 获取是否有商家权限
+      otcApi.getAdPermission((res) => {
+        this.isMerchant = res.otcMerchantsPermission==1?true:false
+      })
+    },
   }
 }
 </script>

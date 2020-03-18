@@ -89,6 +89,8 @@
             }
         }
     }
+    .buy {color: #E01C37;}
+    .sell {color: #0EB574;}
 }
     .status{
         font-size: 0.24rem;
