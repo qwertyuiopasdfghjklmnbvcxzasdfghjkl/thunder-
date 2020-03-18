@@ -18,11 +18,11 @@
                         </label>
                         <div>
                             <!--<p>-->
-                                <!--<span v-if="getUserInfo.nickname">{{getUserInfo.nickname}}</span>-->
-                                <!--<a class="yellow" v-else>{{$t('public0.public40')}}&lt;!&ndash;修改昵称&ndash;&gt;</a>-->
-                                <!--<span class="state entrance" v-if="showVerifyState(0)"-->
-                                      <!--v-tap="{methods:$root.routeTo, to:'kyc'}">{{$t('account.user_Real_name_verification')}}</span>-->
-                                <!--&lt;!&ndash;实名认证&ndash;&gt;-->
+                            <!--<span v-if="getUserInfo.nickname">{{getUserInfo.nickname}}</span>-->
+                            <!--<a class="yellow" v-else>{{$t('public0.public40')}}&lt;!&ndash;修改昵称&ndash;&gt;</a>-->
+                            <!--<span class="state entrance" v-if="showVerifyState(0)"-->
+                            <!--v-tap="{methods:$root.routeTo, to:'kyc'}">{{$t('account.user_Real_name_verification')}}</span>-->
+                            <!--&lt;!&ndash;实名认证&ndash;&gt;-->
 
                             <!--</p>-->
                             <p class="f36">{{getUserInfo.username}}</p>
@@ -35,17 +35,18 @@
                 </div>
             </div>
             <!--<ul class="block sublist ui-flex mt20">-->
-                <!--<router-link class="ui-flex-1" v-for="item in data1" tag="li" :to="{name:item.route}">-->
-                    <!--<img :src="item.icon"/>-->
-                    <!--<p class="ellipsis">{{item.name}}</p>-->
-                <!--</router-link>-->
+            <!--<router-link class="ui-flex-1" v-for="item in data1" tag="li" :to="{name:item.route}">-->
+            <!--<img :src="item.icon"/>-->
+            <!--<p class="ellipsis">{{item.name}}</p>-->
+            <!--</router-link>-->
             <!--</ul>-->
             <div class="mt20 box full">
                 <rail-bar :item="kyc">
                     <div>
-                        <span class="state wait"  v-if="showVerifyState(0)">{{$t('account.user_center_unverified')}}</span>
+                        <span class="state wait"
+                              v-if="showVerifyState(0)">{{$t('account.user_center_unverified')}}</span>
                         <!--未提交-->
-                        <span class="state wait"  v-if="showVerifyState(1)">{{$t('public0.public37')}}</span>
+                        <span class="state wait" v-if="showVerifyState(1)">{{$t('public0.public37')}}</span>
                         <!--待审核-->
                         <span class="state wait" v-if="showVerifyState(4)">{{$t('public0.public151')}}</span>
                         <!--审核中-->
@@ -55,7 +56,7 @@
                         <!--未通过-->
                     </div>
                 </rail-bar>
-                <rail-bar v-for="data in data2" :item="data" v-if="data.route=='adManage'?(isMerchant?true:false):true"></rail-bar>
+                <rail-bar v-for="data in data2" :item="data"></rail-bar>
             </div>
             <div class="mt20 box full">
                 <rail-bar v-for="data in data3" :item="data"></rail-bar>
@@ -73,7 +74,7 @@
     import otcApi from '@/api/otc'
 
     export default {
-        components: { 
+        components: {
             railBar
         },
         data() {
@@ -83,7 +84,7 @@
                 isUseCoinPay: false,
                 messageList: null,
                 title: null,
-                isMerchant:false, //是否otc商家
+                isMerchant: false, //是否otc商家
                 userState: { // 用户状态信息
                     coinState: 0,
                     googleState: 0,
@@ -129,11 +130,6 @@
                         route: 'transRecords',
                         icon: require('@/assets/img/icon_yjjl.png'),
                         name: this.$t('trade_record.my_trade_record'),
-                    },
-                    {
-                        route: 'adManage',  // otc 功能 我的广告
-                        icon: require('@/assets/img/icon_ad.png'),
-                        name: this.$t('otc_ad.otc_ad_management'),
                     },
                     {
                         route: 'referral',  // 邀请好友
@@ -189,10 +185,19 @@
         },
         methods: {
             ...mapActions(['setApiToken', 'setUserInfo', 'setUserState']),
-            getAdPermission () { // 获取是否有商家权限
-              otcApi.getAdPermission((res) => {
-                this.isMerchant = res.otcMerchantsPermission==1?true:false
-              })
+            getAdPermission() { // 获取是否有商家权限
+                otcApi.getAdPermission((res) => {
+                    // this.isMerchant = res.otcMerchantsPermission==1?true:false
+                    let nav = {
+                        route: 'adManage',  // otc 功能 我的广告
+                        icon: require('@/assets/img/icon_ad.png'),
+                        name: this.$t('otc_ad.otc_ad_management'),
+                    }
+                    if (res.otcMerchantsPermission == 1) {
+                        this.data2.splice(4, 0, nav)
+                        console.log(this.data2)
+                    }
+                })
             },
             getInfo() {
                 myApi.getUserInfo(res => {
@@ -215,7 +220,7 @@
                         verifyState: data.verifyState,
                         verifyTimes: data.verifyTimes
                     }
-                    if(this.userState.verifyState !== 0){
+                    if (this.userState.verifyState !== 0) {
                         this.kyc.route = 'ucenter'
                     }
                     this.isUseCoinPay = (data.coinState === 1)
@@ -226,15 +231,15 @@
             },
             showVerifyState(targetVerifyState) { // 实名验证状态
 
-                    if (this.userState.verifyTimes > 0) {
-                        if(this.userState.verifyState === 0){
-                            return targetVerifyState === 3
-                        }
-                        return targetVerifyState === this.userState.verifyState
-                    } else {
-
-                        return targetVerifyState === this.userState.verifyState
+                if (this.userState.verifyTimes > 0) {
+                    if (this.userState.verifyState === 0) {
+                        return targetVerifyState === 3
                     }
+                    return targetVerifyState === this.userState.verifyState
+                } else {
+
+                    return targetVerifyState === this.userState.verifyState
+                }
 
             },
             getMessageList() {
@@ -246,7 +251,7 @@
                     //         i++
                     //     }
                     // })
-                    if(i){
+                    if (i) {
                         this.data3[0].small = `<span class="ft-c-lightGray">${this.$t('account.unread_message')}</span>
                     <span class="mint-badge is-error is-size-small">${i}</span>`
                     }
@@ -256,9 +261,10 @@
     }
 </script>
 <style lang="less" scoped="">
-    .page-main{
+    .page-main {
         padding-bottom: 0.4rem;
     }
+
     .user {
         .user_head {
             position: relative;

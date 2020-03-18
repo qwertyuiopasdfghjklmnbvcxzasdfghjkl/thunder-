@@ -45,7 +45,7 @@
                         obj.style = 'blue'
                         obj.value = this.$t('public0.public51')
                         return obj;
-                    case this.item.status === 3:
+                    case this.item.status === 2:
                         obj.style = 'break'
                         obj.value = this.$t('market.past')
                         return obj
