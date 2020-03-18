@@ -232,7 +232,7 @@ otc.cancelOrder = cancelOrder
 
 // 完成订单
 const finishOrder = function (data, success, error) {
-  api.put(`${domain}api/v2/otc/orders/finish/${data.id}`, data, (res) => {
+  api.post(`${domain}api/v2/otc/orders/finish/${data.id}`, data, (res) => {
     if (res.rst === 1) {
       success && success(res.msg)
     } else {
