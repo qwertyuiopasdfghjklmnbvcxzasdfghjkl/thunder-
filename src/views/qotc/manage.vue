@@ -55,6 +55,7 @@ export default {
   created(){
     this.getSuccessOrders()
     this.getInProcessOrders()
+    this.getAdPermission()
   },
   
   methods:{
