@@ -2,11 +2,11 @@
     <div class="ad_law box" v-tap="{methods: toDetail}">
         <div class="top">
             <p><span :class="[item.ad_type === 2 ? 'sell' : 'buy']">{{type}}</span>{{item.symbol}}</p>
-            <span class="status">{{status}}</span>
+            <span class="status" :class="status.style">{{status.value}}</span>
         </div>
         <div class="tab">
             <div>
-                <p>{{item.cur_price}} {{item.currency}}</p>
+                <p>{{toFlex(item.cur_price)}} {{item.currency}}</p>
                 <span>{{$t('exchange.exchange_price')}}</span>
             </div>
             <div>
@@ -33,7 +33,24 @@
                 return this.$t(this.item.ad_type === 2 ? 'exchange.exchange_sell' : 'exchange.exchange_buy')
             },
             status(){
-                return this.item.status === 3 ? this.$t('gcox_otc.deleted') : this.$t('otc_ad.otc_ad_completed')
+                // status  广告状态（0：已下架、1：已上架、2：已过期）
+                let obj = {
+                    style: 'break',
+                    value: this.$t('public0.public52')
+                }
+                switch (true) {
+                    case this.item.status === 0:
+                        return obj;
+                    case this.item.status === 1:
+                        obj.style = 'blue'
+                        obj.value = this.$t('public0.public51')
+                        return obj;
+                    case this.item.status === 3:
+                        obj.style = 'break'
+                        obj.value = this.$t('market.past')
+                        return obj
+                }
+                return obj
             }
         },
         created() {
@@ -42,6 +59,9 @@
         methods: {
             toDetail(){
                 this.$router.push({name: 'adManageDetail',query: this.item})
+            },
+            toFlex(i){
+                return parseFloat(i).toFixed(2)
             }
         }
     }
@@ -98,5 +118,8 @@
         border-radius: 0.1rem;
         line-height: 0.44rem;
         background: #0C6AC9;
+        &.break{
+            background: #4B5875;
+        }
     }
 </style>

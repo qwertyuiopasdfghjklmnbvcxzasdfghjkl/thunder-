@@ -19,6 +19,9 @@
                 MessageBox({
                     title: this.$t('public0.public242'),
                     message: this.$t('otc_ad.otc_cancel_ad')+'?', // 下架?
+                    confirmButtonText: this.$t('public0.ok'),
+                    cancelButtonText: this.$t('usercontent.user31'),
+                    showCancelButton: true
                 }).then(action => {
                     if (action === 'confirm') {
                         this.api()
@@ -26,11 +29,12 @@
                 })
             },
             api(){
-                otc.deleteAdv(this.item.ad_id,res=>{
+                otc.deleteAdvertisement(this.item.ad_id,res=>{
                     Tip({type: 'success', message: this.$t(`error_code.${res}`)})
                     this.$router.back()
                 },msg=>{
                     Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+                    this.$router.back()
                 })
             }
         }

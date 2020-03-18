@@ -1,5 +1,5 @@
 <template>
-    <div class="ad_list_cont full">
+    <div class="ad_list_cont">
         <ad-list-cont-law v-for="item in dataList" :item="item"/>
     </div>
 </template>

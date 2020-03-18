@@ -1654,7 +1654,8 @@ export default {
 			"flash_topup": "普通充币",
 			"flash_withdrawal": "普通提币",
 			"no_bind_email_unbind_phone":"未绑定邮箱验证码，不可以解绑手机验证码！",
-			"user_SMS_code": "短信验证码"
+			"user_SMS_code": "短信验证码",
+			"past": "已过期"
 		},
 		"referral": {
 			"date": "日期",
