@@ -334,7 +334,7 @@ export default {
 			}
 		},
 		goOnlineService(){
-
+			this.$root.openURL('https://tb.53kf.com/code/client/5d9d654eba5aef268d95ed0116f0cec05/1')
 		},
         hideDialog(key){
             if(key===true){
@@ -364,7 +364,7 @@ export default {
           	return
           }
           otcApi.getAdPermission((res) => {
-            this.isMerchant = res.otcMerchantsPermission?true:false
+            this.isMerchant = res.otcMerchantsPermission==1?true:false
           })
         },
         getPaySettings(){ //获取用户支付方式

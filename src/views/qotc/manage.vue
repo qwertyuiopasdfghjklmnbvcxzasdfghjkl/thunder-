@@ -71,7 +71,7 @@ export default {
     },
     getAdPermission () { // 获取是否有商家权限
       otcApi.getAdPermission((res) => {
-        this.isMerchant = res.otcMerchantsPermission?true:false
+        this.isMerchant = res.otcMerchantsPermission==1?true:false
       })
     },
   }

@@ -231,7 +231,7 @@ export default {
       return
     }
     otcApi.getAdPermission((res) => { //检测是否商家用户，否则无权限进入此页面
-      let _isMerchant = res.otcMerchantsPermission?true:false
+      let _isMerchant = res.otcMerchantsPermission==1?true:false
       if(_isMerchant){
         if(store.getters.getUserInfo.mobileAuthEnable!=1){
           MessageBox.confirm(window.vm.$t('未绑定手机号，是否立即前往？'),window.vm.$t('确认'),{
