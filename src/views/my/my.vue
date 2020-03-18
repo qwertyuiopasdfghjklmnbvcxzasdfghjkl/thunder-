@@ -55,7 +55,7 @@
                         <!--未通过-->
                     </div>
                 </rail-bar>
-                <rail-bar v-for="data in data2" :item="data"></rail-bar>
+                <rail-bar v-for="data in data2" :item="data" v-if="data.route=='adManage'?(isMerchant?true:false):true"></rail-bar>
             </div>
             <div class="mt20 box full">
                 <rail-bar v-for="data in data3" :item="data"></rail-bar>
@@ -70,6 +70,7 @@
     import config from '../../api/config'
     import userApi from '@/api/individual'
     import myApi from '@/api/user'
+    import otcApi from '@/api/otc'
 
     export default {
         components: { 
@@ -82,6 +83,7 @@
                 isUseCoinPay: false,
                 messageList: null,
                 title: null,
+                isMerchant:false, //是否otc商家
                 userState: { // 用户状态信息
                     coinState: 0,
                     googleState: 0,
@@ -181,11 +183,17 @@
             this.getUserState()
             this.getMessageList();
             this.getInfo()
+            this.getAdPermission()
             // this.data4[1].small = `<span class="ft-c-lightGray">${this.getVersion}</span>`
             // console.log(window)
         },
         methods: {
             ...mapActions(['setApiToken', 'setUserInfo', 'setUserState']),
+            getAdPermission () { // 获取是否有商家权限
+              otcApi.getAdPermission((res) => {
+                this.isMerchant = res.otcMerchantsPermission==1?true:false
+              })
+            },
             getInfo() {
                 myApi.getUserInfo(res => {
                     this.setUserInfo(res);
