@@ -275,10 +275,8 @@ export default {
 	          currency: this.currency,
 	          symbol: this.token,
 	          direction: this.type,
+	          payType: this.payType,
 	          bench_marking_id: otcConfig.benchMarkingId
-	        }
-	        if(this.type==2){
-	        	_data.payType = this.payType
 	        }
 	        _data.amount = this.isToken ? this.amount : utils.toFixed(numUtils.div(this.currencyCount, this.refPrice), 8)
 	        otcApi.quickMatchAndCreate(_data, orderId=>{
