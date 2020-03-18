@@ -128,7 +128,7 @@ export default {
         min_amount: '',
         max_amount: '',
         pay_type:'', //pay_type: "1" 银行卡； "2" 支付宝； "3"微信支付； "4" Paypal；
-        max_process_num: 5,
+        max_process_num: 999,
         praise_rate: 1,
         pay_limit_time: 15
       },

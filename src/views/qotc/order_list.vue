@@ -181,7 +181,6 @@ export default {
     getOrderList () { // 获取订单列表
       return new Promise((resolve, reject)=>{
         Indicator.open()
-        console.log(this.params)
         otcApi.getOrdersList(this.params, (res, serverTime, total) => {
           this.clearIntervals()
           this.totalPage = Math.ceil(total/this.params.show)
