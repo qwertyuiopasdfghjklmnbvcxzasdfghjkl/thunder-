@@ -1,5 +1,5 @@
 <template>
-    <div class="btn" v-tap="{methods:down}">{{$t('otc_ad.otc_cancel_ad')}}</div>
+    <div class="btn" v-tap="{methods:del}">{{$t('otc_ad.otc_cancel_ad')}}</div>
 </template>
 
 <script>
@@ -18,7 +18,7 @@
             del(){
                 MessageBox({
                     title: this.$t('public0.public242'),
-                    message: this.$t('otc_ad.otc_cancel_ad')+'?', // 删除?
+                    message: this.$t('otc_ad.otc_cancel_ad')+'?', // 下架?
                 }).then(action => {
                     if (action === 'confirm') {
                         this.api()
