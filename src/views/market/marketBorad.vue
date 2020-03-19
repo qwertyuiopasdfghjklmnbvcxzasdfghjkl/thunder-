@@ -9,7 +9,7 @@
                             v-tap="{methods: tab,symbol:item}"><span>{{item}}</span></li>
                     </ul>
                 </section>
-                <section class="coin_header">
+                <section class="coin_header mt20">
                     <ul>
                         <li @click="sortMarket('dealAmount')">
                             {{$t('home.home05')}}/{{$t('exchange.exchange_Transaction_volume')}}<!--成交量-->
