@@ -27,7 +27,7 @@
           </select>
         </div>
         <div class="kuan ui-flex ui-flex-5 ui-flex-justify ml20" :class="{error: errors.has('lowest_price')}">
-          <numberbox v-model="formData.lowest_price"  :size="13" :accuracy="2" v-validate="'required|intOrDecimal'" data-vv-name="lowest_price" :placeholder="formData.price_type==2?'交易价格':'可接受的最低单价'"/>
+          <numberbox v-model="formData.lowest_price"  :size="13" :accuracy="2" v-validate="'required|intOrDecimal'" data-vv-name="lowest_price" :placeholder="formData.price_type==2?'交易价格':(formData.ad_type==1?'可接受的最高单价':'可接受的最低单价')"/>
           <span class="grey">{{formData.currency}}</span>
         </div>
       </div>
@@ -181,7 +181,8 @@ export default {
       return {
         ad_type: this.formData.ad_type,
         symbol: this.formData.symbol,
-        currency: this.formData.currency
+        currency: this.formData.currency,
+        bench_marking_id: this.formData.bench_marking_id,
       }
     },
     tradeLimitAccuracy () {
@@ -218,7 +219,7 @@ export default {
     currencyMinLimit(){},
     coinMinLimit(){},
     benchSymbolParams() {
-      this.getReferencePrice()
+      this.getBenchSymbolInfo()
     },
     'formData.price_type'(){
       this.formData.lowest_price = ''
@@ -255,7 +256,7 @@ export default {
     this.getPaySettings().then(()=>{
       this.fnGetAdvertisementDetail()
     })
-    this.getReferencePrice()
+    this.getBenchSymbolInfo()
     
   },
   methods:{
@@ -306,6 +307,7 @@ export default {
       this.formData.pay_type = arr.join(',')
     },
     saveAds () {
+      $('input').blur()
       let _formData = JSON.parse(JSON.stringify(this.formData))
       if(this.formData.price_type==2){
         delete _formData['price_rate']
@@ -426,9 +428,9 @@ export default {
         })
       })
     },
-    getReferencePrice () { // 获取对标交易所币种价格
-      otcApi.getReferencePrice(this.benchSymbolParams, (res) => {
-        this.refPrice = numUtils.BN(res || 0).toFixed(2)
+    getBenchSymbolInfo () { // 获取对标交易所币种价格
+      otcApi.getBenchSymbolInfo(this.benchSymbolParams, (res) => {
+        this.refPrice = numUtils.BN(res.cur_price || 0).toFixed(2)
       })
     },
     getAssets() {

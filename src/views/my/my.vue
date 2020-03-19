@@ -97,11 +97,11 @@
                         icon: require('@/assets/img/ic_aqzx@3x.png'),
                         name: this.$t('user.safety')
                     },
-                    {
+                    /*{
                         route: 'myMapping', // otc的功能 我的订单
                         icon: require('@/assets/img/icon_wddd.png'),
                         name: this.$t('usercontent.user60'),
-                    },
+                    },*/
                     {
                         route: 'history',
                         icon: require('@/assets/img/icon_ctjl.png'),

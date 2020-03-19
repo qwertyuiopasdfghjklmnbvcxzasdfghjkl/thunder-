@@ -5,12 +5,12 @@
       <form ref="form" onsubmit="return false">
           <div class="item mt30">
              <p class="line">
-               <input :placeholder="$t('public0.public77')" type="text" name="firstName" v-validate="'required'" maxlength="128" autocomplete="off">
+               <input :placeholder="$t('public0.public77')" type="text" name="firstName" v-model="value.firstName" v-validate="'required'" maxlength="128" autocomplete="off">
              </p>
           </div>
           <div class="item mt40">
             <p class="line">
-              <input :placeholder="$t('public0.public79')" type="text" name="idNumber" v-validate="'required|IdCard'" maxlength="18" autocomplete="off">
+              <input :placeholder="$t('public0.public79')" type="text" name="idNumber" v-model="value.idNumber" v-validate="'required|IdCard'" maxlength="18" autocomplete="off">
             </p>
           </div>
           <div class="item">
@@ -22,11 +22,11 @@
             <div class="form-row">
               <div class="row-file">
                 <div class="row-file-img">
-                  <img :src="image.front" alt=""/>
+                  <img :src="value.front?getImgSrc(value.front):image.front" alt=""/>
                 </div>
                 <div class="row-file-input">
-                  <input type="hidden" data-vv-name="front" aria-required="true" aria-invalid="false" value="" style="display:none;">
-                  <input type="file" title=" " style="display:none;"><input type="file" data-key="2" title=" " @change="uploadImage($event, 'front')">
+                  <input type="hidden" data-vv-name="front" v-validate="'required'" v-model="value.front">
+                  <input type="file" @change="uploadImage($event, 'front')">
                 </div>
               </div>
               <div class="row-description"><p>{{$t('public0.public81')}}<!--请确保照片内容完整并清晰可见，仅支持JPG、PNG、JPEG、BMP图片格式。--></p></div>
@@ -38,11 +38,11 @@
             <div class="form-row">
               <div class="row-file">
                 <div class="row-file-img">
-                  <img :src="image.back" alt=""/>
+                  <img :src="value.back?getImgSrc(value.back):image.back" alt=""/>
                 </div>
                 <div class="row-file-input">
-                  <input type="hidden" data-vv-name="front" aria-required="true" aria-invalid="false" value="" style="display:none;">
-                  <input type="file" title=" " style="display:none;"><input type="file" data-key="2" title=" " @change="uploadImage($event, 'back')">
+                  <input type="hidden" data-vv-name="back" v-validate="'required'" v-model="value.back">
+                  <input type="file" @change="uploadImage($event, 'back')">
                 </div>
               </div>
               <div class="row-description"><p>{{$t('public0.public84')}}<!--请确保照片内容完整并清晰可见，身份证必须在有效期内，仅支持JPG、PNG、JPEG、BMP图片格式。--></p></div></div>
@@ -53,11 +53,11 @@
             <div class="form-row">
               <div class="row-file">
                 <div class="row-file-img">
-                  <img :src="image.hand" alt=""/>
+                  <img :src="value.hand?getImgSrc(value.hand):image.hand" alt=""/>
                 </div>
                 <div class="row-file-input">
-                  <input type="hidden" data-vv-name="front" aria-required="true" aria-invalid="false" value="" style="display:none;">
-                  <input type="file" title=" " style="display:none;"><input type="file" data-key="2" title=" " @change="uploadImage($event, 'hand')">
+                  <input type="hidden" data-vv-name="hand" v-validate="'required'" v-model="value.hand">
+                  <input type="file" @change="uploadImage($event, 'hand')">
                 </div>
               </div>
               <div class="row-description"><p>{{$t('public0.public86').format(brand)}}<!--请您上传一张手持身份证及写有“{0}”和当天日期的卡片的照片。请确保头像、身份证信息、卡片上“{0}”和当天日期内容清晰可见。--></p></div>
@@ -80,6 +80,8 @@ import diagramFront from '@/assets/img/i_one.png'
 import diagramBack from '@/assets/img/i_two.png'
 import diagramHand from '@/assets/img/i_three.png'
 import uploading from '@/components/uploading'
+import photoCompress from '@/assets/js/photoCompress'
+
 export default {
   name: 'realnameInfo',
   components: {
@@ -100,11 +102,6 @@ export default {
         back: diagramBack,
         hand: diagramHand
       },
-      isShowUpload: {
-        front: true,
-        back: true,
-        hand: true
-      },
       locked: false,
       isUploading: false,
       isSubmit: false
@@ -121,44 +118,31 @@ export default {
       }
     }
   },
-  beforeRouteEnter (from, to, next) {
+  /*beforeRouteEnter (from, to, next) {
     myApi.getUserState((data) => {
       data.verifyState === 0 ? next() : window.vm.$router.replace({name: 'ucenter'})
     }, (msg) => {
       console.error(msg)
       window.vm.$router.replace({name: 'ucenter'})
     })
-  },
+  },*/
   methods: {
+    getImgSrc(fileObj){
+      return URL.createObjectURL(fileObj);
+    },
     uploadImage (event, propertyName) {
-      let isTrue = false
-      if (config.imageType.test(event.target.value)) {
-        isTrue = utils.limitUploadImage(event.target, (msg) => {
-          Tip({type: 'danger', message: this.$t(msg)})
-        }, 4)
+      let _file = event.target.files[0]
+      if (config.imageType.test(_file.name)) {
+        photoCompress(_file, {width:1280, height:1280}, (blob)=>{
+          this.value[propertyName] = this.image[propertyName] = new window.File([blob], _file.name, {type: _file.type})
+        })
       } else {
-        isTrue = false
         Tip({type: 'danger', message: this.$t('public0.public43')}) // 请上传JPG、PNG、JPEG、BMP格式的图片
-      }
-      if (isTrue) {
-        this.value[propertyName] = this.image[propertyName] = window.URL.createObjectURL(event.target.files[0])
-        event.target.name = propertyName
-        if (parseInt(event.target.getAttribute('data-key')) === 1) {
-          event.target.nextElementSibling.name = ''
-          event.target.nextElementSibling.value = null
-          this.isShowUpload[propertyName] = false
-        } else {
-          event.target.previousElementSibling.name = ''
-          event.target.previousElementSibling.value = null
-          this.isShowUpload[propertyName] = true
-        }
-      } else {
-        event.target.value = null
       }
     },
     identity1 () {
       $('input').blur()
-      this.$validator.validateAll().then((res) => {
+      this.$validator.validateAll(this.value).then((res) => {
         if (!res) {
           let items = this.errors.items
           if (items && items.length && items[0]) {
@@ -173,7 +157,12 @@ export default {
         }
         this.locked = true
         this.isUploading = true
-        var formData = new FormData(this.$refs.form)
+        var formData = new FormData()
+        formData.append('firstName', this.value.firstName)
+        formData.append('idNumber', this.value.idNumber)
+        formData.append('back', this.value.back)
+        formData.append('front', this.value.front)
+        formData.append('hand', this.value.hand)
         formData.append('countryClass', '1')
         myApi.submitIdentityInfo(formData, (msg) => {
           this.isUploading = false
