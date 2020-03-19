@@ -292,6 +292,7 @@
             },
             '$route.params.market'() { //切换市场后重新初始化websoket
                 this.business.market = this.$route.params.market
+                localStorage.market = this.$route.params.market
                 this.klineSocket.close()
                 this.showMarkets = false
                 this.InitKlineWebSoket()
@@ -312,7 +313,8 @@
         },
         created() {
             this.business.market = this.$route.params.market || this.getInitMarket
-
+            console.log(this.$route.params)
+            localStorage.market = this.business.market
             this.InitKlineWebSoket()
             this.getSymbolInfo()
             this.getDepthList()

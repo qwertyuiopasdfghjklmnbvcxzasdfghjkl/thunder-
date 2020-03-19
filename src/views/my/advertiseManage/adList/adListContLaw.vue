@@ -109,8 +109,8 @@
             }
         }
     }
-    .buy {color: #E01C37;}
-    .sell {color: #0EB574;}
+    .buy {color: #0EB574;}
+    .sell {color: #E01C37;}
 }
     .status{
         font-size: 0.24rem;

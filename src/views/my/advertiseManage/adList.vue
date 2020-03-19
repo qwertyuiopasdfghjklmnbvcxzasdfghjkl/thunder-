@@ -98,7 +98,10 @@
                 otc.getMyAdvertisementList(this.param, res => {
                     if (this.sport === 'bottom') { // 加载更多数据
                         this.allLoaded = false
-                        this.list = res.data
+                        res.data.forEach(res=>{
+                            this.list.push(res)
+                        })
+                        console.log(this.list)
                         this.$refs.loadmore.onBottomLoaded();
                     } else if (this.sport === 'top') { // 下拉刷新
                         this.list = []

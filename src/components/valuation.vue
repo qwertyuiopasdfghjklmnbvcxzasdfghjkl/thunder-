@@ -17,8 +17,9 @@ export default {
     ...mapGetters(['getCoinSign']),
     curPrice(){
       let i = this.curCNYPrice
+      console.log(this.lastPrice)
       if(this.lastPrice){
-        i = numUtils.mul(this.lastPrice,this.unitPrice).toFixed(2)
+        i = numUtils.mul(this.lastPrice,this.curCNYPrice).toFixed(2)
       }
       // console.log(this.lastPrice, this.unitPrice)
       return i || '--'

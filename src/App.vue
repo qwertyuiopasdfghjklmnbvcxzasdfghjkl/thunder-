@@ -85,7 +85,7 @@
                     }
                 }
             })
-            
+
             //建立OTC推送，初始化数据
             this.otcws = new OtcWebSocket({
               onMessage: (data) => {
