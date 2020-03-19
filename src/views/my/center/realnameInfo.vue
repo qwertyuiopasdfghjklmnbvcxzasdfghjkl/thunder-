@@ -118,14 +118,14 @@ export default {
       }
     }
   },
-  /*beforeRouteEnter (from, to, next) {
+  beforeRouteEnter (from, to, next) {
     myApi.getUserState((data) => {
       data.verifyState === 0 ? next() : window.vm.$router.replace({name: 'ucenter'})
     }, (msg) => {
       console.error(msg)
       window.vm.$router.replace({name: 'ucenter'})
     })
-  },*/
+  },
   methods: {
     getImgSrc(fileObj){
       return URL.createObjectURL(fileObj);
@@ -203,6 +203,7 @@ export default {
       img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
       }
     }
     &-input {

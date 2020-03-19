@@ -50,12 +50,12 @@
             <div class="form-row">
               <div class="row-file">
                 <div class="row-file-img">
-                  <img :src="image.front" alt=""/>
+                  <img :src="value.front?getImgSrc(value.front):image.front" alt=""/>
                 </div>
                 <div class="row-file-input">
-                  <input type="hidden" data-vv-name="front" aria-required="true" aria-invalid="false" value="" style="display:none;">
-                  <input type="file" title=" " @change="uploadImage($event, 'front')" style="display:none;">
-                  <input type="file" data-key="2" title=" " @change="uploadImage($event, 'front')"></div>
+                  <input type="hidden" data-vv-name="front" v-validate="'required'" v-model="value.front">
+                  <input type="file" @change="uploadImage($event, 'front')">
+                </div>
               </div>
               <div class="row-description"><p>{{$t('public0.public99')}}<!--请您上传证件封面照片，请确保照片内容完整并清晰可见，仅支持JPG、PNG、JPEG、BMP图片格式。--></p></div>
             </div>
@@ -66,12 +66,12 @@
             <div class="form-row">
               <div class="row-file">
                 <div class="row-file-img">
-                  <img :src="image.back" alt=""/>
+                  <img :src="value.back?getImgSrc(value.back):image.back" alt=""/>
                 </div>
                 <div class="row-file-input">
-                  <input type="hidden" data-vv-name="front" aria-required="true" aria-invalid="false" value="" style="display:none;">
-                  <input type="file" title=" " @change="uploadImage($event, 'back')" style="display:none;">
-                  <input type="file" data-key="2" title=" " @change="uploadImage($event, 'back')"></div>
+                  <input type="hidden" data-vv-name="back" v-validate="'required'" v-model="value.back">
+                  <input type="file" @change="uploadImage($event, 'back')">
+                </div>
               </div>
               <div class="row-description"><p>{{$t('public0.public101')}}<!--请您上传个人信息页照片，请确保照片内容完整并清晰可见，证件必须在有效期内，仅支持JPG、PNG、JPEG、BMP图片格式。--></p></div>
             </div>
@@ -82,12 +82,12 @@
             <div class="form-row">
               <div class="row-file">
                 <div class="row-file-img">
-                  <img :src="image.hand" alt=""/>
+                  <img :src="value.hand?getImgSrc(value.hand):image.hand" alt=""/>
                 </div>
                 <div class="row-file-input">
-                  <input type="hidden" data-vv-name="front" aria-required="true" aria-invalid="false" value="" style="display:none;">
-                  <input type="file" title=" " @change="uploadImage($event, 'hand')" style="display:none;">
-                  <input type="file" data-key="2" title=" " @change="uploadImage($event, 'hand')"></div>
+                  <input type="hidden" data-vv-name="hand" v-validate="'required'" v-model="value.hand">
+                  <input type="file" @change="uploadImage($event, 'hand')">
+                </div>
               </div>
               <div class="row-description"><p>{{$t('public0.public103').format(brand)}}<!--请您上传一张手持证件及写有“{0}”和当天日期的卡片的照片。请确保头像、证件内容、卡片上“{0}”和当天日期内容清晰可见。--></p></div>
             </div>
@@ -109,6 +109,7 @@ import diagramFront from '@/assets/img/i_one.png'
 import diagramBack from '@/assets/img/i_two.png'
 import diagramHand from '@/assets/img/i_three.png'
 import uploading from '@/components/uploading'
+import photoCompress from '@/assets/js/photoCompress'
 export default {
   name: 'page-otherRealnameInfo',
   components: {
@@ -144,11 +145,6 @@ export default {
         back: diagramBack,
         hand: diagramHand
       },
-      isShowUpload: {
-        front: true,
-        back: true,
-        hand: true
-      },
       locked: false,
       isUploading: false,
       isSubmit: false
@@ -182,30 +178,17 @@ export default {
     })
   },
   methods: {
+    getImgSrc(fileObj){
+      return URL.createObjectURL(fileObj);
+    },
     uploadImage (event, propertyName) {
-      let isTrue = false
-      if (config.imageType.test(event.target.value)) {
-        isTrue = utils.limitUploadImage(event.target, (msg) => {
-          Tip({type: 'danger', message: this.$t(msg)})
-        }, 4)
+      let _file = event.target.files[0]
+      if (config.imageType.test(_file.name)) {
+        photoCompress(_file, {width:1280, height:1280}, (blob)=>{
+          this.value[propertyName] = this.image[propertyName] = new window.File([blob], _file.name, {type: _file.type})
+        })
       } else {
-        isTrue = false
-        Tip({type: 'danger', message: this.$t('public0.public43')})
-      }
-      if (isTrue) {
-        this.value[propertyName] = this.image[propertyName] = window.URL.createObjectURL(event.target.files[0])
-        event.target.name = propertyName
-        if (parseInt(event.target.getAttribute('data-key')) === 1) {
-          event.target.nextElementSibling.name = ''
-          event.target.nextElementSibling.value = null
-          this.isShowUpload[propertyName] = false
-        } else {
-          event.target.previousElementSibling.name = ''
-          event.target.previousElementSibling.value = null
-          this.isShowUpload[propertyName] = true
-        }
-      } else {
-        event.target.value = null
+        Tip({type: 'danger', message: this.$t('public0.public43')}) // 请上传JPG、PNG、JPEG、BMP格式的图片
       }
     },
     identity2 () {
@@ -226,6 +209,9 @@ export default {
         this.locked = true
         this.isUploading = true
         var formData = new FormData(this.$refs.form)
+        formData.append('front', this.value.front)
+        formData.append('back', this.value.back)
+        formData.append('hand', this.value.hand)
         formData.append('countryClass', '2')
         myApi.submitIdentityInfo(formData, (msg) => {
           this.isUploading = false
@@ -266,6 +252,7 @@ export default {
       img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
       }
     }
     &-input {
