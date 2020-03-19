@@ -222,7 +222,7 @@
             getCNYPrice(){
                 let data= {
                     ad_type: 1,
-                    symbol: this.currentSymbol,
+                    symbol: this.baseSymbol,
                     currency: 'CNY',
                     bench_marking_id: 1,
                 }

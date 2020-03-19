@@ -98,7 +98,7 @@
                         name: this.$t('user.safety')
                     },
                     {
-                        route: 'myMapping', // otc的功能 我的订单
+                        route: 'qotcOrders', // otc的功能 我的订单
                         icon: require('@/assets/img/icon_wddd.png'),
                         name: this.$t('usercontent.user60'),
                     },

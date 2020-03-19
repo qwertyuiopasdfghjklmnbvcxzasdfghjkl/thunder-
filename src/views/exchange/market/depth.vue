@@ -20,7 +20,7 @@
             <p class="">
                 <span class="" :class="{sell:(getLast24h.direction!=1)}">{{toFixed(getLast24h.close)}}</span>
                 <small class="f24 pt8 ft-c-dark">
-                    <!--≈ {{getCoinSign}} {{curCNYPrice}}-->
+                    ≈ {{getCoinSign}} {{toFixed(CNY, 2)}}
                     <!--<valuation :lastPrice="getLast24h.close" :symbol="currentSymbol" :curCNYPrice="curCNYPrice"/>-->
                 </small>
             </p>
@@ -175,6 +175,9 @@
                 } else {
                     return this.$t('public.market_status_delay')
                 }
+            },
+            CNY(){
+                return numUtils.mul(this.getLast24h.close, this.curCNYPrice)
             }
         },
         watch: {
