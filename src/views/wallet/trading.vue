@@ -20,7 +20,7 @@
                     <span>{{$t('exchange.exchange_valuation')}}(USDT)</span>
                     <img :src="showMoney ? require('../../assets/img/assets_eye_open.png'): require('../../assets/img/assets_eye_closed.png')"/>
                 </p>
-                <h4 class="">{{totalUSDTDisplay}}</h4>
+                <h4 class="">{{totalUSDT}}</h4>
                 <span>≈ {{getCoinSign}} {{totalCNY}}</span>
             </div>
 
@@ -86,6 +86,7 @@
     import myApi from '@/api/user'
     import walletApi from '@/api/wallet'
     import utils from '@/assets/js/utils'
+    import otc from '../../api/otc'
 
 
     export default {
@@ -93,7 +94,8 @@
             return {
                 showZero: false,
                 showMoney: true,
-                totalUSDT: 0
+                totalUSDT: 0,
+                curCNYPrice:null
             }
         },
         computed: {
@@ -132,9 +134,8 @@
                 }
             },
             totalCNY(){
-                console.log(this.getBTCValuation, this.getBtcPrice.CNY)
                 if (this.showMoney) {
-                    return utils.removeEndZero(numUtils.mul(this.getBTCValuation, this.getBtcPrice.CNY).toFixed(2))
+                    return utils.removeEndZero(numUtils.mul(this.totalUSDT, this.curCNYPrice).toFixed(2))
                 } else {
                     return '******'
                 }
@@ -142,9 +143,9 @@
         },
         created() {
             this.showMoney = JSON.parse(localStorage.getItem('showAssets') || 'true')
-            // this.getInfo()
+            this.getCNYPrice()
             this.getAssets()
-            // this.gettTotalUSDTAmount()
+            this.gettTotalUSDTAmount()
             console.log(this.getBTCValuation, this.getBtcPrice.USDT)
         },
         watch: {
@@ -154,11 +155,22 @@
         },
         methods: {
             ...mapActions(['setBTCValuation', 'setSymbol', 'setUserInfo', 'setUserWallets']),
-            // gettTotalUSDTAmount() {
-            //     walletApi.gettTotalUSDTAmount(res => {
-            //         this.totalUSDT = res
-            //     })
-            // },
+            gettTotalUSDTAmount() {
+                walletApi.gettTotalUSDTAmount(res => {
+                    this.totalUSDT = res
+                })
+            },
+            getCNYPrice(){
+                let data= {
+                    ad_type: 1,
+                    symbol: 'USDT',
+                    currency: 'CNY',
+                    bench_marking_id: 1,
+                }
+                otc.getBenchSymbolInfo(data,res=>{
+                    this.curCNYPrice = Number(res.cur_price).toFixed(2) || 0
+                })
+            },
             getAssets() {
                 walletApi.myAssets({}, (res) => {
                     if (res.length == 0) {
