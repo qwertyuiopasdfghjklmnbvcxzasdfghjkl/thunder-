@@ -200,9 +200,9 @@
                 })
             },
             getBtcPrice() {
-                if (!this.getApiToken) {
-                    return
-                }
+                // if (!this.getApiToken) {
+                //     return
+                // }
                 marketApi.getBtcPrice(res => {
                     this.setUSDCNY({
                         USD: numUtils.BN(res.USD).toFixed(8),

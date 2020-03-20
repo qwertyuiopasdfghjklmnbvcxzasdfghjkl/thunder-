@@ -153,9 +153,18 @@ TVjsApi.prototype.init = function() {
             //     'precision': precision
             // });
             widgets.chart().createStudy('Volume', false, true, [20], null, {'Volume ma.color':'rgba(136,136,136,0)'});
+
+            var timer = null
+
             widgets.subscribe('mouse_down', function(e){
                 var tar = document.querySelector('iframe').contentWindow.document.querySelector('.pane-legend-item-value-container')
                 document.querySelector('#price').innerHTML = tar.innerHTML
+
+                clearTimeout(timer)
+                timer = setTimeout(()=>{
+                    document.querySelector('#price').innerHTML = ''
+                },3000)
+
                 self.isClicked = true
                 window.VM.active = ''
 
