@@ -51,7 +51,9 @@
             marketList(){
                 let list = []
                 let market = this.getMarketList || []
-                console.log(market)
+                market.forEach(item=>{
+                    item.lastPrice = numUtils.BN(item.lastPrice).toFixed(item.accuracy)
+                })
                 market.filter(res=>{
                     if(this.star){
                         if(res.collection){

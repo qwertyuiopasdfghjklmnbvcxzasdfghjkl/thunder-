@@ -81,7 +81,7 @@ export default {
   methods:{
     ...mapActions(['addOtcSocketEvent', 'removeOtcSocketEvent']),
     goOnlineService(){
-      this.$root.openURL('https://tb.53kf.com/code/client/5d9d654eba5aef268d95ed0116f0cec05/1')
+      this.$router.push({name:'online'})
     },
     getOrdersDetail(){
       otcApi.ordersDetail(this.$route.params.orderId, (data) => {

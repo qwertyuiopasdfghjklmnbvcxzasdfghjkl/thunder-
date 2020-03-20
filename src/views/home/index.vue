@@ -43,7 +43,6 @@
             otc
         },
         created () {
-            console.log(this.$store)
           this.socket = KLineWebSocket({
             subscribe:['market'],
             callback: (res) => {
@@ -54,7 +53,6 @@
                   item.collection = window.marketCollection[item.market]
                   item.marketCategory = window.marketCategory[item.market]
                 })
-                  console.log(res.data)
                 window.setMarketList(res.data)
               }
             }

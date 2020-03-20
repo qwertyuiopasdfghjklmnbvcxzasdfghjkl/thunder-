@@ -421,7 +421,8 @@ const gtValidate = function (okCallback, endCallback) {
     if (!gtCaptcha) {
       gtIsInitTip = true
       // 请耐心等待滑块初始化完成。
-      Tip({type: 'danger', message: window.$i18n.t('public0.public277')})
+      // Tip({type: 'danger', message: window.$i18n.t('public0.public277')})
+      Indicator.open()
     }
     typeof endCallback === 'function' && endCallback()
     return
@@ -489,6 +490,7 @@ const gtValidate = function (okCallback, endCallback) {
   gtCaptcha = null
   gtIsInitTip = false
   userApi.getGtInfo((res) => {
+    Indicator.close()
     res = JSON.parse(res)
     window.initGeetest({
       protocol: config.http, // config.http
@@ -502,6 +504,7 @@ const gtValidate = function (okCallback, endCallback) {
       lang: lang
     }, handler)
   }, () => {
+    Indicator.close()
     isGtDialogOpen = false
     typeof gtEndCallback === 'function' && gtEndCallback()
     Tip({type: 'danger', message: window.$i18n.t('error_code.SERVER_ERROR')})
