@@ -85,7 +85,7 @@
             if(_isMerchant){
               next()
             } else {
-              Tip({type:'danger', message:'抱歉，非商家用户无法进入此页面！'})
+              Tip({type:'danger', message:window.vm.$t('qotc.no_merchant_right')}) //抱歉，非商家用户无法进入此页面！
             }
           })
         },

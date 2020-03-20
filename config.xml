@@ -17,6 +17,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <access origin="tel:*" launch-external="yes"/>
     <preference name="AppendUserAgent" value="InAppWebView" />
     <preference name="orientation" value="portrait" />
     <platform name="android">
