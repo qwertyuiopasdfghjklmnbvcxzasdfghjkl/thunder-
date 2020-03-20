@@ -23,7 +23,7 @@ Vue.filter('number', function (value) {
   if(isNaN(value)){
     return value
   } else {
-    return Number(value)
+    return Utils.removeEndZero(value)
   }
 })
 

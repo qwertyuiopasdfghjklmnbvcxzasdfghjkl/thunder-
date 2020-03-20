@@ -58,7 +58,7 @@
             <span>{{$t('exchange.value_available')}}<!--可用--></span>
             <span class="ft-c-white f24">
                 <small class="el">{{Number(toFixed(isBuy ?
-                    toBalance.availableBalance : fromBalance.availableBalance)).toString().toMoney()}}</small>
+                    toBalance.availableBalance : fromBalance.availableBalance)) | number}} </small>
                 {{isBuy ?baseSymbol:currentSymbol}}
             </span>
         </p>
@@ -66,7 +66,7 @@
             <span>{{$t('exchange.value_frozen')}}<!--冻结--> </span>
             <span class="ft-c-white f24">
                 <small class="el">{{Number(toFixed(isBuy ?
-                    toBalance.frozenBalance : fromBalance.frozenBalance)).toString().toMoney()}}</small>
+                    toBalance.frozenBalance : fromBalance.frozenBalance)) | number}} </small>
                 {{isBuy ?baseSymbol:currentSymbol}}
             </span>
         </p>
@@ -75,7 +75,7 @@
             <span class="ft-c-white f24">
                 <small class="el">{{(Number(toFixed(isBuy ?
                 toBalance.availableBalance : fromBalance.availableBalance))+Number(toFixed(isBuy ?
-                    toBalance.frozenBalance : fromBalance.frozenBalance))).toString().toMoney()}}</small>
+                    toBalance.frozenBalance : fromBalance.frozenBalance))) | number}} </small>
                 {{isBuy ?baseSymbol:currentSymbol}}
             </span>
         </p>
@@ -853,5 +853,6 @@
         overflow: hidden;
         flex: 1;
         max-width: 2rem;
+        padding-right: 0.06rem;
     }
 </style>
