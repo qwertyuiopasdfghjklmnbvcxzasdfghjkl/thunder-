@@ -20,7 +20,7 @@
                     <span>{{$t('exchange.exchange_valuation')}}(USDT)</span>
                     <img :src="showMoney ? require('../../assets/img/assets_eye_open.png'): require('../../assets/img/assets_eye_closed.png')"/>
                 </p>
-                <h4 class="">{{totalUSDT}}</h4>
+                <h4 class="">{{(totalUSDT.toFixed(8)) | number}}</h4>
                 <span>≈ {{getCoinSign}} {{totalCNY}}</span>
             </div>
 
