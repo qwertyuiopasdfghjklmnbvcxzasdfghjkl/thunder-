@@ -59,3 +59,6 @@ Vue.filter('dateFormat', function (value, format) {
   return date.format(format)
 })
 
+// 保留小数位，非四舍五入
+Vue.filter('toFixed', Utils.toFixed)
+

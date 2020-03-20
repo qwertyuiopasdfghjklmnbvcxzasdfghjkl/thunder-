@@ -1,42 +1,42 @@
 <template>
   <div>
     <div class="mt50 ui-flex ui-flex-justify">
-      <span class="grey"><i class="icon_ orderid"></i> 订单号：{{orderInfo.order_id}}</span>
-      <span class="blue" v-tap="{methods:()=>{dialShow = true}}"><i class="icon_ phone"></i> 联系买家</span>
+      <span class="grey"><i class="icon_ orderid"></i> {{$t('business.ORDER_NUM')}}<!-- 订单号 -->：{{orderInfo.order_id}}</span>
+      <span class="blue" v-tap="{methods:()=>{dialShow = true}}"><i class="icon_ phone"></i> {{$t('qotc.contact_buyer')}}<!-- 联系买家 --></span>
     </div>
     <div class="mt30 bgblock">
       <div class="tc f36"><i class="icon_ status" :class="getStatusIcon"></i> {{orderState.title}}</div>      
       <div class="tc f24 grey mt15" v-if="orderState.state==0 || orderState.state==41">
         <template v-if="orderInfo.appeal_state==3"><!-- {{'放置有申述或被申诉，但交易失败的审批原因'}} --></template>
-        <template v-else-if="orderInfo.cancelType==1">超出 <span class="blue">{{orderInfo.pay_apply_time}}</span> 分钟未付款，订单已被系统自动取消</template>
-        <template v-else>商家已取消订单</template>
+        <span v-else-if="orderInfo.cancelType==1" v-html="$t('qotc.system_cancel_desc').format(`<span class='blue'>${orderInfo.pay_apply_time}</span>`)"><!-- 超出 {0} 分钟未付款，订单已被系统自动取消 --></span>
+        <template v-else>{{$t('qotc.order_cancelled_by_merchant')}}<!-- 商家已取消订单 --></template>
       </div>
       <div class="tc f24 grey mt15 lh17" v-if="orderState.state==1">
-        <p>对方正在付款，剩余 <span class="blue">{{surplusTime}}</span> 分钟</p>
-        <p>对方在上述时间内超时未付款，系统将自动取消该订单</p>
+        <p v-html="$t('qotc.payment_in_progress').format(`<span class='blue'>${surplusTime}</span>`)"><!-- 对方正在付款，剩余 <span class="blue">{{surplusTime}}</span> 分钟 --></p>
+        <p>{{$t('qotc.not_pay_to_cancel')}}<!-- 对方在上述时间内超时未付款，系统将自动取消该订单 --></p>
       </div>
       <div class="tc f24 grey mt15 lh17" v-if="orderState.state==2">
-        <p>对方付款完成</p>
-        <p>请务必登录收款账户，并确认收到该笔款项后的 <span class="blue">{{surplusTime}}</span> 分钟内进行放币</p>
+        <p>{{$t('qotc.opposite_payment_completed')}}<!-- 对方付款完成 --></p>
+        <p v-html="$t('qotc.check_to_release_symbol').format(`<span class='blue'>${surplusTime}</span>`)"><!-- 请务必登录收款账户，并确认收到该笔款项后的 <span class="blue">{{surplusTime}}</span> 分钟内进行放币 --></p>
       </div>
-      <div class="tc f24 grey mt15" v-if="orderState.state==21">平台方将根据双方提供的资料进行核实，请耐心等待结果。</div>
-      <div class="tc f24 grey mt15" v-if="orderState.state==22">该订单已被商家申诉，请尽快联系买方或平台客服处理</div>
-      <div class="tc f24 grey mt15" v-if="orderState.state==3">成功卖出了 <span class="blue">{{orderInfo.symbol_count}} </span>{{orderInfo.symbol}}</div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==21">{{$t('qotc.appeal_wait_tip')}}<!-- 平台方将根据双方提供的资料进行核实，请耐心等待结果。 --></div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==22">{{$t('qotc.appealed_by_merchant')}}<!-- 该订单已被商家申诉，请尽快联系买方或平台客服处理 --></div>
+      <div class="tc f24 grey mt15" v-if="orderState.state==3" v-html="$t('qotc.success_to_sell').format(`<span class='blue'>${orderInfo.symbol_count}</span>`, orderInfo.symbol)"><!-- 成功卖出了 <span class="blue">{{orderInfo.symbol_count}} </span>{{orderInfo.symbol}} --></div>
       <div class="tc f24 grey mt15" v-if="orderState.state==31"><!-- {{'放置有申述或被申诉，但交易成功的审批原因'}} --></div>
       <div class="price_info ui-flex ui-flex-justify f24 mt40 grey">
-        <div>交易金额({{orderInfo.currency}})
-          <p class="white f32 tc mt30">{{orderInfo.currency_count}}</p>
+        <div>{{$t('public0.public17')}}<!-- 交易金额 -->({{orderInfo.currency}})
+          <p class="white f32 tc mt30">{{orderInfo.currency_count|toFixed(2)}}</p>
         </div>
-        <div>购买数量({{orderInfo.symbol}})
+        <div>{{$t('gcox_otc.buy_number')}}<!-- 购买数量 -->({{orderInfo.symbol}})
           <p class="white f32 tc mt30">{{orderInfo.symbol_count}}</p>
         </div>
-        <div>单价({{orderInfo.currency}}/{{orderInfo.symbol}})
+        <div>{{$t('business.UNIT_PRICE')}}<!-- 单价 -->({{orderInfo.currency}}/{{orderInfo.symbol}})
           <p class="white f32 tc mt30">{{orderInfo.cur_price}}</p>
         </div>
       </div>
       <div class="user_info grey f32">
         <div class="ui-flex ui-flex-justify">
-          <span>收款方式</span>
+          <span>{{$t('gcox_otc.currency_way')}}<!-- 收款方式 --></span>
           <span class="white">
             <i class="icon_payment" :class="[payTrans[orderInfo.pay_type]]"></i>
             {{currentPayInfo.name}}
@@ -44,33 +44,33 @@
           </span>
         </div>
         <div class="ui-flex ui-flex-justify">
-          <span>买家</span>
+          <span>{{$t('public0.public148')}}<!-- 买家 --></span>
           <span class="white">{{orderInfo.to_real_name}}</span>
         </div>
         <div class="ui-flex ui-flex-justify">
-          <span>订单时间</span>
+          <span>{{$t('qotc.order_time')}}<!-- 订单时间 --></span>
           <span class="white">{{orderInfo.created_at}}</span>
         </div>
       </div>
 
       <div class="ui-flex ui-flex-justify btns" v-if="orderState.state==2">
-        <mt-button type="cancel" size="large" :disabled="canAppeal" v-tap="{methods:$root.routeTo, to:'qotcAppeal', params:{orderNumber:orderInfo.order_number}}">{{canAppeal?'申诉{0}'.format(appealTime):'申诉'}}</mt-button>
-        <mt-button type="primary" size="large" class="ml30" v-tap="{methods:()=>{fbShow = true}}">放币</mt-button>
+        <mt-button type="cancel" size="large" :disabled="canAppeal" v-tap="{methods:$root.routeTo, to:'qotcAppeal', params:{orderNumber:orderInfo.order_number}}">{{canAppeal?`${$t('qotc.appeal')}${appealTime}`:$t('qotc.appeal')}}<!-- 申诉 --></mt-button>
+        <mt-button type="primary" size="large" class="ml30" v-tap="{methods:()=>{fbShow = true}}">{{$t('qotc.release_symbol')}}<!-- 放币 --></mt-button>
       </div>
       <div class="btns" v-if="orderState.state==21">
-        <mt-button type="cancel" size="large" disabled>{{'已申诉'}}</mt-button>
+        <mt-button type="cancel" size="large" disabled>{{$t('qotc.appealed')}}<!-- '已申诉' --></mt-button>
       </div>
 
       <div class="btns" v-if="orderState.state==3||orderState.state==31">
-        <mt-button type="primary" size="large" v-tap="{methods:$root.routeTo, to:'trading', replace:true}">{{'我的资产'}}</mt-button>
-        <p class="grey f24 tc mt25">-请到资产中核对您的资产金额-</p>
+        <mt-button type="primary" size="large" v-tap="{methods:$root.routeTo, to:'trading', replace:true}">{{$t('usercontent.user58')}}<!-- '我的资产' --></mt-button>
+        <p class="grey f24 tc mt25">-{{$t('qotc.check_balance_in_wallet')}}<!-- 请到资产中核对您的资产金额 -->-</p>
       </div>
 
     </div>
-    <Dialog :show="dialShow" :title="$t('联系买家')" :showBtns="false" :showClose="true" :hide="hidedDialDialog">
-        <p class="ft-c-default f32 tc">{{'使用手机号{0}拨打'.format(sellerPhone)}}</p>
+    <Dialog :show="dialShow" :title="$t('qotc.contact_buyer')" :showBtns="false" :showClose="true" :hide="hidedDialDialog"><!-- 联系买家 -->
+        <p class="ft-c-default f32 tc">{{$t('qotc.phone_number_to_call').format(sellerPhone)}}<!-- 使用手机号{0}拨打 --></p>
         <p class="ft-c-default f48 mt20 tc">{{orderInfo.toUserMobile}}&nbsp;</p>
-        <a class="mint-button mt40 mint-button--primary mint-button--large" style="line-height: 0.9rem;" :href="`tel:${orderInfo.toUserMobile}`" v-tap="{methods:hidedDialDialog}">立即呼叫</a>
+        <a class="mint-button mt40 mint-button--primary mint-button--large" style="line-height: 0.9rem;" :href="`tel:${orderInfo.toUserMobile}`" v-tap="{methods:hidedDialDialog}">{{$t('qotc.call_right_now')}}<!-- 立即呼叫 --></a>
     </Dialog>
     <mt-popup class="verify_popup" v-model="fbShow" position="bottom">
       <vertify ref="vertify" :params="params" :mobileState="getUserInfo.mobileAuthEnable" :googleState="getUserInfo.googleAuthEnable" @removeDialog="hideFBDialog" @okCallback="finishOrder"></vertify>
@@ -127,8 +127,8 @@ export default {
     ...mapGetters(['getUserInfo']),
     params () {
       return {
-        title:'放币确认',
-        desc:'请务必登录网上银行或第三方支付账号，确认收到该笔款项后，再进行放币。',
+        title:this.$t('qotc.confirm_release_symbol'),//'放币确认'
+        desc:this.$t('qotc.release_symbol_tip'), //请务必登录网上银行或第三方支付账号，确认收到该笔款项后，再进行放币。
         phoneNumber: this.getUserInfo.mobile,
         countryCode: this.getUserInfo.countryCode || '+86',
         email: this.getUserInfo.email || this.getUserInfo.username
@@ -151,25 +151,25 @@ export default {
       if (this.orderInfo.state === 1 && this.orderInfo.pay_state === 0) {
         return {
           state: 1,
-          title: this.$t('待收款') // 未付款(待收款)
+          title: this.$t('qotc.wait_collection') // 未付款(待收款)
         }
       } else if (this.orderInfo.state === 1 && this.orderInfo.pay_state === 1) {
         if(this.orderInfo.appeal_manage_id){
           if(this.isAppellant){
             return {
               state: 21,
-              title: this.$t('订单申诉中') // 已付款(订单申诉中)
+              title: this.$t('qotc.order_in_appeal') // 已付款(订单申诉中)
             }
           } else {
             return {
               state: 22,
-              title: this.$t('订单已被申诉') // 已付款(订单已被申诉)
+              title: this.$t('qotc.order_be_appealed') // 已付款(订单已被申诉)
             }
           }
         } else {
           return {
             state: 2,
-            title: this.$t('请放币') // 已付款(请放币)
+            title: this.$t('qotc.to_release_symbol') // 已付款(请放币)
           }
         }
         
@@ -177,7 +177,7 @@ export default {
         if(this.orderInfo.appeal_state==3){
           return {
             state: 31,
-            title: this.isAppellant?this.$t('申诉失败，平台已强制放币'):this.$t('被申诉成功，平台已强制放币') // 已放币，交易完成(申诉失败，平台已强制放币:被申诉成功，平台已强制放币)
+            title: this.isAppellant?this.$t('qotc.appeal_fail_with_symbol'):this.$t('qotc.appealed_success_with_symbol') // 已放币，交易完成(申诉失败，平台已强制放币:被申诉成功，平台已强制放币)
           }
         } else {
           return {
@@ -189,13 +189,13 @@ export default {
         if(this.orderInfo.appeal_state==3){
           return {
             state: 41,
-            title: this.isAppellant?this.$t('申诉成功，订单已取消'):this.$t('被申诉失败，订单已被取消') // 申诉成功，订单已取消:被申诉失败，订单已被取消
+            title: this.isAppellant?this.$t('qotc.appeal_success_with_cancel'):this.$t('qotc.appealed_fail_with_cancel') // 申诉成功，订单已取消:被申诉失败，订单已被取消
 
           }
         } else {
           return {
             state: 0,
-            title: this.orderInfo.cancelType==1?this.$t('订单已被自动取消'):this.$t('已取消') // 订单已被自动取消:已取消
+            title: this.orderInfo.cancelType==1?this.$t('qotc.canceled_order_by_system'):this.$t('public0.public25') // 订单已被自动取消:已取消
           }
         }
       }

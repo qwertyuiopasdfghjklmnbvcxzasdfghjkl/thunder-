@@ -156,7 +156,7 @@ export default {
             confirmButtonText: this.$t('otc_legal.otc_legal_confirm')
           }).then(action => {
             if (action === 'confirm') {
-              this.$router.push({name: 'page-realname'})
+              this.$router.push({name: 'kyc'})
             }
           })
         }

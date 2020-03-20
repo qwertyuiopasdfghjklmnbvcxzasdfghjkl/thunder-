@@ -2,31 +2,31 @@
   <div class="page">
     <top-back style="background-color: transparent;"></top-back>
     <div class="page-main">
-      <p class="mt20 f44">OTC管理</p>
+      <p class="mt20 f44">{{$t('qotc.otc_manage')}}<!-- OTC管理 --></p>
       <div class="bgblock mt40">
         <div class="capitalize">{{getUserInfo.userRealName}}</div>
         <div class="ui-flex classify">
           <div class="ui-flex-1" v-tap="{methods:$root.routeTo, to:'qotcOrders', query:{state:2}}">
-            <h2>总完成单</h2>
+            <h2>{{$t('qotc.total_finished_order')}}<!-- 总完成单 --></h2>
             <h1>{{succeed}}</h1>
           </div>
           <div class="ui-flex-1" v-tap="{methods:$root.routeTo, to:'qotcOrders', query:{state:1}}">
-            <h2>未完成单</h2>
+            <h2>{{$t('qotc.incomplete_order')}}<!-- 未完成单 --></h2>
             <h1>{{inprocess}}</h1>
           </div>
         </div>
       </div>
       <ul class="bgblock mt20 list">
         <router-link :to="{name:'adManage'}" tag="li" v-if="isMerchant">
-          我的广告
+          {{$t('qotc.my_advertisement')}}<!-- 我的广告 -->
           <i class="allow-right"></i>
         </router-link>
         <router-link :to="{name:'qotcOrders'}" tag="li">
-          我的订单
+          {{$t('qotc.my_orders')}}<!-- 我的订单 -->
           <i class="allow-right"></i>
         </router-link>
         <router-link :to="{name:'set-payway'}" tag="li">
-          支付管理
+          {{$t('qotc.payment_management')}}<!-- 支付管理 -->
           <i class="allow-right"></i>
         </router-link>
       </ul>

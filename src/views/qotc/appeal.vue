@@ -3,18 +3,18 @@
     <top-back>{{$t('otc_exchange.otc_exchange_complaint')}}<!--发起申诉--></top-back>
     <div class="page-main">
       <div class="mt40 ui-flex lh80">
-        <div class="ui-flex-2 f32">申诉类型</div>
+        <div class="ui-flex-2 f32">{{$t('gcox_otc.complaint_type')}}<!-- 申诉类型 --></div>
         <div class="ui-flex-3 kuan">
           <select v-model="formData.type" v-validate="'required'" data-vv-name="type">
             <option v-for="(item, index) in appealType" :key="index" :value="parseInt(item.appeal_type_id)">{{$t(`otc_exchange.otc_exchange_${item.type_key}`)}}</option>
           </select>
         </div>
       </div>
-      <div class="f32 mt50">{{$t('申诉原因')}}<!--申诉原因--></div>
+      <div class="f32 mt50">{{$t('appeal.appeal_reason')}}<!--申诉原因--></div>
       <div class="mt25 kuan">
-        <textarea v-model="formData.description" v-validate="formData.type === 5 ? 'required' : null" data-vv-name="description" :placeholder="formData.type === 5 ? $t('请填写申诉原因及详情描述...') : $t('public0.public237')" maxlength="255" autocomplete="off"></textarea>
+        <textarea v-model="formData.description" v-validate="formData.type === 5 ? 'required' : null" data-vv-name="description" :placeholder="formData.type === 5 ? $t('appeal.appeal_desc') : $t('public0.public237')" maxlength="255" autocomplete="off"><!-- 请填写申诉原因及详情描述... --></textarea>
       </div>
-      <div class="mt20 grey f24">添加相关转账证明或证明资料(仅支持jpg.png.jpeg.bmp格式)</div>
+      <div class="mt20 grey f24">{{$t('appeal.appeal_add_proof').format('jpg.png.jpeg.bmp')}}<!-- 添加相关转账证明或证明资料(仅支持jpg.png.jpeg.bmp格式) --></div>
       <div class="thumbs mt40">
         <div v-for="(item,index) in files">
           <div>
@@ -32,7 +32,7 @@
         <mt-button :class="{disabled: isLock}" type="primary" size="large" v-tap="{methods: submitAppeal}">{{$t('public0.public207')}}<!--提交申诉--></mt-button>
       </div>
     </div>
-    <Dialog :show="isShow" :title="$t('图片预览')" :hide="()=>{isShow = false}">
+    <Dialog :show="isShow" :title="$t('appeal.img_preview')" :hide="()=>{isShow = false}"><!-- 图片预览 -->
         <swiper :options="swiperOption" ref="swiper">
             <!-- 幻灯内容 -->
             <swiper-slide v-for="(item,index) in files" :key="index">
@@ -117,7 +117,7 @@ export default {
       this.$validator.validateAll().then((action) => {
         if (action) {
           if(!this.files.length){
-            Tip({type: 'danger', message: this.$t(`添加相关转账证明或证明资料`)})
+            Tip({type: 'danger', message: this.$t(`appeal.appeal_add_proof`).format('jpg.png.jpeg.bmp')}) //添加相关转账证明或证明资料(仅支持{0}格式)
             return
           }
           this.isLock = true
@@ -147,11 +147,11 @@ export default {
     filesChange(e){
       let _files = e.target.files;
       if(_files.length > this.maxFiles){ //一次最多上传9张图片
-        Tip({type:'error', message:'一次最多上传{0}张图片,请重新选择!'.format(this.maxFiles)});
+        Tip({type:'error', message:this.$t('appeal.max_upload_tip').format(this.maxFiles)}); //一次最多上传{0}张图片,请重新选择!
         return;
       }
       if((this.files.length + _files.length) > this.maxFiles){ //判断所选的总图片数是否不大于9, 大于9张不能上传
-        Tip({type:'error', message:'所选图片总数超过{0}张,请重新选择!'.format(this.maxFiles)});
+        Tip({type:'error', message:this.$t('appeal.max_total_upload_tip').format(this.maxFiles)}); //所选图片总数超过{0}张,请重新选择!
         return;
       }
       for(let file of _files){
