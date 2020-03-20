@@ -70,7 +70,7 @@
     <Dialog :show="dialShow" :title="$t('qotc.contact_buyer')" :showBtns="false" :showClose="true" :hide="hidedDialDialog"><!-- 联系买家 -->
         <p class="ft-c-default f32 tc">{{$t('qotc.phone_number_to_call').format(sellerPhone)}}<!-- 使用手机号{0}拨打 --></p>
         <p class="ft-c-default f48 mt20 tc">{{orderInfo.toUserMobile}}&nbsp;</p>
-        <a class="mint-button mt40 mint-button--primary mint-button--large" style="line-height: 0.9rem;" :href="`tel:${orderInfo.toUserMobile}`" v-tap="{methods:hidedDialDialog}">{{$t('qotc.call_right_now')}}<!-- 立即呼叫 --></a>
+        <a class="mint-button mt40 mint-button--primary mint-button--large" style="line-height: 0.9rem;" :href="`tel:${orderInfo.toUserMobile}`">{{$t('qotc.call_right_now')}}<!-- 立即呼叫 --></a>
     </Dialog>
     <mt-popup class="verify_popup" v-model="fbShow" position="bottom">
       <vertify ref="vertify" :params="params" :mobileState="getUserInfo.mobileAuthEnable" :googleState="getUserInfo.googleAuthEnable" @removeDialog="hideFBDialog" @okCallback="finishOrder"></vertify>
