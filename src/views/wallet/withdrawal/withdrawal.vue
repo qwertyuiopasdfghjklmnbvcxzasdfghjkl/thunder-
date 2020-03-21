@@ -11,7 +11,7 @@
                 <ul class="payment-detail">
                     <li v-show="withdrawalType === 1">
                         <label>
-                            {{$t('account.user_Pick_up_address')}}
+                            {{$t('account.user_Pick_up_address')}} Number(this.symbolInfo.stationFlag) !== 1
                         </label>
                         <p class="address mt10">
                             <input type="text" v-validate="'required'" v-model="form.toAddress"
@@ -89,7 +89,7 @@
             </div>
             <div class="bottom">
                 <mt-button type="primary" size="large" :disabled="!lock"
-                           v-tap="{methods: walletWithdraw}">{{$t('public0.submit')}}
+                           v-tap="{methods: walletWithdraw}">{{statusText}}
                 </mt-button>
             </div>
         </div>
@@ -144,7 +144,35 @@
         computed: {
             ...mapGetters(['getUserWallets', 'getSymbol', 'getUserInfo']),
             lock() {
-                return (this.form.toAddress && this.form.amount && this.lockAccount) || false
+                if(this.withdrawalType === 2){
+                    if(Number(this.symbolInfo.stationFlag) !== 1){
+                        return false
+                    }else{
+                        return (this.form.toAddress && this.form.amount && this.lockAccount) || false
+                    }
+                }else{
+                    if(Number(this.symbolInfo.withdrawFlag) !== 1){
+                        return false
+                    }else{
+                        return (this.form.toAddress && this.form.amount && this.lockAccount) || false
+                    }
+                }
+
+            },
+            statusText(){
+                if(this.withdrawalType === 2){
+                    if(Number(this.symbolInfo.stationFlag) !== 1){
+                        return this.$t('market.off_withdrawal')
+                    }else{
+                        return this.$t('public0.submit')
+                    }
+                }else{
+                    if(Number(this.symbolInfo.withdrawFlag) !== 1){
+                        return this.$t('market.off_innerWithdrawal')
+                    }else{
+                        return this.$t('public0.submit')
+                    }
+                }
             },
             lastAmount() {
                 if (this.form.amount) {
@@ -197,7 +225,7 @@
         },
         watch: {
             //stationFlag
-            withdrawalType(e){
+            /*withdrawalType(e){
                 console.log(this.symbolInfo.stationFlag)
                 if(e === 2){
                     if(Number(this.symbolInfo.stationFlag) !== 1){
@@ -205,7 +233,7 @@
                         Tip({type: 'danger', message: this.$t('error_code.SYMBOL_NOT_INNER_WITHDRAWAL')})
                     }
                 }
-            }
+            }*/
         },
         created() {
             this.symbol = this.getSymbol

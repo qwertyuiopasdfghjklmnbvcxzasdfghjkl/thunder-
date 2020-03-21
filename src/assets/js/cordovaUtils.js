@@ -181,9 +181,9 @@ document.addEventListener('deviceready', function(){
               // alert(444)
               // 询问用户是否更新 检测到新版本，是否更新?
                 let lang = window.localStorage.getItem('lang') || 'zh-CN'
-                MessageBox.alert(lang==='zh-CN'?'检测到新版本，请更新。':'New version detected, please update.',lang==='zh-CN'?'提示':'Tip',{
+                /*MessageBox.alert(lang==='zh-CN'?'检测到新版本，请更新。':'New version detected, please update.',lang==='zh-CN'?'提示':'Tip',{
                   confirmButtonText: lang==='zh-CN'?'确定':'Yes'
-                }).then(action => {
+                }).then(action => {*/
                   // 更新中
                   chcp.installUpdate((error) => {
                     if (error) {
@@ -197,14 +197,14 @@ document.addEventListener('deviceready', function(){
                       console.log('Update installed!');
                     }
                   });
-                }, () =>{})
+                //}, () =>{})
               // 对比版本号
               console.log('Current content version: ' + data.currentVersion);
               console.log('Ready to be installed:' + data.readyToInstallVersion);
             }
           });
         });
-        
+
       }
 }, false);
 

@@ -4,16 +4,6 @@
             {{$t('home.home45')}}
         </top-back>
         <div class="top top_total">
-            <!--<section class="wallet-feature">-->
-                <!--<p>{{$t('home.home46')}}</p>-->
-                <!--<div class="wallet-feature-operation">-->
-                  <!---->
-                    <!--<span v-tap="{methods: $root.routeTo, to: 'address-manage'}">-->
-                    <!--<img src="../../../assets/img/i_jy.png">-->
-                    <!--<em>{{$t('home.home51')}}&lt;!&ndash;地址&ndash;&gt;</em>-->
-                  <!--</span>-->
-                <!--</div>-->
-            <!--</section>-->
 
             <div class="total">
                 <p v-tap="{methods:()=>{ showMoney = !showMoney}}">
@@ -23,7 +13,6 @@
                 <h4 class="">{{(totalUSDT.toFixed(8)) | number}}</h4>
                 <span>≈ {{getCoinSign}} {{totalCNY}}</span>
             </div>
-
 
             <div class="nav_item">
                 <span v-tap="{methods: withdrawal}">
@@ -37,7 +26,7 @@
                     <em>
                         {{$t('home.home50')}}<!--充值-->
                     </em>
-                  </span>
+                </span>
                 <span>
                     <router-link :to="{name: 'history'}" slot="right" tag="span">
                         <img src="../../assets/img/i_txjl.png">
