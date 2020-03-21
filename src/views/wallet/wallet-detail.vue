@@ -144,8 +144,8 @@
                         confirmButtonText: this.$t('public0.ok')
                     }).then(action => {
                         if (action === 'confirm') {
-                            this.$router.push({name: 'safe'})
-                        }
+                              this.$router.push({name: 'safe'})
+                      }
                     })
                     return
                 }*/
