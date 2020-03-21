@@ -1,49 +1,49 @@
 <template>
   <div class="page">
-    <top-back>{{$t('发布广告')}}<!--发布广告--></top-back>
+    <top-back>{{ad_id?$t('otc_ad.otc_edit_ad'):$t('otc_ad.otc_post_ad')}}<!--发布广告||修改广告--></top-back>
     <div class="pl30 pr30">
       <div class="mint-navbar mt100">
         <a class="mint-tab-item" :class="{'is-selected':formData.ad_type==1}">
-          <div class="mint-tab-item-label" v-tap="{methods:setAdType, type:1}">购买</div>
+          <div class="mint-tab-item-label" v-tap="{methods:setAdType, type:1}">{{$t('otc_exchange.otc_exchange_buy')}}<!-- 购买 --></div>
         </a>
         <a class="mint-tab-item" :class="{'is-selected':formData.ad_type==2}">
-          <div class="mint-tab-item-label" v-tap="{methods:setAdType, type:2}">出售</div>
+          <div class="mint-tab-item-label" v-tap="{methods:setAdType, type:2}">{{$t('otc_exchange.otc_exchange_sell')}}<!-- 出售 --></div>
         </a>
       </div>
     </div>
     <div class="page-main">
-      <div class="f30 mt40">币种</div>
+      <div class="f30 mt40">{{$t('trade_record.trade_record_currency')}}<!-- 币种 --></div>
       <div class="kuan">
         <select v-model="formData.symbol">
           <option v-for="(item,index) in tokens" :value="item.symbol">{{item.symbol}}</option>
         </select>
       </div>
-      <div class="f30 mt40">价格</div>
+      <div class="f30 mt40">{{$t('exchange.exchange_price')}}<!-- 价格 --></div>
       <div class="ui-flex ui-flex-justify">
         <div class="kuan ui-flex-3">
           <select v-model="formData.price_type">
-            <option :value="2" v-if="false">固定价格</option>
-            <option :value="1">溢价价格</option>
+            <option :value="2" v-if="false">{{$t('qotc.fixed_price')}}<!-- 固定价格 --></option>
+            <option :value="1">{{$t('qotc.premium_price')}}<!-- 溢价价格 --></option>
           </select>
         </div>
         <div class="kuan ui-flex ui-flex-5 ui-flex-justify ml20" :class="{error: errors.has('lowest_price')}">
-          <numberbox v-model="formData.lowest_price"  :size="13" :accuracy="2" v-validate="'required|intOrDecimal'" data-vv-name="lowest_price" :placeholder="formData.price_type==2?'交易价格':(formData.ad_type==1?'可接受的最高单价':'可接受的最低单价')"/>
+          <numberbox v-model="formData.lowest_price"  :size="13" :accuracy="2" v-validate="'required|intOrDecimal'" data-vv-name="lowest_price" :placeholder="formData.price_type==2?$t('qotc.trans_price'):(formData.ad_type==1?$t('public0.public136'):$t('public0.public137'))"/> <!-- 交易价格;'可接受的最高单价':'可接受的最低单价' -->
           <span class="grey">{{formData.currency}}</span>
         </div>
       </div>
       <div class="kuan ui-flex ui-flex-justify" :class="{error: errors.has('price_rate')}" v-show="formData.price_type==1">
-        <numberbox v-model="formData.price_rate" :size="6" :accuracy="2" v-validate="'required|premiumPriceValid'" data-vv-name="price_rate" placeholder="溢价率(正负值)"/>
+        <numberbox v-model="formData.price_rate" :size="6" :accuracy="2" v-validate="'required|premiumPriceValid'" data-vv-name="price_rate" :placeholder="$t('qotc.premium_rate')"/><!-- 溢价率(正负值) -->
         <span class="grey">%</span>
       </div>
-      <p class="grey f26 mt10" v-show="formData.price_type==1">交易所溢价后单价： {{ratePrice}}{{formData.currency}}</p>
-      <p class="grey f26 mt10">市场参加价： {{refPrice}}{{formData.currency}}</p>
-      <div class="f30 mt40">数量</div>
+      <p class="grey f26 mt10" v-show="formData.price_type==1">{{$t('qotc.exchange_premium_price')}}<!-- 交易所溢价后单价 -->： {{ratePrice}}{{formData.currency}}</p>
+      <p class="grey f26 mt10">{{$t('qotc.market_reference_price')}}<!-- 市场参考价 -->： {{refPrice}}{{formData.currency}}</p>
+      <div class="f30 mt40">{{$t('business.QUANTITY')}}<!-- 数量 --></div>
       <div class="kuan ui-flex ui-flex-justify" :class="{error: errors.has('symbol_count')}" >
-        <numberbox v-model="formData.symbol_count" :size="15" :accuracy="4" v-validate="'required|intOrDecimal|buyAmountLimitValid|maxInputValue:9999999999'" data-vv-name="symbol_count" placeholder="请输入交易数量"/>
+        <numberbox v-model="formData.symbol_count" :size="15" :accuracy="4" v-validate="'required|intOrDecimal|buyAmountLimitValid|maxInputValue:9999999999'" data-vv-name="symbol_count" :placeholder="$t('qotc.input_trans_amount')"/><!-- 请输入交易数量 -->
         <span class="grey">{{formData.symbol}}</span>
       </div>
-      <p class="grey f26 mt10">账户余额： {{balance}} {{formData.symbol}}</p>
-      <div class="f30 mt40">付款期限</div>
+      <p class="grey f26 mt10">{{$t('qotc.account_balance')}}<!-- 账户余额 -->： {{balance}} {{formData.symbol}}</p>
+      <div class="f30 mt40">{{$t('otc_ad.otc_ad_expiration_pay')}}<!-- 付款期限 --></div>
       <div class="kuan">
         <select v-model="formData.pay_limit_time" v-validate="'required'" data-vv-name="pay_limit_time">
           <option value="15">15 {{$t('otc_ad.otc_ad_minute')}}<!--分钟--></option>
@@ -51,17 +51,17 @@
           <option value="30">30 {{$t('otc_ad.otc_ad_minute')}}<!--分钟--></option>
         </select>
       </div>
-      <div class="f30 mt40">单笔限额({{formData.ad_type==1?formData.symbol:formData.currency}})</div>
+      <div class="f30 mt40">{{$t('qotc.single_quota')}}<!-- 单笔限额 -->({{formData.ad_type==1?formData.symbol:formData.currency}})</div>
       <div class="ui-flex ui-flex-justify">
         <div class="kuan ui-flex-1"  :class="{error: errors.has('min_amount')}" >
-          <numberbox id="ads_min_amount" v-model="formData.min_amount" :size="tradeLimitAccuracy.size" :accuracy="tradeLimitAccuracy.accuracy" v-validate="'required|intOrDecimal|minAmountValid|minamount|maxInputValue:9999999999,public0.public258'" data-vv-name="min_amount" placeholder="最小单笔限额"/>
+          <numberbox id="ads_min_amount" v-model="formData.min_amount" :size="tradeLimitAccuracy.size" :accuracy="tradeLimitAccuracy.accuracy" v-validate="'required|intOrDecimal|minAmountValid|minamount|maxInputValue:9999999999,public0.public258'" data-vv-name="min_amount" :placeholder="$t('qotc.min_single_quota')"/><!-- 最小单笔限额 -->
         </div>
         <span class="f30 grey mt10 ml20 mr20" style="line-height: 0.9rem;"> ~ </span>
         <div class="kuan ui-flex-1"  :class="{error: errors.has('max_amount')}">
-          <numberbox id="ads_max_amount" v-model="formData.max_amount" :size="tradeLimitAccuracy.size" :accuracy="tradeLimitAccuracy.accuracy" v-validate="'required|intOrDecimal|maxamount|maxInputValue:9999999999,public0.public259'" data-vv-name="max_amount" placeholder="最大单笔限额"/>
+          <numberbox id="ads_max_amount" v-model="formData.max_amount" :size="tradeLimitAccuracy.size" :accuracy="tradeLimitAccuracy.accuracy" v-validate="'required|intOrDecimal|maxamount|maxInputValue:9999999999,public0.public259'" data-vv-name="max_amount" :placeholder="$t('qotc.max_single_quota')"/><!-- 最大单笔限额 -->
         </div>
       </div>
-      <div class="f30 mt40">{{formData.ad_type==1?'付款方式':'收款方式'}}</div>
+      <div class="f30 mt40">{{formData.ad_type==1?$t('gcox_otc.payment_method'):$t('gcox_otc.currency_way')}}<!-- '付款方式':'收款方式' --></div>
       <input type="hidden" v-validate="'required'" data-vv-name="pay_type" v-model="formData.pay_type"/>
       <ul class="mt10 payments">
         <li v-tap="{methods:setPayment, type:1}" :class="{active:isPayChecked(1)}" v-if="payments.card_number">
@@ -77,13 +77,13 @@
           <i :class="[isPayChecked(4) ? 'icon-checkbox-checked' : 'icon-checkbox-unchecked']"></i> {{$t(payTrans[4])}}<!--PayPal-->
         </li>
 
-        <router-link v-if="hasAllPays" :to="{name:'set-payway'}" class="active" tag="li">{{formData.ad_type==1?'添加付款方式':'添加收款方式'}}</router-link>
+        <router-link v-if="hasAllPays" :to="{name:'set-payway'}" class="active" tag="li">{{formData.ad_type==1?$t('qotc.add_payment_method'):$t('qotc.add_collection_method')}}<!-- '添加付款方式':'添加收款方式' --></router-link>
       </ul>
       <div class="f26 mt60 grey agreement" :class="{active:agree}" v-tap="{methods:()=>{agree = !agree}}">
-        <i class="icon_"></i> 我已阅读并同意<a href="#" class="blue">《交易规则》</a>
+        <i class="icon_"></i> {{$t('login_register.agree_Service')}}<!-- 我已阅读并同意 --><a href="#" class="blue">《{{$t('qotc.trading_rules')}}<!-- 交易规则 -->》</a>
       </div>
       <div class="mt40 pb90">
-        <mt-button type="primary" size="large" v-tap="{methods:saveAds}">{{ad_id?'更新':'发布'}}</mt-button>
+        <mt-button type="primary" size="large" v-tap="{methods:saveAds}">{{ad_id?$t('update.update'):$t('qotc.publish')}}<!-- '更新':'发布' --></mt-button>
       </div>
     </div>
   </div>
@@ -139,12 +139,12 @@ export default {
     ...mapGetters(['getUserWallets', 'getUserInfo']),
     msgs () {
       return {
-        lowest_price: {required: this.$t('请输入交易单价')}, // 请输入交易单价
-        price_rate: {required: this.$t('请输入溢价率')}, // 请输入溢价率
+        lowest_price: {required: this.$t('qotc.input_trans_price')}, // 请输入交易单价
+        price_rate: {required: this.$t('qotc.input_premium_rate')}, // 请输入溢价率
         min_amount: {required: this.$t('otc_ad.otc_ad_minimum_amount')}, // 请输入最小限额
         max_amount: {required: this.$t('otc_ad.otc_ad_maximum_amount')}, // 请输入最大限额
-        symbol_count: {required: this.$t('请输入交易数量')}, // 请输入交易数量
-        pay_type: {required: this.hasPay?this.$t(this.formData.ad_type==1?'请选择付款方式':'请选择收款方式'):'请添加支付方式'}, // 请选择付款\收款方式：请添加支付方式
+        symbol_count: {required: this.$t('qotc.input_trans_amount')}, // 请输入交易数量
+        pay_type: {required: this.hasPay?this.$t(this.formData.ad_type==1?'qotc.select_payment_method':'qotc.select_collection_method'):this.$t('qotc.add_payway')}, // 请选择付款\收款方式：请添加支付方式
       }
     },
     payTrans(){
@@ -231,9 +231,9 @@ export default {
       let _isMerchant = res.otcMerchantsPermission==1?true:false
       if(_isMerchant){
         if(store.getters.getUserInfo.mobileAuthEnable!=1){
-          MessageBox.confirm(window.vm.$t('未绑定手机号，是否立即前往？'),window.vm.$t('确认'),{
-            cancelButtonText:window.vm.$t('取消'),
-            confirmButtonText:window.vm.$t('确认'),
+          MessageBox.confirm(window.vm.$t('qotc.to_bind_phone'),window.vm.$t('otc_ad.otc_ad_confirm'),{ //未绑定手机号，是否立即前往？
+            cancelButtonText:window.vm.$t('home.home37'),
+            confirmButtonText:window.vm.$t('otc_ad.otc_ad_confirm'),
           }).then(action => {
             window.vm.$router.push({name:'phoneVerify'})
           })
@@ -241,14 +241,11 @@ export default {
           next()
         }
       } else {
-        Tip({type:'danger', message:'抱歉，非商家用户无法进入此页面！'})
+        Tip({type:'danger', message:window.vm.$t('qotc.no_merchant_right')}) //抱歉，非商家用户无法进入此页面！
       }
     })
   },
   created(){
-    /*if('没有权限发布广告'){
-      this.$router.back()
-    }*/
     this.ad_id = this.$route.params.orderId || null
     this.setValidate()
     this.getOtcTokens()
@@ -308,6 +305,17 @@ export default {
     },
     saveAds () {
       $('input').blur()
+      if(this.getUserInfo.kycState !== 1) {
+          MessageBox.confirm(this.$t('home.home66'), this.$t('user.realName'), {
+            cancelButtonText: this.$t('public0.no'),
+              confirmButtonText: this.$t('qotc.to_realName')
+          }).then(action => {
+              if (action === 'confirm') {
+                  this.$router.push({name: 'kyc'})
+              }
+          })
+          return
+      }
       let _formData = JSON.parse(JSON.stringify(this.formData))
       if(this.formData.price_type==2){
         delete _formData['price_rate']
@@ -325,7 +333,7 @@ export default {
           return
         }
         if(numUtils.BN(this.formData.symbol_count).gt(this.balance)){
-          Tip({type:'danger', message: `${this.formData.symbol}余额不足`})
+          Tip({type:'danger', message: `${this.formData.symbol} ${this.$t('exchange.exchange_Insufficient_balance')}`}) //余额不足
           return
         }
         this.locked = true

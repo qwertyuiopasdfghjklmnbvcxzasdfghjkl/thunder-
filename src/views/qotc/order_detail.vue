@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <top-back>{{$t('订单详情')}}<!--订单详情-->
+    <top-back>{{$t('otc_ad.otc_order_details')}}<!--订单详情-->
       <i class="icon_service" slot="right" v-tap="{methods:goOnlineService}"></i>
     </top-back>
     <div class="page-main">

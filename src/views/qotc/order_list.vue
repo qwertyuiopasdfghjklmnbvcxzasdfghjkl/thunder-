@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <top-back>
-      我的订单<!--我的订单-->
+      {{$t('usercontent.user60')}}<!--我的订单-->
       <i slot="right" class="icon_ filter" v-tap="{methods:showFilter}"></i>
     </top-back>
 
@@ -9,8 +9,8 @@
       <div class="full">
         <mt-loadmore 
         :top-method="loadTop" 
-        :top-pull-text="'下拉刷新'"
-        :top-drop-text="'释放更新'"
+        :top-pull-text="$t('home.top-pull-text')"
+        :top-drop-text="$t('home.drop-text')"
         :top-loading-text="$t('home.loading-text')"
         :bottom-method="loadBottom"
         :bottom-all-loaded="allLoaded"
@@ -34,19 +34,19 @@
               </div>
               <div class="info">
                 <div class="ui-flex ui-flex-justify">
-                  <span class="grey f30">数量</span>
+                  <span class="grey f30">{{$t('business.QUANTITY')}}<!-- 数量 --></span>
                   <span>{{item.symbol_count}} {{item.symbol}}</span>
                 </div>
                 <div class="ui-flex ui-flex-justify">
-                  <span class="grey f30">总价</span>
+                  <span class="grey f30">{{$t('qotc.total_price')}}<!-- 总价 --></span>
                   <span>{{item.total_price}} {{item.currency}}</span>
                 </div>
                 <div class="ui-flex ui-flex-justify">
-                  <span class="grey f30">交易对象</span>
+                  <span class="grey f30">{{$t('qotc.trans_object')}}<!-- 交易对象 --></span>
                   <span>{{isBuyType?item.from_real_name:item.to_real_name}}</span>
                 </div>
                 <div class="ui-flex ui-flex-justify">
-                  <span class="grey f30">支付方式</span>
+                  <span class="grey f30">{{$t('otc_ad.otc_ad_Payment_method')}}<!-- 支付方式 --></span>
                   <span><i class="icon_payment" :class="[payTrans[item.pay_type]]"></i></span>
                 </div>
               </div>
@@ -58,12 +58,12 @@
       </div>
     </div>
     <mt-popup class="filter-popup" v-model="isShow" position="right">
-      <p class="ft-c-default f36">OTC管理</p>
-      <p class="mt60 ft-c-note f26">状态</p>
+      <p class="ft-c-default f36">{{$t('qotc.otc_manage')}}<!-- OTC管理 --></p>
+      <p class="mt60 ft-c-note f26">{{$t('otc_ad.otc_ad_status')}}<!-- 状态 --></p>
       <ul class="mt30 options">
-        <li :class="{active:state==1}" v-tap="{methods:setState, state:1}">未完成</li>
-        <li :class="{active:state==2}" v-tap="{methods:setState, state:2}">已完成</li>
-        <li :class="{active:state==3}" v-tap="{methods:setState, state:3}">已取消</li>
+        <li :class="{active:state==1}" v-tap="{methods:setState, state:1}">{{$t('otc_ad.otc_ad_uncompleted')}}<!-- 未完成 --></li>
+        <li :class="{active:state==2}" v-tap="{methods:setState, state:2}">{{$t('otc_ad.otc_ad_completed')}}<!-- 已完成 --></li>
+        <li :class="{active:state==3}" v-tap="{methods:setState, state:3}">{{$t('public0.public25')}}<!-- 已取消 --></li>
       </ul>
     </mt-popup>
   </div>

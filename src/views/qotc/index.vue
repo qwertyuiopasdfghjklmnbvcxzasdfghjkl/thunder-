@@ -5,10 +5,10 @@
     		<div class="full bgblock">
 	    		<div class="ui-flex ui-flex-justify f32">
 	    			<div class="tabs">
-	    				<span :class="{active:type==1}" v-tap="{methods:setType, type:1}">极速购买</span>
-	    				<span :class="{active:type==2}" v-tap="{methods:setType, type:2}">极速卖出</span>
+	    				<span :class="{active:type==1}" v-tap="{methods:setType, type:1}">{{$t('qotc.quick_buy')}}<!-- 极速购买 --></span>
+	    				<span :class="{active:type==2}" v-tap="{methods:setType, type:2}">{{$t('qotc.quick_sell')}}<!-- 极速卖出 --></span>
 	    			</div>
-	    			<div><router-link :to="{name:'qotcManage'}" tag="span">OTC管理</router-link></div>
+	    			<div><router-link :to="{name:'qotcManage'}" tag="span">{{$t('qotc.otc_manage')}}<!-- OTC管理 --></router-link></div>
 	    		</div>
 	    		<swiper :options="swiperOption" class="tokens mt30">
 	    		    <!-- 幻灯内容 -->
@@ -22,27 +22,27 @@
 	    		<div class="mt50 amount-container">
 	    			<transition enter-active-class="animated short slideInLeft" leave-active-class="animated short slideOutLeft">
 	    			  	<div class="ui-flex ui-flex-justify" v-show="isToken">
-	    			  		<numberbox :size="15" :accuracy="4" v-model="amount" class="ui-flex-1" :placeholder="type==1?'请输入购买数量':'请输入卖出数量'"/>
+	    			  		<numberbox :size="15" :accuracy="4" v-model="amount" class="ui-flex-1" :placeholder="type==1?$t('qotc.input_buy_amount'):$t('qotc.input_sell_amount')"/><!-- '请输入购买数量':'请输入卖出数量' -->
 	    			  		<span class="f30 grey">{{token}}</span>
-	    			  		<span class="f30 blue ml20" v-show="type==2" v-tap="{methods:allIn}">{{'全部'}}</span>
+	    			  		<span class="f30 blue ml20" v-show="type==2" v-tap="{methods:allIn}">{{$t('home.home59')}}<!-- 全部 --></span>
 	    			  	</div>
 	    			</transition>
 	    			<transition enter-active-class="animated short slideInRight" leave-active-class="animated short slideOutRight">
 	    				<div class="ui-flex ui-flex-justify" v-show="!isToken">
 	    					<span class="f52">￥ </span>
-	    			  		<numberbox :size="13" :accuracy="2" v-model="currencyCount" class="ui-flex-1" :placeholder="type==1?'请输入购买金额':'请输入卖出金额'"/>
-	    			  		<span class="f30 blue" v-show="type==2" v-tap="{methods:allIn}">{{'全部'}}</span>
+	    			  		<numberbox :size="13" :accuracy="2" v-model="currencyCount" class="ui-flex-1" :placeholder="type==1?$t('qotc.input_buy_currency'):$t('qotc.input_sell_currency')"/> <!-- '请输入购买金额':'请输入卖出金额' -->
+	    			  		<span class="f30 blue" v-show="type==2" v-tap="{methods:allIn}">{{$t('home.home59')}}<!-- 全部 --></span>
 	    			  	</div>
 	    			</transition>
 	    		</div>
 	    		<div class="mt25 ui-flex ui-flex-justify f26">
-	    			<span class="grey">参考价格 {{refPrice}} {{currency}}</span>
-	    			<span class="blue" v-tap="{methods:()=>{isToken = !isToken}}">{{type==1?(isToken?'按金额购买':'按数量购买'):(isToken?'按金额卖出':'按数量卖出')}} <i class="icon_exchange"></i></span>
+	    			<span class="grey">{{$t('qotc.reference_price')}}<!-- 参考价格 --> {{refPrice}} {{currency}}</span>
+	    			<span class="blue" v-tap="{methods:()=>{isToken = !isToken}}">{{type==1?(isToken?$t('qotc.buy_with_currency'):$t('qotc.buy_with_amount')):(isToken?$t('qotc.sell_with_currency'):$t('qotc.sell_with_amount'))}} <i class="icon_exchange"></i></span><!-- '按金额购买':'按数量购买','按金额卖出':'按数量卖出' -->
 	    		</div>
-	    		<div class="mt10 grey f26" v-if="getApiToken">账户余额 {{balance}} {{token}}</div>
+	    		<div class="mt10 grey f26" v-if="getApiToken">{{$t('qotc.account_balance')}}<!-- 账户余额 --> {{balance}} {{token}}</div>
     		</div>
     		<div class="full bgblock mt20" v-show="getApiToken">
-    			<p class="f26 grey">选择收款方式</p>
+    			<p class="f26 grey">{{$t('qotc.select_collection_method')}}<!-- 选择收款方式 --></p>
     			<ul class="mt25 payments">
     				<li v-tap="{methods:()=>{payType = 1}}" class="ui-flex ui-flex-justify" :class="{active:payType==1}" v-if="payments.card_number">
     					<span><i class="icon_"></i> {{$t(payTrans[1])}}<!--银行卡--></span>
@@ -61,7 +61,7 @@
     					<span>{{payments.paypal_number}}</span>
     				</li>
 
-    				<router-link v-if="hasAllPays" :to="{name:'set-payway'}" class="active mt20" tag="li">{{'添加收款方式'}}</router-link>
+    				<router-link v-if="hasAllPays" :to="{name:'set-payway'}" class="active mt20" tag="li">{{$t('qotc.add_collection_method')}}<!-- 添加收款方式 --></router-link>
     			</ul>
     		</div>
     	</div>
@@ -69,17 +69,17 @@
     	<span class="icon_ online-service" v-tap="{methods:goOnlineService}"></span>
     	<div class="bottom-layer">
     		<template v-if="getApiToken">
-	    		<mt-button type="primary" size="large" :disabled="locked" v-tap="{methods:buyOrSell}">{{type==1?'立即购买':'立即卖出'}}</mt-button>
+	    		<mt-button type="primary" size="large" :disabled="locked" v-tap="{methods:buyOrSell}">{{type==1?$t('qotc.buy_now'):$t('qotc.sell_now')}}<!-- '立即购买':'立即卖出' --></mt-button>
     		</template>
     		<template v-else>
-    			<mt-button type="primary" size="large" v-tap="{methods:$root.routeTo, to:'login', query:{curl:$route.fullPath}}">请登录</mt-button>
+    			<mt-button type="primary" size="large" v-tap="{methods:$root.routeTo, to:'login', query:{curl:$route.fullPath}}">{{$t('qotc.please_login_in')}}<!-- 请登录 --></mt-button>
     		</template>
     	</div>
-    	<Dialog :show="isShow" :title="$t('昵称设置')" :modal="true" :hide="hideDialog" :submit="modifyNickname">
+    	<Dialog :show="isShow" :title="$t('qotc.nickname_set')" :modal="true" :hide="hideDialog" :submit="modifyNickname">
             <nike-name-form ref="nikeNameForm" :nikename="getUserInfo.nickname" @hide="hideDialog"></nike-name-form>
         </Dialog>
-        <Dialog :show="notMatched" :title="$t('提示')" :showBtns="false" :hide="hideMTDialog">
-            <p class="tc ft-c-default f28 lh17">未匹配成功，建议您分多笔小额下单，更容易匹配成功。</p>
+        <Dialog :show="notMatched" :title="$t('public0.tip')" :showBtns="false" :hide="hideMTDialog">
+            <p class="tc ft-c-default f28 lh17">{{$t('qotc.no_matched_tip')}}<!-- 未匹配成功，建议您分多笔小额下单，更容易匹配成功。 --></p>
         </Dialog>
     </div>
 </template>
@@ -197,9 +197,9 @@ export default {
 	},
 	beforeRouteEnter (to, from, next) {
 	  if(store.getters.getApiToken && store.getters.getUserInfo.mobileAuthEnable!=1){
-	    MessageBox.confirm(window.vm.$t('未绑定手机号，是否立即前往？'),window.vm.$t('确认'),{
-	      cancelButtonText:window.vm.$t('取消'),
-	      confirmButtonText:window.vm.$t('确认'),
+	    MessageBox.confirm(window.vm.$t('qotc.to_bind_phone'),window.vm.$t('otc_ad.otc_ad_confirm'),{ //未绑定手机号，是否立即前往？
+	      cancelButtonText:window.vm.$t('home.home37'),
+	      confirmButtonText:window.vm.$t('otc_ad.otc_ad_confirm'),
 	    }).then(action => {
 	      window.vm.$router.push({name:'phoneVerify'})
 	    })
@@ -224,9 +224,9 @@ export default {
 				return
 			}
 			if(this.getUserInfo.kycState !== 1) {
-			    MessageBox.confirm(this.$t('home.home66'), this.$t('实名认证'), {
+			    MessageBox.confirm(this.$t('home.home66'), this.$t('user.realName'), {
 			    	cancelButtonText: this.$t('public0.no'),
-			        confirmButtonText: this.$t('前往认证')
+			        confirmButtonText: this.$t('qotc.to_realName')
 			    }).then(action => {
 			        if (action === 'confirm') {
 			            this.$router.push({name: 'kyc'})
@@ -235,36 +235,36 @@ export default {
 			    return
 			}
 			if(!this.hasPay){ //买卖需添加收款支付方式
-				Tip({type:'error', message:'请添加支付方式'})
+				Tip({type:'error', message:this.$t('qotc.add_payway')})//请添加支付方式
 				return
 			}
 			if(!this.payType){ //如果是卖需选择收款方式
-				Tip({type:'error', message:this.type==1?'请选择付款方式':'请选择收款方式'})
+				Tip({type:'error', message:this.type==1?this.$t('qotc.select_payment_method'):this.$t('qotc.select_collection_method')}) //'请选择付款方式':'请选择收款方式'
 				return
 			}
 			if(this.isToken){
 				if(Number(this.amount)==0){ //币种模式则币种不能为空
-					Tip({type:'error', message:this.type==1?'请输入购买数量':'请输入卖出数量'})
+					Tip({type:'error', message:this.type==1?this.$t('qotc.input_buy_amount'):this.$t('qotc.input_sell_amount')}) //'请输入购买数量':'请输入卖出数量'
 					return
 				}
 				if(Number(this.amount)<this.coinMinLimit){ //币种模式最低买卖不能低于币种设置的最小值
-					Tip({type:'error', message:this.type==1?'购买数量不能低于{0}{1}'.format(this.coinMinLimit, this.token):'卖出数量不能低于{0}{1}'.format(this.coinMinLimit, this.token)})
+					Tip({type:'error', message:this.type==1?this.$t('qotc.buy_amount_limit_tip').format(this.coinMinLimit, this.token):this.$t('qotc.sell_amount_limit_tip').format(this.coinMinLimit, this.token)}) //'购买数量不能低于{0}{1}':'卖出数量不能低于{0}{1}'
 					return
 				}
 			}
 			if(!this.isToken){
 				if(Number(this.currencyCount)==0){ //金额模式则总金额不能为空
-					Tip({type:'error', message:this.type==1?'请输入购买金额':'请输入卖出金额'})
+					Tip({type:'error', message:this.type==1?this.$t('qotc.input_buy_currency'):this.$t('qotc.input_sell_currency')}) //'请输入购买金额':'请输入卖出金额'
 					return
 				}
 				if(Number(this.currencyCount)<this.currencyMinLimit){ //金额模式最低买卖不能低于法币设置的最小值
-					Tip({type:'error', message:this.type==1?'购买金额不能低于{0}{1}'.format(this.currencyMinLimit, this.currency):'卖出金额不能低于{0}{1}'.format(this.currencyMinLimit, this.currency)})
+					Tip({type:'error', message:this.type==1?this.$t('qotc.buy_currency_limit_tip').format(this.currencyMinLimit, this.currency):this.$t('qotc.sell_currency_limit_tip').format(this.currencyMinLimit, this.currency)}) //购买金额不能低于{0}{1}:卖出金额不能低于{0}{1}
 					return
 				}
 				
 			}
 			if(this.type==2 && numUtils.BN(this.balance).lt(this.isToken?this.amount:numUtils.div(this.currencyCount, this.refPrice))){
-				Tip({type:'error', message:this.token+'账户余额不足'})
+				Tip({type:'error', message:this.$t('qotc.insufficient_account_balance').format(this.token)}) //{0}账户余额不足
 				return
 			}
 			this.quickMatch()
