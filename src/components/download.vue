@@ -7,9 +7,9 @@
                 <a href="javascript:;" class="ios" @click="showTip=true" v-if="isWeiXi || isQQ">
                     <img src="../assets/img/appleApp.png"/>
                 </a>
-                <a :href="'itms-services://?action=download-manifest&url='+url.appleUrl" target="_blank" class="ios" v-else>
+                <!-- <a :href="'itms-services://?action=download-manifest&url='+url.appleUrl" target="_blank" class="ios" v-else>
                     <img src="../assets/img/appleApp.png"/>
-                </a>
+                </a> -->
                 <a :href="url.appleUrl" target="_blank" class="ios" v-else>
                     <img src="../assets/img/appleApp.png"/>
                 </a>
