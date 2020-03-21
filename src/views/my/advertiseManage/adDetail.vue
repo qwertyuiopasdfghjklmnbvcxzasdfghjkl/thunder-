@@ -126,7 +126,7 @@
         }
     }
     .buy {color: #0EB574;}
-    .sell {color: #E01C37;}
+    .sell {color: #D74E5A;}
 
     .icon_payment {
         width: .4rem;

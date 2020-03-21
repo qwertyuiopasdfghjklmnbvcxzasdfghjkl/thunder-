@@ -1,14 +1,18 @@
 <template>
     <div class="latest-deal">
         <div class="header">
-            <span class="ui-flex-3">{{$t('exchange.exchange_date')}}<!--时间--></span>
+            <span class="ui-flex-4">{{$t('exchange.exchange_date')}}<!--时间--></span>
+            <span class="ui-flex-5">方向</span>
             <span class="ui-flex-4">{{$t('exchange.exchange_price')}}<!--价格-->({{baseSymbol}})</span>
             <span class="ui-flex-4 tr">{{$t('exchange.exchange_amount')}}<!--数量-->({{currentSymbol}})</span>
         </div>
         <ul class="deal-list">
             <li v-for="(item, index) in datas" :key="index" :class="{buy:item.direction==1}"
                 @click="clickChangeValue(item)">
-                <span class="ui-flex-3 ft-c-lightGray">{{formatDate(item.createdAt)}}</span>
+                <span class="ui-flex-4 ft-c-lightGray">{{formatDate(item.createdAt)}}</span>
+                <!-- 方向 -->
+                <span class="ui-flex-5 buy" v-if="item.direction === '1'">{{$t('exchange.exchange_buy')}}</span>
+                <span class="ui-flex-5 sell" v-if="item.direction === '2'">{{$t('exchange.exchange_sell')}}</span>
                 <span class="ui-flex-4">{{toFixed(item.price)|removeEndZero}}</span>
                 <span class="ui-flex-4">{{toFixed(item.amount,accuracy.quantityAccu)|removeEndZero}}</span>
             </li>
@@ -128,15 +132,21 @@
         white-space: nowrap;
     }
 
-    .latest-deal .deal-list li span:nth-of-type(2) {
-        color: #01C89F;
+    .latest-deal .deal-list li span:nth-of-type(3) {
+        color: #6C6F8B;
     }
 
-    .latest-deal .deal-list li span:nth-of-type(3) {
+    .latest-deal .deal-list li span:nth-of-type(4) {
         text-align: right;
+        color: #6C6F8B;
     }
 
     .latest-deal .deal-list li.buy span:nth-of-type(2) {
-        color: #F07180;
+        // color: #F07180;
+    }
+
+    .latest-deal {
+        .buy {color: #0EB574;}
+        .sell {color: #D74E5A;}
     }
 </style>

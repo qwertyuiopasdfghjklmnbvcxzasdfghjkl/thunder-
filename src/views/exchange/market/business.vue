@@ -531,7 +531,7 @@
 <style lang="less" scoped>
     @c_white: #ffffff;
     @c_buy: #0EB574;
-    @c_sell: #E01C37;
+    @c_sell: #D74E5A;
     @c_light: #666;
     @c_board: #95b7bf;
     .c_light {

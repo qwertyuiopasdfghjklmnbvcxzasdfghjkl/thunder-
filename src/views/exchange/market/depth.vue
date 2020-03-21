@@ -318,7 +318,7 @@
 <style lang="less" scoped>
     @c_gray: #F4F5FA;
     @c_buy: #0EB574;
-    @c_sell: #E01C37;
+    @c_sell: #D74E5A;
     @c_light: #4B5875;
     @c_board: #4B5875;
     .order-book {
