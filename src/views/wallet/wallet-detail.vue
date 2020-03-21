@@ -35,7 +35,7 @@
                 </ul>
             </div>
             <div class="btn">
-                <label class="withdrawal" :class="{disabled: Number(symbolInfo.withdrawFlag) !== 1}"
+                <label class="withdrawal"
                        v-tap="{methods: withdrawal}">{{$t('public0.topup')}}</label>
                 <label class="topup" :class="{disabled: Number(symbolInfo.rechargeFlag) !== 1}"
                        v-tap="{methods: topup}">{{$t('home.topup')}}</label>
@@ -122,9 +122,9 @@
                 this.$router.push({name: 'exchange'})
             },
             withdrawal() {
-                if (Number(this.symbolInfo.withdrawFlag) !== 1) {
+                /*if (Number(this.symbolInfo.withdrawFlag) !== 1) {
                     return
-                }
+                }*/
                 if (this.getUserInfo.kycState !== 1) {
                     MessageBox({
                         title: this.$t('public0.public242'),
