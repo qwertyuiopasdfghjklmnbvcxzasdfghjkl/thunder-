@@ -129,7 +129,7 @@
             }
 
             .c-orange {
-                color: #E01C37;
+                color: #D74E5A;
             }
         }
     }

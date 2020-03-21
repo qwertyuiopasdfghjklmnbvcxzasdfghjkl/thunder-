@@ -30,7 +30,7 @@ export default {
 	computed:{
 		...mapGetters(['getLang','getVersion','getSysParams']),
 		info(){
-		    let _obj = {} 
+		    let _obj = {}
 		    for(let item in this.getSysParams){
 		        _obj[item] = this.getSysParams[item].value
 		    }
@@ -74,10 +74,10 @@ export default {
 		        } else {
 		          // 询问用户是否更新 检测到新版本，是否更新?
 		            let lang = this.getLang
-		            MessageBox.confirm(lang==='zh-CN'?'检测到新版本，是否更新？':'New version detected. Is it updated?',lang==='zh-CN'?'提示':'Tip',{
+		            /*MessageBox.confirm(lang==='zh-CN'?'检测到新版本，是否更新？':'New version detected. Is it updated?',lang==='zh-CN'?'提示':'Tip',{
 		              confirmButtonText: lang==='zh-CN'?'确定':'Yes',
 		              cancelButtonText: lang==='zh-CN'?'取消':'No'
-		            }).then(action => {
+		            }).then(action => {*/
 		              // 更新中
 		              chcp.installUpdate((error) => {
 		                if (error) {
@@ -91,7 +91,7 @@ export default {
 		                  console.log('Update installed!');
 		                }
 		              });
-		            }, () =>{})
+		            // }, () =>{})
 		          // 对比版本号
 		          console.log('Current content version: ' + data.currentVersion);
 		          console.log('Ready to be installed:' + data.readyToInstallVersion);

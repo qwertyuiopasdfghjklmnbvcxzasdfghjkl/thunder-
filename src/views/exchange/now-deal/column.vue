@@ -110,7 +110,7 @@
 
 <style scoped lang="less">
     @c_f: #4B5875;
-    @c_buy: #E01C37;
+    @c_buy: #D74E5A;
     @c_sell: #0EB574;
     .cont {
         .top {

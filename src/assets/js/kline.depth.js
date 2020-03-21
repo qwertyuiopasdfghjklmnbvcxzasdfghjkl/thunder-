@@ -14,7 +14,7 @@ export default function (opts) {
   opts = opts || {}
   opts.container = opts.container || document.body
   let riseColor = opts.riseColor || '#01C89F' // 红跌
-  let fallColor = opts.fallColor ||'#F43148' // 绿涨
+  let fallColor = opts.fallColor ||'#D74E5A' // 绿涨
   let fontColor = opts.fontColor || '#6C6F8B' // 字体颜色
   let gridLineColor = opts.gridLineColor  || '#1c2a40' // 表格线颜色
   let middleLineColor = opts.middleLineColor || '#1c2a40' // 中间线颜色
