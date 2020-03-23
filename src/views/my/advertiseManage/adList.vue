@@ -175,7 +175,7 @@
     .add_ad{
         display: inline-flex;
         align-items: center;
-        height: 0.5rem;
+        height: 0.9rem;
         img{
             width: 0.34rem;
         }

@@ -2,9 +2,9 @@
   <div class="nikename-form">
     <input name="nickname" type="text" maxlength="15" v-model="nicknameValue" v-validate="'required'" :placeholder="$t('public0.public73')" />
     <ul  class="mt20 f24 ft-c-note lh17">
-      <li>· 只允许设置汉字、字母和数字</li>
-      <li>· 最大长度为15个字符</li>
-      <li>· 昵称设置后将不可更改，请谨慎操作</li>
+      <li>· {{$t('account.nickname_rule_1')}}</li>
+      <li>· {{$t('account.nickname_rule_2')}}</li>
+      <li>· {{$t('account.nickname_rule_3')}}</li>
     </ul>
   </div>
 </template>

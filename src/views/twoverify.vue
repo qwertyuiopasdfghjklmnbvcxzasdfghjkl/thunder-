@@ -235,15 +235,15 @@ export default {
   margin-top: .2rem;
   /*background-color: #fff;*/
   border-radius: 4px;
-  /deep/ .mint-navbar {border-bottom: 1px solid #eee;}
+  /deep/ .mint-navbar {background-color: #151C2C;}
   /deep/ .mint-tab-item {
       height: 0.9rem;
       color: #999;
       padding: 0;
       &.is-selected {
-          color: #3B48C8; border-bottom: none; margin-bottom: 0;
+          color: #0C6AC9; border-bottom: none; margin-bottom: 0;
           .mint-tab-item-label span{
-              border-bottom: 2px solid #3B48C8;
+              border-bottom: 2px solid #0C6AC9;
               margin-bottom: -2px;
           }
       }

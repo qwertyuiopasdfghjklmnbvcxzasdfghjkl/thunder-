@@ -332,7 +332,7 @@ export default {
           }
           return
         }
-        if(numUtils.BN(this.formData.symbol_count).gt(this.balance)){
+        if(this.formData.ad_type==2 && numUtils.BN(this.formData.symbol_count).gt(this.balance)){
           Tip({type:'danger', message: `${this.formData.symbol} ${this.$t('exchange.exchange_Insufficient_balance')}`}) //余额不足
           return
         }
@@ -485,7 +485,7 @@ select, input {
   width: 100%;
   height: 100%;
   font-size: inherit;
-  background-color: transparent;
+  background-color: #101724;
   color: inherit;
   option {
     color: @blue;
