@@ -23,10 +23,12 @@ const config = {
   version:'1.0.0',
   updateInfo:{  //更新日志
   	'zh-CN':`
-    <p class="tl">1. 优化接口数据请求策略</p>
+    <p class="tl">1. 优化部分页面界面显示</p>
+    <p class="tl">2. 去除OTC发布购买广告的余额检测</p>
     `,
   	'en':`
-    <p class="tl">1. Optimize interface data request strategy</p>
+    <p class="tl">1. Optimize partial page interface display</p>
+    <p class="tl">2. Remove the balance detection of OTC advertising</p>
     `
   }
 }

@@ -156,11 +156,19 @@ export default {
 			}
 			return _balance
 		},
-		benchSymbolParams () {
+		priceSymbolParams () {
 		  return {
 		    ad_type: this.type,
 		    symbol: this.token,
 		    currency: this.currency
+		  }
+		},
+		benchSymbolParams () {
+		  return {
+		    ad_type: this.type,
+		    symbol: this.token,
+		    currency: this.currency,
+		    bench_marking_id: otcConfig.benchMarkingId,
 		  }
 		},
 		coinMinLimit(){
@@ -276,7 +284,8 @@ export default {
 	          symbol: this.token,
 	          direction: this.type,
 	          payType: this.payType,
-	          bench_marking_id: otcConfig.benchMarkingId
+	          bench_marking_id: otcConfig.benchMarkingId,
+	          isCurrentPriceMatch:1
 	        }
 	        _data.amount = this.isToken ? this.amount : utils.toFixed(numUtils.div(this.currencyCount, this.refPrice), 8)
 	        otcApi.quickMatchAndCreate(_data, orderId=>{
@@ -349,9 +358,25 @@ export default {
             })
         },
         getReferencePrice () { // 获取币种买卖参考价格
-          otcApi.getReferencePrice(this.benchSymbolParams, (res) => {
-            this.refPrice = numUtils.BN(res || 0).toFixed(2)
-          })
+        	let p1 = new Promise((resolve, reject)=>{
+        		otcApi.getReferencePrice(this.priceSymbolParams, (res) => {
+        		  resolve(res)
+        		}, msg=>{
+        			resolve(0)
+        		})
+        	})
+        	let p2 = new Promise((resolve, reject)=>{
+        		otcApi.getBenchSymbolInfo(this.benchSymbolParams, (res) => {
+        		  let _p = numUtils.BN(res.cur_price || 0).toFixed(2)
+        		  resolve(_p)
+        		}, msg=>{
+        			resolve(0)
+        		})
+        	})
+        	Promise.all([p1,p2]).then(res=>{
+        		this.refPrice = numUtils.mul(res[0], res[1]).toFixed(2)
+        	})
+          
         },
         getAdPermission () { // 获取是否有商家权限
           if(!this.getApiToken){
