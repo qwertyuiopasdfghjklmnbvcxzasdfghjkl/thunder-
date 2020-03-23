@@ -297,7 +297,7 @@
             justify-content: center;
             font-size: 0.3rem;
             color: #fff;
-            background: #C11623;
+            background: #D74E5A;
             margin: 0 0.1rem;
 
             &.withdrawal {
@@ -312,7 +312,7 @@
     }
 
     .c-green {
-        color: #C11623;
+        color: #D74E5A;
     }
 
     .c-orange {

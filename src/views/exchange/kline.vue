@@ -463,7 +463,7 @@
 
 <style lang="less" scoped>
     @c-up:#0EB574;
-    @c-down:#C11623;
+    @c-down:#D74E5A;
     .page-main {
         bottom:1.3rem;
     }
@@ -528,7 +528,7 @@
 
 
     .price {
-        color: #F43148;
+        color: #D74E5A;
     }
 
     .price.up {

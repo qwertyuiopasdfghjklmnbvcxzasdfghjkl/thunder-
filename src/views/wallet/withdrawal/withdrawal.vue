@@ -503,7 +503,7 @@
             opacity: 0.5;
 
             &.active {
-                background: #E01C37;
+                background: #D74E5A;
                 opacity: 1;
             }
         }

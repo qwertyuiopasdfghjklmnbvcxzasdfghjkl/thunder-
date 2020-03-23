@@ -66,7 +66,7 @@ TVjsApi.prototype.getPeriod = function(resolution) {
 }
 TVjsApi.prototype.init = function() {
     //设置默认symbol，interval的默认值
-    var upColor = '#01C89F', downColor = '#F43148'
+    var upColor = '#01C89F', downColor = '#D74E5A'
     var symbol = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'ETHBTC'
     var interval = arguments.length > 0 && arguments[1] !== undefined ? arguments[1] : '720'
     var precision = arguments.length > 0 && arguments[2] !== undefined ? arguments[2] : 5

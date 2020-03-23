@@ -454,7 +454,7 @@
                 color: #ffffff;
             }
             &.active_sell {
-                background: #E01C37;
+                background: #D74E5A;
                 color: #ffffff;
             }
         }
@@ -539,7 +539,7 @@
     }
 
     .price.down {
-        color: #E01C37;
+        color: #D74E5A;
     }
 
     .exchange-container {

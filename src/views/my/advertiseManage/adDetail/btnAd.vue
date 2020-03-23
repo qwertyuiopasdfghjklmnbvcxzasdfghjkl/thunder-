@@ -62,7 +62,7 @@
     align-items: center;
     justify-content: space-between;
     .edit{
-        background: #E01C37;
+        background: #D74E5A;
         flex: 1;
     }
     .back{

@@ -191,7 +191,7 @@
 
                 &.c-green {
                     color: #fff;
-                    background-color: #F43148;
+                    background-color: #D74E5A;
                 }
 
                 &.c-orange {
@@ -201,7 +201,7 @@
             }
 
             .c-green {
-                color:#F43148;
+                color: #D74E5A;
             }
 
             .c-orange {

@@ -7,8 +7,8 @@
 
     <div class="page-main">
       <div class="full">
-        <mt-loadmore 
-        :top-method="loadTop" 
+        <mt-loadmore
+        :top-method="loadTop"
         :top-pull-text="$t('home.top-pull-text')"
         :top-drop-text="$t('home.drop-text')"
         :top-loading-text="$t('home.loading-text')"
@@ -263,7 +263,7 @@ export default {
 
 <style lang="less" scoped>
 @grey:#4E5B73;
-@redColor:#E01C37;
+@redColor:#D74E5A;
 @greenColor:#0EB574;
 
 .grey {color: @grey;}
@@ -279,7 +279,7 @@ export default {
     padding: 0 0.3rem;
     border-bottom: 1px solid #273246;
     .arrow {
-      width: 0.24rem; 
+      width: 0.24rem;
       height: 0.26rem;
       object-fit: contain;
       display: inline-block;

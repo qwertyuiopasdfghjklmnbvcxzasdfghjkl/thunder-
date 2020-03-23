@@ -28,6 +28,7 @@
                     <span>{{toFixed(data.finishedAmount)|number}} / {{toFixed(data.totalAmount)|number}}</span>
                 </p>
                 <p>{{$t('exchange.exchange_price')}}<!--价格--> <span>{{data.price==-1?$t('exchange.exchange_market'):toFixed(data.price)|number}}</span></p>
+                <p>{{$t('account.user_total_turnover')}}<!--成交总额--> <span>{{toFixed(data.finishedAmount*data.averagePrice)|number}}</span></p>
             </div>
             <div class="btn">
                 <span v-if="form">{{getStatue(data)}}</span>
@@ -110,7 +111,7 @@
 
 <style scoped lang="less">
     @c_f: #4B5875;
-    @c_buy: #E01C37;
+    @c_buy: #D74E5A;
     @c_sell: #0EB574;
     .cont {
         .top {

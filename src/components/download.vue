@@ -1,7 +1,7 @@
 <template>
     <div>
     <transition enter-active-class="animated short slideInDown" leave-active-class="animated short slideOutUp">
-        <div class="cont" v-if="show===1 && phone!=='ios'">
+        <div class="cont" v-if="show===1">
             <span class="leftTit"><img src="../assets/logo.png"/>{{$t('public0.public212')}}</span>
             <p v-if="phone === 'ios'">
                 <a href="javascript:;" class="ios" @click="showTip=true" v-if="isWeiXi || isQQ">
