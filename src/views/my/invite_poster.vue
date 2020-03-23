@@ -1,14 +1,18 @@
 <template>
     <div class="page">
-        <top-back style="background: #ff9245">{{$t('referral.invitation_poster')}} <!-- Invitation Code --> </top-back>
-        <div class="page-main poster">
+        <top-back style="background: transparent"><!-- {{$t('referral.invitation_poster')}} Invitation Code --> </top-back>
+        <div class="poster">
             <div class="bottom">
-                <p class="f30"><strong>{{$t('market.invite_p')}}</strong></p>
-                <p class="f24 mt15">{{$t('market.invite_span')}}</p>
+
                 <div class="qrcode">
                     <div ref="qrcode"></div>
                     <i class="logo"></i>
                 </div>
+                <div>
+                    <p class="f30"><strong>{{$t('market.invite_p')}}</strong></p>
+                    <p class="f24 mb15">{{$t('market.invite_span')}}</p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -30,49 +34,50 @@
 
 <style lang="less" scoped="">
     .poster {
-        background: url('../../assets/img/invite_bg.jpg') #fff no-repeat center top / cover;
+        background: url('../../assets/img/invite_bg.jpg') no-repeat center top / cover;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
     }
 
     .bottom {
         position: absolute;
-        bottom: 0;
+        bottom: 0.6rem;
         left: 0;
         right: 0;
         height: 1.8rem;
-        background-color: #fff;
         padding-left: 0.3rem;
         padding-right: 0.3rem;
-        padding-top: 0.25rem;
-        color: #000;
+        color: #ffffff;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
         p {
             max-width: 5.1rem;
-            line-height: 1.5;
+            line-height: 0.4rem;
         }
 
         .qrcode {
-            position: absolute;
-            right: 0.3rem;
-            top: 0.25rem;
+            background: #ffffff;
+            border:0.05rem solid #ffffff;
             width: 1.3rem;
             height: 1.3rem;
-
+            margin-right: 0.2rem;
             /deep/ canvas {
                 max-width: 100%;
             }
 
-            .logo {
-                position: absolute;
-                width: 0.3rem;
-                height: 0.3rem;
-                left: 50%;
-                top: 50%;
+            /* .logo {
+
                 background: url('../../assets/img/logo.png') #fff no-repeat center/contain;
                 border: 0.06rem solid #fff;
                 border-radius: 4px;
                 margin-top: -0.15rem;
                 margin-left: -0.15rem;
                 z-index: 1;
-            }
+            }*/
         }
     }
 </style>
