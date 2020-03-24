@@ -601,8 +601,8 @@ utils.humanNum = humanNum
 
 // 保留小数位，非四舍五入
 const toFixed = function(data, num){
-  data = data + ''
-  data = data.substring(0, data.lastIndexOf(".") + num+1);
+  data = Number(data).toFixed(10)
+  data = data.substring(0, data.lastIndexOf(".") + num + 1);
   return data
 }
 utils.toFixed = toFixed
