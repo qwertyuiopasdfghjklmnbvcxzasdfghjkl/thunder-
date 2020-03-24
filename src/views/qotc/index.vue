@@ -37,7 +37,7 @@
 	    		</div>
 	    		<div class="mt25 ui-flex ui-flex-justify f26">
 	    			<span class="grey">{{$t('qotc.reference_price')}}<!-- 参考价格 --> {{refPrice}} {{currency}}</span>
-	    			<span class="blue" v-tap="{methods:()=>{isToken = !isToken}}">{{type==1?(isToken?$t('qotc.buy_with_currency'):$t('qotc.buy_with_amount')):(isToken?$t('qotc.sell_with_currency'):$t('qotc.sell_with_amount'))}} <i class="icon_exchange"></i></span><!-- '按金额购买':'按数量购买','按金额卖出':'按数量卖出' -->
+	    			<span class="blue" v-tap="{methods:()=>{isToken = !isToken}}" v-if="false">{{type==1?(isToken?$t('qotc.buy_with_currency'):$t('qotc.buy_with_amount')):(isToken?$t('qotc.sell_with_currency'):$t('qotc.sell_with_amount'))}} <i class="icon_exchange"></i></span><!-- '按金额购买':'按数量购买','按金额卖出':'按数量卖出' -->
 	    		</div>
 	    		<div class="mt10 grey f26" v-if="getApiToken">{{$t('qotc.account_balance')}}<!-- 账户余额 --> {{balance}} {{token}}</div>
     		</div>
