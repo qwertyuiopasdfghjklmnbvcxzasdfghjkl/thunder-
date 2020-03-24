@@ -158,7 +158,7 @@ export default {
 		},
 		priceSymbolParams () {
 		  return {
-		    ad_type: this.type,
+		    ad_type: this.type==1?2:1,
 		    symbol: this.token,
 		    currency: this.currency
 		  }
