@@ -24,11 +24,11 @@ const config = {
   updateInfo:{  //更新日志
   	'zh-CN':`
     <p class="tl">1. 优化部分页面界面显示</p>
-    <p class="tl">2. 优化广告发布及快速买卖</p>
+    <p class="tl">2. 优化内部转账功能</p>
     `,
   	'en':`
     <p class="tl">1. Optimize partial page interface display</p>
-    <p class="tl">2. Optimize advertising and fast sales</p>
+    <p class="tl">2. Optimize internal transfer function</p>
     `
   }
 }

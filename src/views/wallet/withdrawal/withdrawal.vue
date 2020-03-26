@@ -130,7 +130,7 @@
                 },
                 accountType: {
                     name: this.$t('otc_exchange.otc_exchange_phone'),
-                    type: 1
+                    type: 3
                 },
                 accountTypeList: [
                     // {name: this.$t('otc_exchange.otc_exchange_phone'), type: 1},
