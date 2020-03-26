@@ -129,7 +129,7 @@
                     memo: null
                 },
                 accountType: {
-                    name: this.$t('otc_exchange.otc_exchange_phone'),
+                    name: 'UID',
                     type: 3
                 },
                 accountTypeList: [
