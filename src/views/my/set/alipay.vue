@@ -109,7 +109,7 @@ export default {
       }
 
       let isTrue = false
-      if (config.imageType.test(event.target.value)) {
+      if (config.imageType.test(event.target.value.toLowerCase())) {
         isTrue = utils.limitUploadImage(event.target, (msg) => {
           Tip({type: 'danger', message: this.$t(msg)}) // 图片不能超过1M
         }, 1)

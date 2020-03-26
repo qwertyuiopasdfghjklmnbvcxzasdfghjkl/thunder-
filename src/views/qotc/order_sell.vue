@@ -36,10 +36,13 @@
       </div>
       <div class="user_info grey f32">
         <div class="ui-flex ui-flex-justify">
+          <span>{{$t('public0.public65')}}<!-- 收款人 --></span>
+          <span class="white">{{currentPayInfo.name}}</span>
+        </div>
+        <div class="ui-flex ui-flex-justify">
           <span>{{$t('gcox_otc.currency_way')}}<!-- 收款方式 --></span>
           <span class="white">
             <i class="icon_payment" :class="[payTrans[orderInfo.pay_type]]"></i>
-            {{currentPayInfo.name}}
             &nbsp;&nbsp;{{currentPayInfo.number}}
           </span>
         </div>

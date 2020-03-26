@@ -11,7 +11,7 @@
                 <ul class="payment-detail">
                     <li v-show="withdrawalType === 1">
                         <label>
-                            {{$t('account.user_Pick_up_address')}} Number(this.symbolInfo.stationFlag) !== 1
+                            {{$t('account.user_Pick_up_address')}}
                         </label>
                         <p class="address mt10">
                             <input type="text" v-validate="'required'" v-model="form.toAddress"
@@ -129,12 +129,12 @@
                     memo: null
                 },
                 accountType: {
-                    name: this.$t('otc_exchange.otc_exchange_phone'),
-                    type: 1
+                    name: 'UID',
+                    type: 3
                 },
                 accountTypeList: [
-                    {name: this.$t('otc_exchange.otc_exchange_phone'), type: 1},
-                    {name: this.$t('usercontent.user02'), type: 2},
+                    // {name: this.$t('otc_exchange.otc_exchange_phone'), type: 1},
+                    // {name: this.$t('usercontent.user02'), type: 2},
                     {name: 'UID', type: 3}
                 ],
                 showType: false,

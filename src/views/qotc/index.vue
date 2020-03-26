@@ -37,7 +37,7 @@
 	    		</div>
 	    		<div class="mt25 ui-flex ui-flex-justify f26">
 	    			<span class="grey">{{$t('qotc.reference_price')}}<!-- 参考价格 --> {{refPrice}} {{currency}}</span>
-	    			<span class="blue" v-tap="{methods:()=>{isToken = !isToken}}">{{type==1?(isToken?$t('qotc.buy_with_currency'):$t('qotc.buy_with_amount')):(isToken?$t('qotc.sell_with_currency'):$t('qotc.sell_with_amount'))}} <i class="icon_exchange"></i></span><!-- '按金额购买':'按数量购买','按金额卖出':'按数量卖出' -->
+	    			<span class="blue" v-tap="{methods:()=>{isToken = !isToken}}" >{{type==1?(isToken?$t('qotc.buy_with_currency'):$t('qotc.buy_with_amount')):(isToken?$t('qotc.sell_with_currency'):$t('qotc.sell_with_amount'))}} <i class="icon_exchange"></i></span><!-- '按金额购买':'按数量购买','按金额卖出':'按数量卖出' -->
 	    		</div>
 	    		<div class="mt10 grey f26" v-if="getApiToken">{{$t('qotc.account_balance')}}<!-- 账户余额 --> {{balance}} {{token}}</div>
     		</div>
@@ -156,11 +156,19 @@ export default {
 			}
 			return _balance
 		},
+		priceSymbolParams () {
+		  return {
+		    ad_type: this.type==1?2:1,
+		    symbol: this.token,
+		    currency: this.currency
+		  }
+		},
 		benchSymbolParams () {
 		  return {
 		    ad_type: this.type,
 		    symbol: this.token,
-		    currency: this.currency
+		    currency: this.currency,
+		    bench_marking_id: otcConfig.benchMarkingId,
 		  }
 		},
 		coinMinLimit(){
@@ -276,9 +284,12 @@ export default {
 	          symbol: this.token,
 	          direction: this.type,
 	          payType: this.payType,
-	          bench_marking_id: otcConfig.benchMarkingId
+	          buyType: this.isToken?0:1,
+	          amount: this.amount,
+	          currencyCount: this.currencyCount,
+	          bench_marking_id: otcConfig.benchMarkingId,
+	          isCurrentPriceMatch: 1
 	        }
-	        _data.amount = this.isToken ? this.amount : utils.toFixed(numUtils.div(this.currencyCount, this.refPrice), 8)
 	        otcApi.quickMatchAndCreate(_data, orderId=>{
 	        	this.locked = false
 	        	if(this.type==2){ //卖币成功刷新用户余额
@@ -349,9 +360,25 @@ export default {
             })
         },
         getReferencePrice () { // 获取币种买卖参考价格
-          otcApi.getReferencePrice(this.benchSymbolParams, (res) => {
-            this.refPrice = numUtils.BN(res || 0).toFixed(2)
-          })
+        	let p1 = new Promise((resolve, reject)=>{
+        		otcApi.getReferencePrice(this.priceSymbolParams, (res) => {
+        		  resolve(res)
+        		}, msg=>{
+        			resolve(0)
+        		})
+        	})
+        	let p2 = new Promise((resolve, reject)=>{
+        		otcApi.getBenchSymbolInfo(this.benchSymbolParams, (res) => {
+        		  let _p = numUtils.BN(res.cur_price || 0).toFixed(2)
+        		  resolve(_p)
+        		}, msg=>{
+        			resolve(0)
+        		})
+        	})
+        	Promise.all([p1,p2]).then(res=>{
+        		this.refPrice = numUtils.mul(res[0], res[1]).toFixed(2)
+        	})
+          
         },
         getAdPermission () { // 获取是否有商家权限
           if(!this.getApiToken){
