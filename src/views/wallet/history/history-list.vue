@@ -66,7 +66,7 @@
                             </li>
                         </ul>
                         <noMoreData v-if="noMoreData"/>
-                        <no-data v-if="noData"/>
+                        <no-data v-if="!list.length"/>
                     </mt-loadmore>
                 </div>
             </mt-tab-container-item>
@@ -96,7 +96,7 @@
                             </li>
                         </ul>
                         <noMoreData v-if="noMoreDataWithdrawal"/>
-                        <no-data v-if="noDataWithdrawal"/>
+                        <no-data v-if="!listWithdrawal.length"/>
                     </mt-loadmore>
                 </div>
             </mt-tab-container-item>
@@ -223,15 +223,17 @@
                             this.list.push(d)
                         })
                         this.$refs.loadmore.onBottomLoaded();
-                        if (this.list.length >= res.total) { // 没有更多数据
-                            this.list.length ? this.noMoreData = true : this.noMoreData = false
-                            this.allLoaded = true
-                        }
                     } else if (this.sport === 'top') { // 下拉刷新
+                        this.noMoreData = false
+                        this.allLoaded = false
                         this.list = res.data
                         this.$refs.loadmore.onTopLoaded();
                     } else {
                         this.list = res.data
+                    }
+                    if (this.list.length >= res.total) { // 没有更多数据
+                        this.noMoreData = Boolean(res.total)
+                        this.allLoaded = true
                     }
                     this.noData = !this.list.length
                 }, msg => {
@@ -261,15 +263,17 @@
                             this.listWithdrawal.push(d)
                         })
                         this.$refs.loadmoreWithdrawal.onBottomLoaded();
-                        if (this.listWithdrawal.length >= res.total) { // 没有更多数据
-                            this.noMoreDataWithdrawal = true
-                            this.allWithdrawalLoaded = true
-                        }
                     } else if (this.sportWithdrawal === 'top') { // 下拉刷新
+                        this.noMoreDataWithdrawal = false
+                        this.allWithdrawalLoaded = false
                         this.listWithdrawal = res.data
                         this.$refs.loadmoreWithdrawal.onTopLoaded();
                     } else {
                         this.listWithdrawal = res.data
+                    }
+                    if (this.listWithdrawal.length >= res.total) { // 没有更多数据
+                        this.noMoreDataWithdrawal = Boolean(res.total)
+                        this.allWithdrawalLoaded = true
                     }
                     this.noDataWithdrawal = !this.listWithdrawal.length
                 }, msg => {
