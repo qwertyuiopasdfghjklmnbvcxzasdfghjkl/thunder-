@@ -2,7 +2,7 @@
     <div class="latest-deal">
         <div class="header">
             <span class="ui-flex-4">{{$t('exchange.exchange_date')}}<!--时间--></span>
-            <span class="ui-flex-5">方向</span>
+            <span class="ui-flex-5">{{$t('exchange.exchange_direction')}}<!--方向--></span>
             <span class="ui-flex-4">{{$t('exchange.exchange_price')}}<!--价格-->({{baseSymbol}})</span>
             <span class="ui-flex-4 tr">{{$t('exchange.exchange_amount')}}<!--数量-->({{currentSymbol}})</span>
         </div>
