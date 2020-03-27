@@ -9,6 +9,7 @@
     "build-sit": "vue-cli-service build --mode sit",
     "build-sit-app": "vue-cli-service build --mode sitApp",
     "build-app": "vue-cli-service build --mode app",
+    "build-pre": "vue-cli-service build --mode pre",
     "build-android": "cordova build android"
   },
   "dependencies": {
