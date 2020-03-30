@@ -115,7 +115,7 @@
                         this.list = res.data
                     }
                     if (this.list.length >= res.total) { // 没有更多数据
-                        this.noMoreData = true
+                        this.noMoreData = Boolean(res.total)
                         this.allLoaded = true
                     }
                 }, msg => {

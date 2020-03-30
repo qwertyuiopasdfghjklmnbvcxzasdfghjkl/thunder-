@@ -210,6 +210,7 @@ export default {
           Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
           this.$emit('hidePlaceOrderDialog', true)
         }, (msg) => {
+            console.log(msg)
           this.locked = false
           let errMsg = typeof msg === 'string' ? msg : msg[0]
           Tip({type: 'danger', message: this.$t(`error_code.${errMsg}`)})

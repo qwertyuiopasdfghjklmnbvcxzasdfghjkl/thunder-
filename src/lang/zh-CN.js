@@ -1943,7 +1943,9 @@ export default {
 			"wait_collect_symbol": "待收币",
 			"not_pay_to_cancel": "对方在上述时间内超时未付款，系统将自动取消该订单",
 			"think_again": "我再想想",
-			"appeal_success_with_symbol": "申诉成功，平台已强制放币"
+			"appeal_success_with_symbol": "申诉成功，平台已强制放币",
+			"flash": "快捷区",
+			"self_select":"自选区"
 		},
 		"auth_warning": {
 			"warning_SMS_auth": "短信验证",

@@ -41,7 +41,8 @@
                 locked: true, // 锁
                 formData: {
                     username: '',
-                    password: ''
+                    password: '',
+                    userType: 0
                 },
                 account: '',
                 password: '',

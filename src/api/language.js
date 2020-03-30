@@ -4,8 +4,8 @@
 import api from '@/api'
 
 // let domain = process.env.NODE_ENV === 'development' ?'https://gcox.com/':''
-// let domain = process.env.NODE_ENV === 'development' ?'https://linton.tech/':''
-let domain =''
+let domain = process.env.NODE_ENV === 'development' ?'https://ltpro.vip/':''
+// let domain =''
 let language = {}
 
 const getLanguage = function (lang, success, error) {

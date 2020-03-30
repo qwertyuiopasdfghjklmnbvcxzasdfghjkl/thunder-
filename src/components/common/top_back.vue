@@ -110,7 +110,7 @@
             position: absolute;
             top: 0;
             /*height: 0.9rem;*/
-            width: 0.8rem;
+            min-width: 0.8rem;
             right: 0;
             font-size: 0.32rem;
             z-index: 999;
