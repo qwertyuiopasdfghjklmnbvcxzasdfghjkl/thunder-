@@ -6,7 +6,7 @@
       <span class="blue" v-tap="{methods:()=>{dialShow = true}}"><i class="icon_ phone"></i> {{$t('qotc.contact_seller')}}<!-- 联系卖家 --></span>
     </div>
     <div class="mt30 bgblock">
-      <div class="tc f36"><i class="icon_ status" :class="getStatusIcon"></i> {{orderState.title}}</div>      
+      <div class="tc f36"><i class="icon_ status" :class="getStatusIcon"></i> {{orderState.title}}</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==0">
         <template v-if="orderInfo.appeal_state==3"><!-- {{'放置有申述或被申诉，但交易失败的审批原因'}} --></template>
         <span v-else-if="orderInfo.cancelType==1" v-html="$t('qotc.system_cancel_desc').format(`<span class='blue'>${orderInfo.pay_apply_time}</span>`)"><!-- 超出 {0} 分钟未付款，订单已被系统自动取消 --></span>
@@ -32,7 +32,7 @@
       <div class="user_info grey f32" v-if="orderInfo.cancelType!=2">
         <div class="ui-flex ui-flex-justify">
           <span>{{$t('user.name')}}<!-- 姓名 --></span>
-          <span class="white">{{currentPayInfo.name}} <i class="icon_ copy" 
+          <span class="white">{{currentPayInfo.name}} <i class="icon_ copy"
             v-clipboard:copy="currentPayInfo.name"
             v-clipboard:success="onCopy"
             v-clipboard:error="onError"></i></span>
@@ -151,7 +151,8 @@ export default {
       payInfo:null,
       canAppeal:false,
       appealTime:'00:00',
-      surplusTime: '00:00'
+      surplusTime: '00:00',
+      interval:null
     }
   },
   watch:{
@@ -199,7 +200,7 @@ export default {
             title: this.$t('qotc.wait_collect_symbol') // 已付款(待收币)
           }
         }
-        
+
       } else if (this.orderInfo.state === 2) {
         if(this.orderInfo.appeal_state==3){
           return {
@@ -309,9 +310,12 @@ export default {
     this.getSurplusTime()
     this.getSellerPayInfo(this.orderInfo.from_user_id)
   },
+  mounted(){
+    this.interval = null
+  },
   methods:{
     getSurplusTime(){
-      let interval = utils.countDown(this.orderInfo.surplus_Time, (time) => {
+      this.interval = utils.countDown(this.orderInfo.surplus_Time, (time) => {
 
       console.log(time)
         if (time === '00:00') {

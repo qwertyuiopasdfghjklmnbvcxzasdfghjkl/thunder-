@@ -23,8 +23,8 @@
       <swiper :options="swiperOption" class="tokens mt30">
         <!-- 幻灯内容 -->
         <swiper-slide li v-for="(item, index) in symbolList" :key="index">
-          <div class="token" :class="{active:globalParams.symbol==item.symbol}"
-               v-tap="{methods:()=>{globalParams.symbol = item.symbol}}">
+          <div class="token" :class="{active:symbol===item.symbol}"
+               v-tap="{methods:()=>{symbol = item.symbol}}">
             <i class="icon_ checked"></i> {{item.symbol}}
           </div>
         </swiper-slide>
@@ -63,8 +63,8 @@
     </div>
 
     <div class="page-main" :class="{nobar:active==='incomplete'}">
-      <adslist v-show="active === 'buys'" :params="globalParams" @placeOrderClick="placeOrderClick"></adslist>
-      <adslist v-show="active === 'sells'" :params="globalParams" @placeOrderClick="placeOrderClick"></adslist>
+      <adslist v-show="active === 'buys'" :params="buyParams" @placeOrderClick="placeOrderClick"></adslist>
+      <adslist v-show="active === 'sells'" :params="sellParams" @placeOrderClick="placeOrderClick"></adslist>
       <!--<mt-tab-container v-model="active" :swipeable="true">-->
         <!--<mt-tab-container-item id="buys">-->
          <!---->
@@ -89,8 +89,11 @@
     </div>
 
     <mt-popup class="place_order_popup" v-model="placeOrderVisible" position="bottom">
-      <placeorder :params="globalParams" :ad_id="adsId" @hidePlaceOrderDialog="hidePlaceOrderDialog"></placeorder>
+      <placeorder :params="active === 'buys'? buyParams: sellParams" :ad_id="adsId" @hidePlaceOrderDialog="hidePlaceOrderDialog"></placeorder>
     </mt-popup>
+      <mt-popup class="place_order_popup" v-model="payTypeShow" position="bottom">
+          <pay-type @hidePay="hidePay"/>
+      </mt-popup>
   </div>
 </template>
 
@@ -103,15 +106,18 @@ import adslist from '@/views/otc/adslist'
 import orderlist from '@/views/otc/orderlist'
 import placeorder from '@/views/otc/placeorder'
 import myadslist from '@/views/otc/myadslist'
+import PayType from "./payType";
 
 export default {
   name: 'otc',
   components: {
+      PayType,
     adslist,
     orderlist,
     placeorder,
     myadslist
   },
+    props:['pay'],
   data () {
     return {
       placeOrderVisible: false,
@@ -120,17 +126,6 @@ export default {
       adsId: null,
       symbolList: otcConfig.coins,
       currencyList: otcConfig.currencys,
-      globalParams: {
-        ad_type: 2,
-        symbol: 'USDT',
-        currency: 'CNY',
-        state: 1, // 1未完成订单 2已完成订单 3已取消订单
-        type: 0, // 0当前广告 1历史广告
-        pay_type: null,
-        sort_mode: 1, // 1价格升序 2信用降序 3价格降序
-        page: 1,
-        show: 10
-      },
       swiperOption: {
         // 所有配置均为可选（同Swiper配置）
         observer: true,
@@ -139,8 +134,43 @@ export default {
         spaceBetween: 15,
         freeMode: true
       },
+        payTypeShow:false,
+        params: {},
+        symbol: "USDT",
+        currency: 'CNY',
     }
   },
+    computed: {
+        ...mapGetters(['getApiToken','getLang']),
+        hasPay(){
+            return this.pay
+        },
+        buyParams(){
+            return {
+                ad_type: 2,
+                symbol: this.symbol,
+                currency: this.currency,
+                state: 1, // 1未完成订单 2已完成订单 3已取消订单
+                type: 0, // 0当前广告 1历史广告
+                pay_type: null,
+                sort_mode: 1, // 1价格升序 2信用降序 3价格降序
+                show: 10
+            }
+        },
+        sellParams(){
+            return {
+                ad_type: 1,
+                symbol: this.symbol,
+                currency: this.currency,
+                state: 1, // 1未完成订单 2已完成订单 3已取消订单
+                type: 0, // 0当前广告 1历史广告
+                pay_type: null,
+                sort_mode: 1, // 1价格升序 2信用降序 3价格降序
+                page: 1,
+                show: 10
+            }
+        }
+    },
   watch: {
     placeOrderVisible (bool) {
       if (!bool) {
@@ -150,51 +180,51 @@ export default {
     // 'globalParams.symbol'(_new){
     //   this.$router.replace({name:'otc', query:{tab:this.active,symbol:_new}})
     // },
-    active(_new){
-      if(_new==='buys'){
-        this.globalParams.ad_type = 2
-        this.globalParams.sort_mode = 1
-      }
-      if(_new==='sells'){
-        this.globalParams.ad_type = 1
-        this.globalParams.sort_mode = 3
-      }
-      if(_new==='incomplete'){
-        this.globalParams.state = 1
-      }
-      if(_new==='completed'){
-        if(this.globalParams.state===1){
-          this.globalParams.state = 2
-        }
-      }
-      if(_new==='current'){
-        this.globalParams.state = 2
-      }
-      // this.$router.replace({name:'otc', query:{tab:_new,symbol:this.globalParams.symbol}})
-    }
+    // active(_new){
+    //   if(_new==='buys'){
+    //     this.globalParams.ad_type = 2
+    //     this.globalParams.sort_mode = 1
+    //   }
+    //   if(_new==='sells'){
+    //     this.globalParams.ad_type = 1
+    //     this.globalParams.sort_mode = 3
+    //   }
+    //   if(_new==='incomplete'){
+    //     this.globalParams.state = 1
+    //   }
+    //   if(_new==='completed'){
+    //     if(this.globalParams.state===1){
+    //       this.globalParams.state = 2
+    //     }
+    //   }
+    //   if(_new==='current'){
+    //     this.globalParams.state = 2
+    //   }
+    //   // this.$router.replace({name:'otc', query:{tab:_new,symbol:this.globalParams.symbol}})
+    // }
   },
   created(){
     // this.globalParams.symbol = this.$route.query.symbol || 'ETH'
-    if(this.$route.query.tab){
-      this.active = this.$route.query.tab
-      if(this.active==='buys'){
-        this.globalParams.ad_type = 2
-        this.globalParams.sort_mode = 1
-      }
-      if(this.active==='sells'){
-        this.globalParams.ad_type = 1
-        this.globalParams.sort_mode = 3
-      }
-      if(this.active==='incomplete'){
-        this.globalParams.state = 1
-      }
-      if(this.active==='completed'){
-        this.globalParams.state = 2
-      }
-      if(this.active==='current'){
-        this.globalParams.state = 2
-      }
-    }
+    // if(this.$route.query.tab){
+    //   this.active = this.$route.query.tab
+    //   if(this.active==='buys'){
+    //     this.globalParams.ad_type = 2
+    //     this.globalParams.sort_mode = 1
+    //   }
+    //   if(this.active==='sells'){
+    //     this.globalParams.ad_type = 1
+    //     this.globalParams.sort_mode = 3
+    //   }
+    //   if(this.active==='incomplete'){
+    //     this.globalParams.state = 1
+    //   }
+    //   if(this.active==='completed'){
+    //     this.globalParams.state = 2
+    //   }
+    //   if(this.active==='current'){
+    //     this.globalParams.state = 2
+    //   }
+    // }
   },
   mounted(){
     let self = this
@@ -204,9 +234,7 @@ export default {
       }
     })
   },
-  computed: {
-    ...mapGetters(['getApiToken','getLang']),
-  },
+
   methods: {
     goToMyCenter () {
       this.$router.push('/realname')
@@ -282,14 +310,36 @@ export default {
         }})
       }, 'public0.public109', true, false)
     },
-    hidePlaceOrderDialog (bool) {
+    hidePlaceOrderDialog (bool, data) {
       this.placeOrderVisible = false
       if (bool) {
-        this.$router.push({name:'qotcOrders'})
-        // this.active = 'incomplete'
-        // this.$refs.curOrderList.getOrderList()
+          console.log(data)
+          this.params = data
+          if(data.trade_type === 1){
+              this.subOrder(data)
+          }else{
+              this.payTypeShow = true
+          }
       }
     },
+      hidePay(data){
+        console.log(data)
+          this.payTypeShow = false
+          if(data){
+              this.params.payType = data.payType
+              this.subOrder(this.params)
+          }
+      },
+      subOrder(data){
+          otcApi.createOrders(data, (id, msg) => {
+              Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+              this.$router.replace({name:'orderDetail', params:{orderId:id}})
+          }, (msg) => {
+              console.log(msg)
+              let errMsg = typeof msg === 'string' ? msg : msg[0]
+              Tip({type: 'danger', message: this.$t(`error_code.${errMsg}`)})
+          })
+      },
     placeOrderClick (item) {
       this.placeOrderVisible = true
       this.adsId = item.ad_id

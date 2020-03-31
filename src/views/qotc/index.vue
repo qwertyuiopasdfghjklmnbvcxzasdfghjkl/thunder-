@@ -9,8 +9,8 @@
 			</template>
 		</top-back>
 		<div>
-			<flash v-show="tab===1"/>
-			<otc-index v-show="tab===2"/>
+			<flash v-show="tab===1" ref="flash"/>
+			<otc-index v-show="tab===2" :pay="pay"/>
 		</div>
     </div>
 </template>
@@ -20,6 +20,7 @@
 
 import Flash from "./flash";
 import OtcIndex from "../otc/index"
+import store from '@/store'
 export default {
 	components: {Flash,OtcIndex},
 	data(){
@@ -27,8 +28,28 @@ export default {
 			tab:1
 		}
 	},
+	computed:{
+		pay(){
+			return null
+		}
+	},
 	created(){
 
+	},
+	beforeRouteEnter (to, from, next) {
+		if(store.getters.getApiToken && store.getters.getUserInfo.mobileAuthEnable!=1){
+			MessageBox.confirm(window.vm.$t('qotc.to_bind_phone'),window.vm.$t('otc_ad.otc_ad_confirm'),{ //未绑定手机号，是否立即前往？
+				cancelButtonText:window.vm.$t('home.home37'),
+				confirmButtonText:window.vm.$t('otc_ad.otc_ad_confirm'),
+			}).then(action => {
+				window.vm.$router.push({name:'phoneVerify'})
+			})
+		} else {
+			next()
+		}
+	},
+	mounted(){
+		console.log(this.$refs.flash.hasPay)
 	},
 	methods: {}
 }

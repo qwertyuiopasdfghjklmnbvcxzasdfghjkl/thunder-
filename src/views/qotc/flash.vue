@@ -94,7 +94,7 @@
     import { Toast, MessageBox } from 'mint-ui'
     import Dialog from '@/components/common/dialog'
     import nikeNameForm from '@/views/my/center/nikeNameForm' // 修改昵称
-    import store from '@/store'
+
     import otcConfig from '@/assets/js/otcconfig'
 
     export default {
@@ -202,18 +202,7 @@
                 this.currencyCount = ''
             }
         },
-        beforeRouteEnter (to, from, next) {
-            if(store.getters.getApiToken && store.getters.getUserInfo.mobileAuthEnable!=1){
-                MessageBox.confirm(window.vm.$t('qotc.to_bind_phone'),window.vm.$t('otc_ad.otc_ad_confirm'),{ //未绑定手机号，是否立即前往？
-                    cancelButtonText:window.vm.$t('home.home37'),
-                    confirmButtonText:window.vm.$t('otc_ad.otc_ad_confirm'),
-                }).then(action => {
-                    window.vm.$router.push({name:'phoneVerify'})
-                })
-            } else {
-                next()
-            }
-        },
+
         created(){
             this.type = this.$route.params.type || 1
             this.getOtcTokens()
