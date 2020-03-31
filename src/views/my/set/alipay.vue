@@ -80,13 +80,16 @@ export default {
       })
     },
     saveSettings (type) { // 提交保存
-      if (!this.$root.trim(this.alipayData.alipay_number, 1)) {
+      if (!this.$root.trim(this.alipayData.alipay_number||'', 1)) {
         Tip({type: 'danger', message: this.$t('otc_legal.otc_legal_input_Alipay_number')}) // 请输入支付宝账号
         $('input[name=alipay_number]').focus()
         return
       }
-      if (this.alipayData.alipay_QRcode) {
+      // if (this.alipayData.alipay_QRcode) {
         let formData = new FormData(this.$refs.alipayForm)
+        if (!this.alipayData.alipay_QRcode){
+          formData.delete('source')
+        }
         Indicator.open('Loading...')
         otcApi.savePaySettings(type, formData, (msg) => {
           Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
@@ -94,9 +97,9 @@ export default {
         }, (msg) => {
           Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
         })
-      } else {
+      /*} else {
         Tip({type: 'danger', message: this.$t('public0.public90')})
-      }
+      }*/
     },
     uploadImage (event, type) { // 上传图片
       let objectName = null
