@@ -41,7 +41,7 @@
                    :placeholder="$t('account.user_center_Google_verification_code')" v-if="googleState === 1"/>
             <!--谷歌验证码-->
             <div class="buttons">
-                <span class="mint-button--primary" @click="auth1">{{$t('otc_legal.otc_legal_confirm')}}<!--确定--></span>
+                <span class="mint-button--primary" @click="googleauth">{{$t('otc_legal.otc_legal_confirm')}} <!--确定--></span>
             </div>
         </div>
     </div>
@@ -73,7 +73,8 @@
                     // safetyCode: ''
                 },
                 disabled: false,
-                time: 60
+                time: 60,
+                lock: false
             }
         },
         computed: {
@@ -97,7 +98,12 @@
             this.getUserState()
         },
         methods: {
-            auth1() {
+            googleauth() {
+                console.log('1111')
+                if(this.lock){
+                    return
+                }
+                this.lock = true
                 this.$validator.validateAll().then((valid) => {
                     if (!valid) {
                         let items = this.errors.items
@@ -126,6 +132,7 @@
                         this.$emit('okCallback')
                     }, (msg) => {
                         Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+                        this.closeDialog()
                     })
                 })
             },
@@ -186,7 +193,10 @@
                 })
             },
             auth() {
-
+                if(this.lock){
+                    return
+                }
+                this.lock = true
                 this.$validator.validateAll().then((valid) => {
                     console.log(valid)
                     if (!valid) {
@@ -217,6 +227,7 @@
                             Tip({type: 'success', message: msg}) // 提现成功
                             this.$emit('okCallback')
                         }, (msg) => {
+                            this.closeDialog()
                             Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
                         })
                     }

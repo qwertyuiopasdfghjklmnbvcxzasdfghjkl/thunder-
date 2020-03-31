@@ -22,6 +22,7 @@
 </template>
 
 <script>
+    import until from "../../../../assets/js/utils"
     export default {
         name: "adLaw",
         props:['item'],
@@ -61,7 +62,7 @@
                 this.$router.push({name: 'adManageDetail',query: this.item})
             },
             toFlex(i){
-                return parseFloat(i).toFixed(2)
+                return until.toFixed(i,2)
             }
         }
     }
