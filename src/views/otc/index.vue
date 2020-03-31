@@ -283,11 +283,11 @@ export default {
       }, 'public0.public109', true, false)
     },
     hidePlaceOrderDialog (bool) {
-      this.$router.push({name:'qotcOrders'})
       this.placeOrderVisible = false
       if (bool) {
-        this.active = 'incomplete'
-        this.$refs.curOrderList.getOrderList()
+        this.$router.push({name:'qotcOrders'})
+        // this.active = 'incomplete'
+        // this.$refs.curOrderList.getOrderList()
       }
     },
     placeOrderClick (item) {

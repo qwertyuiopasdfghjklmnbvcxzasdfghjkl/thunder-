@@ -46,7 +46,7 @@
 
 <script>
 import { Validator } from 'vee-validate'
-import Tip from '@/assets/js/tip'
+// import Tip from '@/assets/js/tip'
 import utils from '@/assets/js/utils'
 import numUtils from '@/assets/js/numberUtils'
 import otcApi from '@/api/otc'

@@ -4,8 +4,10 @@
 
         <div class="page-main">
             <div class="select full">
-                <label :class="{'active':withdrawalType === 1}" v-tap="{methods: ()=>{withdrawalType = 1}}">{{$t('market.def_withdrawal')}}</label>
-                <label :class="{'active':withdrawalType === 2}" v-tap="{methods: ()=>{withdrawalType = 2}}">{{$t('market.inset_withdrawal')}}</label>
+                <label :class="{'active':withdrawalType === 1}"
+                       v-tap="{methods: ()=>{withdrawalType = 1}}">{{$t('market.def_withdrawal')}}</label>
+                <label :class="{'active':withdrawalType === 2}"
+                       v-tap="{methods: ()=>{withdrawalType = 2}}">{{$t('market.inset_withdrawal')}}</label>
             </div>
             <div class="withdrawal mt20">
                 <ul class="payment-detail">
@@ -138,7 +140,8 @@
                     {name: 'UID', type: 3}
                 ],
                 showType: false,
-                lockAccount:true
+                lockAccount:true,
+                once:false,
             }
         },
         computed: {
@@ -266,6 +269,10 @@
                     return
                 }
                 if(this.withdrawalType === 2){
+                    if(this.once){
+                        return
+                    }
+                    this.once = true
                     if (Number(this.form.amount) < Number(this.symbolInfo.stationWithdrawMin)) {
                         Tip({
                             type: 'danger',
@@ -278,6 +285,7 @@
                         Tip({type: 'success', message: res})
                         this.$router.push({name: 'trading'})
                     },msg=>{
+                        this.once = false
                         Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
                     })
                 }else {
