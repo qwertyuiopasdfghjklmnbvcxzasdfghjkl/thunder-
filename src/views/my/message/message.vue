@@ -12,28 +12,22 @@
             </div>
             <div class="loadmore-wrapper">
                 <mt-loadmore
-                        :class="{'is-loading': messageTopLoading}"
                         ref="loadmore"
                         :autoFill="false"
-                        :topDistance="40"
-                        :topMethod="loadTop"
+                        :bottom-all-loaded="allLoaded"
                         :top-pull-text="$t('home.top-pull-text')"
                         :top-drop-text="$t('home.drop-text')"
                         :top-loading-text="$t('home.loading-text')"
                         :bottom-pull-text="$t('home.bottom-pull-text')"
                         :bottom-drop-text="$t('home.drop-text')"
                         :bottom-loading-text="$t('home.loading-text')"
-                        @top-status-change="handleTopChange"
-                        infinite-scroll-immediate-check="false"
-                        infinite-scroll-distance="80"
-                        infinite-scroll-disabled="messageBottomDisabled"
-                        v-infinite-scroll="loadMore"
+                        :top-method="loadTop"
+                        :bottom-method="loadBottom"
                 >
-                    <loading slot="top" :class="{'is-loading': messageTopDrop}"/>
-                    <template v-if="messageList.length > 0">
-                        <ul class="message-list" :class="{'is-loading': messageTopDrop}" ref="messageList">
+                    <template v-if="list.length > 0">
+                        <ul class="message-list">
                             <li class="message-item" :class="{markread: item.messageState === 1}" :key="index"
-                                v-for="(item, index) in messageList" @click="markItemRead(item)">
+                                v-for="(item, index) in list" @click="markItemRead(item)">
                                 <p>
                                     <i></i>
                                     <span>{{formatSystemMessage(item.title, item.msgType !== 5)}}</span>
@@ -45,10 +39,9 @@
                                 </p>
                             </li>
                         </ul>
-                        <loading v-if="messageBottomLoading"/>
-                        <noMoreData v-if="!messageBottomLoading && noMoreMessage"/>
+                        <noMoreData v-if="noMoreData"/>
                     </template>
-                    <noData v-if="!messageTopLoading && messageList.length === 0"/>
+                    <noData v-if="!list.length"/>
                 </mt-loadmore>
             </div>
         </div>
@@ -86,129 +79,72 @@
                     show: 10,
                     page: 1
                 },
-                messageList: [], // 消息列表
-                unReadLength: 0, // 未读消息长度
-                messageTopDrop: false, // 下拉状态
-                messageTopLoading: false, // 下拉加载状态
-                messageBottomDisabled: false, // 滚动加载禁用状态
-                messageBottomLoading: false, // 滚动加载状态
-                noMoreMessage: false, // 是否没有更多消息
-                responseState: { // 组件创建时所请求的接口的响应状态
-                    item1: false,
-                    item2: false
-                }
+                list: [], // 消息列表
+                sport: null,
+                noMoreData: false, // 是否没有更多消息
+                allLoaded: false,
             }
         },
         watch: {
-            responseState: { // 数据请求完毕后关闭indicator
-                handler(val) {
-                    let i = 0
-                    let j = 0
-                    for (let x in val) {
-                        i++
-                        if (val[x]) {
-                            j++
-                        }
-                    }
-                    if (i === j) {
-                        Indicator.close()
-                    }
-                },
-                deep: true
-            },
-            'param.period'() {
-                Indicator.open()
-                this.param.page = 1
-                this.messageList = []
-                this.getMessageList(() => {
-                    Indicator.close()
-                }, () => {
-                    Indicator.close()
-                })
-            },
-            'param.page'(val) {
-                if (val !== 1 && !this.noMoreMessage) {
-                    this.messageBottomDisabled = true
-                    this.messageBottomLoading = true
-                    this.getMessageList(() => {
-                        this.messageBottomLoading = false
-                    }, () => {
-                        this.messageBottomLoading = false
-                    })
-                }
-            }
+
         },
         created() {
-            Indicator.open()
-            this.$nextTick(() => {
-                this.getMessageList(() => {
-                    this.responseState.item1 = true
-                }, () => {
-                    this.responseState.item1 = true
-                })
-                // this.getUnReadLength()
-            })
+            this.getList()
         },
         methods: {
             formatSystemMessage: utils.formatSystemMessage, // 对返回多个key的消息进行国际化处理
-            getMessageList(successCallback, errorCallback, isLoadTop) { // 根据参数获取消息
+            getList() { // 根据参数获取消息
                 msgApi.getMessages(this.param, (res) => {
-                    if (isLoadTop) { // 判断是否为下拉刷新方式加载数据，则替换旧数据
-                        this.messageList = res.data
-                    } else {
-                        res.data.forEach((item) => {
-                            this.messageList.push(item)
+                    if (this.sport === 'bottom') { // 加载更多数据
+                        this.allLoaded = false
+                        res.data.forEach(res=>{
+                            this.list.push(res)
                         })
-                    }
-                    if (this.messageList.length >= res.total) { // 判断数据是否加载完毕，则禁用滚动加载事件
-                        this.messageBottomDisabled = true
-                        this.noMoreMessage = true
+                        console.log(this.list)
+                        this.$refs.loadmore.onBottomLoaded();
+                    } else if (this.sport === 'top') { // 下拉刷新
+                        this.list = res.data
+                        this.noMoreData = false
+                        this.allLoaded = false
+                        this.$refs.loadmore.onTopLoaded();
                     } else {
-                        this.messageBottomDisabled = false
-                        this.noMoreMessage = false
+                        this.list = res.data
                     }
-                    if (!this.noMoreMessage) { // 如果数据撑不满容器时，继续请求下一页数据
-                        this.$nextTick(() => {
-                            if (this.$refs.loadmore.$el.clientHeight > this.$refs.messageList.clientHeight) {
-                                this.param.page++
-                            }
-                        })
+                    if (this.list.length >= res.total) { // 没有更多数据
+                        this.noMoreData = Boolean(res.total)
+                        this.allLoaded = true
                     }
-                    successCallback && successCallback(res)
                 }, (msg) => {
-                    errorCallback && errorCallback(msg)
                     if (msg !== 'NOT_FIND_MESSAGE') {
-                        console.error(msg)
                         Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
                     }
                 })
             },
-            getUnReadLength() { // 参数为空时获取所有未读消息
-                msgApi.getMessages({}, (res) => {
-                    this.unReadLength = res.data.length
-                    this.responseState.item2 = true
-                }, (msg) => {
-                    this.responseState.item2 = true
-                    if (msg !== 'NOT_FIND_MESSAGE') {
-                        console.error(msg)
-                        Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
-                    }
-                })
+            loadTop() { // 刷新
+                this.sport = 'top';
+                this.param.page = 1;
+                this.getList()
             },
+            loadBottom() { // 获取下一页
+                this.sport = 'bottom'
+                this.param.page++;
+                this.getList()
+                this.allLoaded = true
+            },
+
             markItemRead(item) { // 单条消息标记为已读
                 if (item.messageState === 0) {
                     msgApi.markItemRead({
                         messageId: item.messageId
                     }, (msg) => {
                         item.messageState = 1
-                        this.unReadLength--
                     })
                 }
             },
             markAllRead() { // 全部消息标记为已读
                 if (this.unReadLength) {
                     msgApi.markAllRead((msg) => {
-                        this.messageList.forEach((item) => {
+                        this.list.forEach((item) => {
                             item.messageState = 1
                         })
                         this.unReadLength = 0
@@ -219,29 +155,7 @@
                     })
                 }
             },
-            handleTopChange(status) { // 获取组件的下拉状态 status: pull（组件被下拉但未达到阈值）、drop（组件被下拉且已达到阈值）、loading（组件被下拉达到阈值后释放）
-                this.messageTopDrop = status !== 'pull'
-                this.messageTopLoading = status === 'loading'
-            },
-            loadTop() { // 下拉获取最新消息
-                this.param.page = 1
-                this.getMessageList(() => {
-                    setTimeout(()=>{
-                        this.messageTopDrop = false
-                        this.messageTopLoading = false
-                        $('.mint-loadmore-content').css({'transform':'translate3d(0px, 0px, 0px)'})
-                    },1000)
-                }, () => {
-                    setTimeout(()=>{
-                        this.messageTopDrop = false
-                        this.messageTopLoading = false
-                        $('.mint-loadmore-content').css({'transform':'translate3d(0px, 0px, 0px)'})
-                    },1000)
-                }, true)
-            },
-            loadMore() { // 向下滚动获取更多消息
-                this.param.page++
-            }
+
         }
     }
 </script>

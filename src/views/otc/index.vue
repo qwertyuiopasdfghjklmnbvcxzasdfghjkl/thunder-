@@ -63,8 +63,12 @@
     </div>
 
     <div class="page-main" :class="{nobar:active==='incomplete'}">
-      <adslist v-show="active === 'buys'" :params="buyParams" @placeOrderClick="placeOrderClick"></adslist>
-      <adslist v-show="active === 'sells'" :params="sellParams" @placeOrderClick="placeOrderClick"></adslist>
+      <adslist v-show="active === 'buys'"
+               :hasPay="pay" :params="buyParams"
+               @placeOrderClick="placeOrderClick"></adslist>
+      <adslist v-show="active === 'sells'"
+               :params="sellParams"
+               @placeOrderClick="placeOrderClick"></adslist>
       <!--<mt-tab-container v-model="active" :swipeable="true">-->
         <!--<mt-tab-container-item id="buys">-->
          <!---->
@@ -165,7 +169,7 @@ export default {
                 state: 1, // 1未完成订单 2已完成订单 3已取消订单
                 type: 0, // 0当前广告 1历史广告
                 pay_type: null,
-                sort_mode: 1, // 1价格升序 2信用降序 3价格降序
+                sort_mode: 3, // 1价格升序 2信用降序 3价格降序
                 page: 1,
                 show: 10
             }

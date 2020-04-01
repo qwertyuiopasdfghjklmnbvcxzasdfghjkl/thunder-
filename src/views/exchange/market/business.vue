@@ -37,9 +37,9 @@
         <div class="range-percent mt30">
             <div class="dots"
                  :class="{d2:percent>=25,d3:percent>=50,d4:percent>=75,d5:percent>=100, d6:percent>=100, active:showPercent}">
-                <span v-tap="{methods:()=>{percent=25, showPercent = true}}">20%</span>
-                <span v-tap="{methods:()=>{percent=50, showPercent = true}}">40%</span>
-                <span v-tap="{methods:()=>{percent=75, showPercent = true}}">60%</span>
+                <span v-tap="{methods:()=>{percent=25, showPercent = true}}">25%</span>
+                <span v-tap="{methods:()=>{percent=50, showPercent = true}}">50%</span>
+                <span v-tap="{methods:()=>{percent=75, showPercent = true}}">75%</span>
                 <!--<span v-tap="{methods:()=>{percent=80, showPercent = true}}">80</span>-->
                 <span v-tap="{methods:()=>{percent=100, showPercent = true}}">100%</span>
             </div>

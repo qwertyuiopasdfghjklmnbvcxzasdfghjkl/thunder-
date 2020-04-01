@@ -34,7 +34,7 @@
                 return this.$t(this.item.ad_type === 2 ? 'exchange.exchange_sell' : 'exchange.exchange_buy')
             },
             status(){
-                // status  广告状态（0：已下架、1：已上架、2：已过期）
+                // status  广告状态（0：已下架、1：已上架、2：已过期, 3:已删除）
                 let obj = {
                     style: 'break',
                     value: this.$t('public0.public52')
@@ -49,6 +49,10 @@
                     case this.item.status === 2:
                         obj.style = 'break'
                         obj.value = this.$t('market.past')
+                        return obj
+                    case this.item.status === 3:
+                        obj.style = 'break'
+                        obj.value = this.$t('otc_ad.deleted')
                         return obj
                 }
                 return obj

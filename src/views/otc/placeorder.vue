@@ -193,6 +193,7 @@
                 if (this.locked) {
                     return
                 }
+
                 this.$validator.validateAll().then((valid) => {
                     if (!valid) {
                         let items = this.errors.items
@@ -214,6 +215,7 @@
                         payType: 2
                     }
                     this.$emit('hidePlaceOrderDialog', true, data)
+                    this.locked = false
                 })
             }
         }

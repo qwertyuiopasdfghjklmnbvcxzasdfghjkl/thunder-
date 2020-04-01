@@ -4,6 +4,22 @@ import QRCode from './qrcode'
 import config from '@/api/config'
 import userApi from '@/api/user'
 
+
+Vue.prototype.$publish = publish
+Vue.prototype.$subscribe = subscribe
+// 发布订阅
+let eventHub = new Vue()
+function publish(key, ...args) {
+  console.log(...args)
+  eventHub.$emit(key, ...args)
+  return this
+}
+function subscribe(key, callback) {
+  eventHub.$on(key, callback.bind(this))
+  return this
+}
+
+
 String.prototype.trim = function(){
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }

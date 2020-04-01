@@ -81,10 +81,11 @@
     import noMoreData from '@/components/common/noMoreData'
     import nikeNameForm from '@/views/my/center/nikeNameForm' // 修改昵称
     import userApi from '@/api/user'
+    import Dialog from '@/components/common/dialog'
 
     export default {
         name: 'adslist',
-        components: {noMoreData, nikeNameForm},
+        components: {noMoreData, nikeNameForm, Dialog},
         props: ['params', 'hasPay'],
         data() {
             return {
@@ -94,6 +95,7 @@
                 sport: '',
                 page: 1,
                 isShow: false,
+                pay: null
             }
         },
         computed: {
@@ -105,6 +107,8 @@
                     currency: this.params.currency,
                     pay_type: this.params.pay_type,
                     sort_mode: this.params.sort_mode,
+                    status: this.params.state,
+                    // type: this.params.type,
                     page: this.page,
                     show: this.params.show
                 }
@@ -123,7 +127,7 @@
                         limit: this.params.symbol // 交易限额
                     }
                 }
-            }
+            },
         },
         watch: {
             // paramsChange() {
@@ -132,6 +136,12 @@
         },
         created() {
             this.getList()
+        },
+        mounted(){
+            this.$subscribe('pay',res=>{
+                console.log(res)
+                this.pay = res
+            })
         },
         methods: {
             ...mapActions(['setUserInfo', 'setUserWallets']),
@@ -238,10 +248,10 @@
                     return
                 }
                 // console.log(this.hasPay)
-                // if (!this.hasPay) { //买卖需添加收款支付方式
-                //     Tip({type: 'error', message: this.$t('qotc.add_payway')})//请添加支付方式
-                //     return
-                // }
+                if (!this.pay) { //买卖需添加收款支付方式
+                    Tip({type: 'error', message: this.$t('qotc.add_payway')})//请添加支付方式
+                    return
+                }
                 // if (!this.payType) { //如果是卖需选择收款方式
                 //     Tip({
                 //         type: 'error',

@@ -913,7 +913,8 @@ export default {
 			"otc_ad_management": "我的广告管理",
 			"otc_others": "其他",
 			"otc_ad_Order_Management": "订单管理",
-			"otc_ad_end_time": "完成时间"
+			"otc_ad_end_time": "完成时间",
+			"deleted": "已删除"
 		},
 		"public0": {
 			"reason": "失败原因",
