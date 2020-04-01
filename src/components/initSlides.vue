@@ -7,7 +7,7 @@
                     <div class="img" :style="{backgroundImage:'url(' + item + ')'}"></div>
                     <span class="start-btn" v-if="index==2" v-tap="{methods:start}"></span>
                 </swiper-slide>
-                <div class="swiper-pagination" slot="custom"></div>
+                <div class="swiper-pagination" slot="pagination"></div>
             </swiper>
         </div>
     </transition>

@@ -81,13 +81,16 @@ export default {
       })
     },
     saveSettings (type) { // 提交保存
-      if (!this.$root.trim(this.wechatData.wechat_number, 1)) {
+      if (!this.$root.trim(this.wechatData.wechat_number||'', 1)) {
         Tip({type: 'danger', message: this.$t('otc_legal.otc_legal_input_WeChat_number')}) // 请输入微信账号
         $('input[name=wechat_number]').focus()
         return
       }
-      if (this.wechatData.wechat_QRcode) {
+      // if (this.wechatData.wechat_QRcode) {
         let formData = new FormData(this.$refs.wechatForm)
+        if (!this.wechatData.wechat_QRcode){
+          formData.delete('source')
+        }
         Indicator.open('Loading...')
         otcApi.savePaySettings(type, formData, (msg) => {
           Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
@@ -95,9 +98,9 @@ export default {
         }, (msg) => {
           Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
         })
-      } else {
+      /*} else {
         Tip({type: 'danger', message: this.$t('public0.public90')})
-      }
+      }*/
     },
     uploadImage (event, type) { // 上传图片
       let objectName = null
