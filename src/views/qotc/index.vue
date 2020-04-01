@@ -21,6 +21,7 @@
 import Flash from "./flash";
 import OtcIndex from "../otc/index"
 import store from '@/store'
+import { MessageBox, Toast } from 'mint-ui'
 export default {
 	components: {Flash,OtcIndex},
 	data(){
