@@ -81,10 +81,11 @@
     import noMoreData from '@/components/common/noMoreData'
     import nikeNameForm from '@/views/my/center/nikeNameForm' // 修改昵称
     import userApi from '@/api/user'
+    import Dialog from '@/components/common/dialog'
 
     export default {
         name: 'adslist',
-        components: {noMoreData, nikeNameForm},
+        components: {noMoreData, nikeNameForm, Dialog},
         props: ['params', 'hasPay'],
         data() {
             return {
