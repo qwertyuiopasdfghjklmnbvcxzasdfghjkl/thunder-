@@ -79,9 +79,9 @@
 
         <router-link v-if="hasAllPays" :to="{name:'set-payway'}" class="active" tag="li">{{formData.ad_type==1?$t('qotc.add_payment_method'):$t('qotc.add_collection_method')}}<!-- '添加付款方式':'添加收款方式' --></router-link>
       </ul>
-      <div class="f26 mt60 grey agreement" :class="{active:agree}" v-tap="{methods:()=>{agree = !agree}}">
-        <i class="icon_"></i> {{$t('login_register.agree_Service')}}<!-- 我已阅读并同意 --><a href="#" class="blue">《{{$t('qotc.trading_rules')}}<!-- 交易规则 -->》</a>
-      </div>
+      <!--<div class="f26 mt60 grey agreement" :class="{active:agree}" v-tap="{methods:()=>{agree = !agree}}">-->
+        <!--<i class="icon_"></i> {{$t('login_register.agree_Service')}}&lt;!&ndash; 我已阅读并同意 &ndash;&gt;<a href="#" class="blue">《{{$t('qotc.trading_rules')}}&lt;!&ndash; 交易规则 &ndash;&gt;》</a>-->
+      <!--</div>-->
       <div class="mt40 pb90">
         <mt-button type="primary" size="large" v-tap="{methods:saveAds}">{{ad_id?$t('update.update'):$t('qotc.publish')}}<!-- '更新':'发布' --></mt-button>
       </div>
@@ -254,7 +254,7 @@ export default {
       this.fnGetAdvertisementDetail()
     })
     this.getBenchSymbolInfo()
-    
+
   },
   methods:{
     ...mapActions(['setUserWallets']),

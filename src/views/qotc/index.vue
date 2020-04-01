@@ -30,13 +30,21 @@ export default {
 	},
 	computed:{
 		pay(){
-			return null
+			return  null
+		}
+	},
+	watch:{
+		pay(e){
+			console.log(e)
 		}
 	},
 	created(){
-
+		this.$nextTick(()=>{
+			console.log( this.$refs.flash)
+		})
 	},
 	beforeRouteEnter (to, from, next) {
+		console.log(store.getters.getApiToken)
 		if(store.getters.getApiToken && store.getters.getUserInfo.mobileAuthEnable!=1){
 			MessageBox.confirm(window.vm.$t('qotc.to_bind_phone'),window.vm.$t('otc_ad.otc_ad_confirm'),{ //未绑定手机号，是否立即前往？
 				cancelButtonText:window.vm.$t('home.home37'),

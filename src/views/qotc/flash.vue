@@ -200,6 +200,9 @@
             isToken(){
                 this.amount = ''
                 this.currencyCount = ''
+            },
+            hasPay(e){
+                this.$publish('pay',e)
             }
         },
 
@@ -432,7 +435,7 @@
         border-bottom:1px solid #273246;
         line-height: 0.5rem;
         > div {position: absolute; left: 0; right: 0;}
-        input {color: #fff; border: none; background-color: transparent; font-size: 0.48rem; vertical-align: middle;}
+        input {color: #fff; border: none; background-color: transparent; font-size: 0.4rem; vertical-align: middle;}
     }
     .icon_exchange {width: 0.32rem; height: 0.34rem; background-image: url('../../assets/img/icon_exchange.png');}
     .bgblock { background-color: #151C2C; padding: 0.3rem; }

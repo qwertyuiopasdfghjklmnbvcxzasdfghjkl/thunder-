@@ -418,8 +418,14 @@ export default {
 .user_info {
   > div {
     border-bottom: 1px solid #1D273C;
-    height: 0.95rem;
-    line-height: 0.95rem;
+    min-height: 0.95rem;
+    line-height: 0.45rem;
+    span{
+      padding: 0.25rem 0;
+      &:first-child{
+        padding-right: 0.2rem;
+      }
+    }
   }
   .icon_ {
     width: 0.3rem; height: 0.3rem; margin-left: 0.15rem;

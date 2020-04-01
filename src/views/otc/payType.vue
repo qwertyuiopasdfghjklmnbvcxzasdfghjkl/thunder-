@@ -30,7 +30,7 @@
         },
         computed:{
             locked(){
-                return !this.payType
+                return !this.payType.payType
             },
         },
 
@@ -112,7 +112,7 @@
     ul{
         li{
             padding: 0.2rem 0.3rem;
-            background-color: #151c2c;
+            background-color: #202738;
             margin: 0.3rem;
             border: 0.02rem solid transparent;
             p{
