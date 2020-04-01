@@ -96,8 +96,16 @@
             </div>
         </div>
         <mt-popup class="place_order_popup" v-model="placeOrderVisible" position="bottom">
-            <confirm ref="confirm" :params="params" :type="withdrawalType" :toUserType="accountType.type"
-                     @removeDialog="removeDialog" @okCallback="okCallback"></confirm>
+            <confirm
+                ref="confirm"
+                :params="params"
+                :withdrawalType="withdrawalType"
+                :toUserType="accountType.type"
+                @removeDialog="removeDialog"
+                @okCallback="okCallback"
+                :toAddress="form.toAddress"
+                :amount="form.amount"
+            ></confirm>
         </mt-popup>
     </div>
 </template>
@@ -269,6 +277,7 @@
                     return
                 }
                 if(this.withdrawalType === 2){
+                    // 内部转账
                     if(this.once){
                         return
                     }
@@ -281,13 +290,15 @@
                         this.form.amount = this.symbolInfo.stationWithdrawMin
                         return
                     }
-                    userUtils.insetWithdraw(this.insetWithdrawalParams,res=>{
-                        Tip({type: 'success', message: res})
-                        this.$router.push({name: 'trading'})
-                    },msg=>{
-                        this.once = false
-                        Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
-                    })
+                    this.placeOrderVisible = true
+
+                    // userUtils.insetWithdraw(this.insetWithdrawalParams,res=>{
+                    //     Tip({type: 'success', message: res})
+                    //     this.$router.push({name: 'trading'})
+                    // },msg=>{
+                    //     this.once = false
+                    //     Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+                    // })
                 }else {
                     if (Number(this.form.amount) < Number(this.symbolInfo.minWithdraw)) {
                         Tip({

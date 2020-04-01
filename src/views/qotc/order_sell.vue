@@ -5,7 +5,7 @@
       <span class="blue" v-tap="{methods:()=>{dialShow = true}}"><i class="icon_ phone"></i> {{$t('qotc.contact_buyer')}}<!-- 联系买家 --></span>
     </div>
     <div class="mt30 bgblock">
-      <div class="tc f36"><i class="icon_ status" :class="getStatusIcon"></i> {{orderState.title}}</div>      
+      <div class="tc f36"><i class="icon_ status" :class="getStatusIcon"></i> {{orderState.title}}</div>
       <div class="tc f24 grey mt15" v-if="orderState.state==0 || orderState.state==41">
         <template v-if="orderInfo.appeal_state==3"><!-- {{'放置有申述或被申诉，但交易失败的审批原因'}} --></template>
         <span v-else-if="orderInfo.cancelType==1" v-html="$t('qotc.system_cancel_desc').format(`<span class='blue'>${orderInfo.pay_apply_time}</span>`)"><!-- 超出 {0} 分钟未付款，订单已被系统自动取消 --></span>
@@ -175,7 +175,7 @@ export default {
             title: this.$t('qotc.to_release_symbol') // 已付款(请放币)
           }
         }
-        
+
       } else if (this.orderInfo.state === 2) {
         if(this.orderInfo.appeal_state==3){
           return {
@@ -374,8 +374,14 @@ export default {
 .user_info {
   > div {
     border-bottom: 1px solid #1D273C;
-    height: 0.95rem;
-    line-height: 0.95rem;
+    min-height: 0.95rem;
+    line-height: 0.45rem;
+    span{
+      padding: 0.25rem 0;
+      &:first-child{
+        padding-right: 0.2rem;
+      }
+    }
   }
   .icon_ {
     width: 0.3rem; height: 0.3rem; margin-left: 0.15rem;

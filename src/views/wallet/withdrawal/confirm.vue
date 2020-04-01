@@ -4,46 +4,57 @@
             <i class="cancel" @click="closeDialog">
                 <img src="../../../assets/img/off_blank.png"/>
             </i>
-            <p>{{mobileState === 1 ? $t('auth_warning.warning_SMS_auth') : $t('account.safety_verification')}}
-                <!--短信验证||谷歌验证--></p>
+            <p>{{ $t('account.safety_verification')}}</p>
         </div>
-        <!--短信验证-->
-        <div class="form" v-if="mobileState === 1">
-            <input class="input" type="password" v-validate="'required'" name="passwordVerify" :msgs="msgs.password"
-                   :errs="errors" v-model="comData.password" :title="$t('account.user_center_login_password')"
-                   :placeholder="$t('account.user_center_login_password')"><!--登录密码-->
+
+        <div class="form">
+            <!-- google 验证码 -->
+            <input
+                v-if="type === 2"
+                class="input"
+                v-validate="'required|pInteger'"
+                :maxLength="6"
+                name="googleCode"
+                :msgs="msgs.verifyCode"
+                :errs="errors"
+                v-model="comData.googleCode"
+                :title="$t('account.user_center_Google_verification_code')"
+                :placeholder="$t('account.user_center_Google_verification_code')"
+            >
+
+            <!-- 短信/邮箱验证码 -->
             <div class="smsCode">
-                <input class="input" v-validate="'required|pInteger'" :maxLength="6" name="smsCode" :msgs="msgs.smsCode"
-                       :errs="errors" v-model="comData.smsCode" :title="$t('account.user_center_SMS_code')"
-                       :placeholder="$t('account.user_center_SMS_code')"><!--短信验证码-->
-                <mt-button type="primary" style="font-size: 0.28rem;" :disabled="disabled" v-tap="{methods:sendSMSCode}">
+                <input
+                    class="input"
+                    v-validate="'required|pInteger'"
+                    :maxLength="6"
+                    name="smsCode"
+                    :msgs="msgs.smsCode"
+                    :errs="errors"
+                    v-model="comData.smsCode"
+                    :title="codePlaceholder"
+                    :placeholder="codePlaceholder"
+
+                >
+
+                <mt-button
+                    type="primary"
+                    style="font-size: 0.28rem;"
+                    :disabled="disabled"
+                    v-tap="{methods:sendCode}"
+                >
                     {{$t('account.user_center_send_SMS')}}<!--发送验证码--> {{disabled ? `（${time}s）` : ''}}
                 </mt-button>
+
             </div>
+
+            <!-- 确定 -->
             <div class="buttons">
-                <span class="mint-button--primary" @click="auth">{{$t('otc_legal.otc_legal_confirm')}}<!--确定--></span>
+                <span class="mint-button--primary" @click="auth">{{$t('otc_legal.otc_legal_confirm')}}</span>
             </div>
+
         </div>
-        <!--谷歌验证-->
-        <div class="form" v-if="mobileState !== 1">
-            <div class="smsCode safetyCode">
-                <input v-validate="'required|pInteger'" class="verifycode mr20" :maxLength="6" name="safetyCode"
-                       :msgs="msgs.safetyCode" :errs="errors" v-model="formData.safetyCode"
-                       :title="$t('account.user_center_code')" :placeholder="$t('account.user_center_code')"/>
-                <mt-button type="primary" style="font-size: 0.28rem;" :disabled="disabled"
-                           v-tap="{methods:sendEMAILCode}">{{$t('account.user_center_send_SMS')}}<!--发送验证码--> {{disabled
-                    ? `（${time}s）` : ''}}
-                </mt-button>
-            </div>
-            <input v-validate="'required|pInteger'" class="verifycode" :maxLength="6" name="verifyCode"
-                   :msgs="msgs.verifyCode" :errs="errors" v-model="formData.verifyCode"
-                   :title="$t('account.user_center_Google_verification_code')"
-                   :placeholder="$t('account.user_center_Google_verification_code')" v-if="googleState === 1"/>
-            <!--谷歌验证码-->
-            <div class="buttons">
-                <span class="mint-button--primary" @click="googleauth">{{$t('otc_legal.otc_legal_confirm')}} <!--确定--></span>
-            </div>
-        </div>
+
     </div>
 </template>
 
@@ -55,17 +66,16 @@
     import userUtils from '@/api/wallet'
 
     export default {
-        props: ['params', 'type', 'toUserType'],
+        props: ['params', 'withdrawalType', 'toUserType'],
         data() {
             return {
                 toAddress: '',
-                mobileState: null,
-                googleState: null,
                 password: '',
                 code: '',
+                codePlaceholder: '',
                 comData: {
                     type: 1,
-                    password: '',
+                    googleCode: '',
                     smsCode: '',
                 },
                 formData: {
@@ -74,7 +84,7 @@
                 },
                 disabled: false,
                 time: 60,
-                lock: false
+                type: ''
             }
         },
         computed: {
@@ -86,6 +96,7 @@
                         pInteger: this.$t('error_code.NUMERIC')
                     }, // 请输入验证码
                     password: {required: this.$t('login_register.password')}, // 请输入密码
+                    googleCode: {required: this.$t('login_register.verify_code'), pInteger: this.$t('error_code.NUMERIC')}, // 请输入验证码
                     smsCode: {required: this.$t('login_register.verify_code'), pInteger: this.$t('error_code.NUMERIC')}, // 请输入验证码
                     // safetyCode: {
                     //     required: this.$t('account.safety_code_required'),
@@ -98,12 +109,7 @@
             this.getUserState()
         },
         methods: {
-            googleauth() {
-                console.log('1111')
-                if(this.lock){
-                    return
-                }
-                this.lock = true
+            auth() {
                 this.$validator.validateAll().then((valid) => {
                     if (!valid) {
                         let items = this.errors.items
@@ -114,28 +120,75 @@
                         }
                         return
                     }
-                    let formData = { // 提现
-                        symbol: this.params.symbol,
-                        symbolType: this.params.symbolType,
-                        amount: this.params.amount,
-                        fromAccount: this.params.fromAccount, // 用户id
-                        toAddress: this.params.selToAddress,
-                        googleCode: this.formData.verifyCode,
-                        smsCode: this.formData.safetyCode,
-                        type: this.googleState === 1 ? 2 : 1,
-                        memo: this.params.memo,
-                        lang: this.getLang === 'zh-CN' ? 'cn' : 'en'
+
+                    if (this.withdrawalType === 2) {
+                        // 站内转账
+                        this.insetWithdrawal()
+                    } else if (this.withdrawalType === 1) {
+                        // 普通提币
+                        this.defWithdrawal()
                     }
-                    userUtils.walletWithdraw(formData, () => {
-                        let msg = this.getSysParams.withdrawEmail && this.getSysParams.withdrawEmail.value === '1' ? this.$t('login_register.Mail_sent_successfully') : this.$t('message.WITHDRAWALS_SUCCESS')  // 邮件发送成功
-                        Tip({type: 'success', message: msg})
-                        this.$emit('okCallback')
-                    }, (msg) => {
-                        Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
-                        this.closeDialog()
-                    })
+
+                })
+
+            },
+
+            // 站内转账
+            insetWithdrawal() {
+                let formData = {
+                    toUserType: this.toUserType,
+                    toAccountName: this.params.selToAddress,
+                    quantity: this.params.amount,
+                    symbol: this.params.symbol,
+                    symbolType: this.params.symbolType,
+                    type: this.type,
+                    googleCode: this.comData.googleCode,
+                    smsCode: this.comData.smsCode,
+                    // memo: this.form.memo,
+                }
+                userUtils.insetWithdraw(formData, res=>{
+                    Tip({type: 'success', message: res})
+                    this.$router.push({name: 'trading'})
+                },msg=>{
+                    this.once = false
+                    Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
                 })
             },
+
+            // 普通提币
+            defWithdrawal() {
+                let formData = { // 提现
+                    symbol: this.params.symbol,
+                    symbolType: this.params.symbolType,
+                    amount: this.params.amount,
+                    fromAccount: this.params.fromAccount, // 用户id
+                    toAddress: this.params.selToAddress,
+                    googleCode: this.comData.googleCode,
+                    smsCode: this.comData.smsCode,
+                    type: this.type,
+                    memo: this.params.memo,
+                    lang: this.getLang === 'zh-CN' ? 'cn' : 'en'
+                }
+                userUtils.walletWithdraw(formData, () => {
+                    let msg = this.getSysParams.withdrawEmail && this.getSysParams.withdrawEmail.value === '1' ? this.$t('login_register.Mail_sent_successfully') : this.$t('message.WITHDRAWALS_SUCCESS')  // 邮件发送成功
+                    Tip({type: 'success', message: msg})
+                    this.$emit('okCallback')
+                }, (msg) => {
+
+                    Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+                    this.closeDialog()
+                })
+            },
+
+            sendCode() {
+                console.log('sendCode  type', this.type)
+                if (this.type === 2 || this.type === 3) {
+                    this.sendEMAILCode()
+                } else if (this.type === 1) {
+                    this.sendSMSCode()
+                }
+            },
+
             sendEMAILCode() {
                 if (this.disabled) {
                     return
@@ -165,6 +218,7 @@
                     Tip({type: 'danger', message: this.$t(`error_code.${typeof msg === 'string' ? msg : msg[0]}`)})
                 })
             },
+
             sendSMSCode() {
                 console.log(this.disabled)
                 if (this.disabled) {
@@ -192,63 +246,39 @@
                     Tip({type: 'danger', message: msg})
                 })
             },
-            auth() {
-                if(this.lock){
-                    return
-                }
-                this.lock = true
-                this.$validator.validateAll().then((valid) => {
-                    console.log(valid)
-                    if (!valid) {
-                        let items = this.errors.items
-                        if (items && items.length && items[0]) {
-                            let name = items[0].field
-                            let msg = this.msgs[name] && this.msgs[name][this.errors.firstRule(name)] ? this.msgs[name][this.errors.firstRule(name)] : this.$t(this.errors.first(name))
-                            Tip({type: 'danger', message: msg})
-                        }
-                        return
-                    }
-                    let formData = {
-                        alias: null,
-                        symbol: this.params.symbol,
-                        symbolType: this.params.symbolType,
-                        amount: this.params.amount,
-                        fromAccount: this.params.fromAccount, // 用户id
-                        toAddress: this.params.selToAddress,
-                        type: 1,
-                        lang: this.getLang === 'zh-CN' ? 'cn' : 'en',
-                        password: this.comData.password,
-                        smsCode: this.comData.smsCode,
-                        memo: this.params.memo
-                    }
-                    let saveFun = () => {
-                        userUtils.walletWithdraw(formData, () => {
-                            let msg = this.$t('message.WITHDRAWALS_SUCCESS')
-                            Tip({type: 'success', message: msg}) // 提现成功
-                            this.$emit('okCallback')
-                        }, (msg) => {
-                            this.closeDialog()
-                            Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
-                        })
-                    }
-                    myApi.getRsaPublicKey((rsaPublicKey) => {
-                        formData.password = utils.encryptPwd(rsaPublicKey, formData.password)
-                        formData.rsaPublicKey = rsaPublicKey
-                        saveFun()
-                    })
-                })
-            },
+
             closeDialog() {
                 this.$emit('removeDialog')
             },
+
+            // 获取当前用户状态信息
             getUserState() {
-                // 获取当前用户状态信息
+                // 1.只有邮箱的时候，邮箱验证 type = 3
+                // 2.只有手机的时候，短信验证 type = 1
+                // 3.邮箱和谷歌验证，同时需要邮箱和谷歌验证 type = 2
+                // 4.邮箱和手机号码，短信验证 type = 1
+                // 5.手机号码和谷歌，短信验证 type = 1
+                // 6.邮箱、谷歌验证和手机号码，短信验证 type = 1
+
                 userApi.getUserState((data) => {
-                    this.mobileState = data.mobileAuthState
-                    this.googleState = data.googleState
+
+                    if (data.emailAuthEnable === 1  && data.googleState === 0 && data.mobileAuthState === 0) {
+                        // 邮箱验证
+                        this.type = 3
+                    } else if (data.emailAuthEnable === 1  && data.googleState === 1 && data.mobileAuthState === 0) {
+                        // 邮箱 + Google 验证码验证
+                        this.codePlaceholder = this.$t('usercontent.user62')
+                        this.type = 2
+                    } else if (data.mobileAuthState === 1) {
+                        // 短信验证
+                        this.codePlaceholder = this.$t('market.user_SMS_code')
+                        this.type = 1
+                    }
                 }, (msg) => {
                     console.error(msg)
                 })
+
+
             }
         }
     }
