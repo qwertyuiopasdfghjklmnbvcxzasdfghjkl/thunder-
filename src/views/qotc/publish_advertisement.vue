@@ -224,6 +224,9 @@ export default {
     'formData.price_type'(){
       this.formData.lowest_price = ''
       this.formData.price_rate = ''
+    },
+    'formData.lowest_price'(_new){
+      this.formData.lowest_price = _new.replace('-','')
     }
   },
   beforeRouteEnter (to, from, next) {
