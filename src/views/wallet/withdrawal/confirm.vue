@@ -32,8 +32,9 @@
                     :msgs="msgs.smsCode"
                     :errs="errors"
                     v-model="comData.smsCode"
-                    :title="$t('account.user_center_SMS_code')"
-                    :placeholder="$t('account.user_center_SMS_code')"
+                    :title="codePlaceholder"
+                    :placeholder="codePlaceholder"
+
                 >
 
                 <mt-button
@@ -69,10 +70,9 @@
         data() {
             return {
                 toAddress: '',
-                mobileState: null,
-                googleState: null,
                 password: '',
                 code: '',
+                codePlaceholder: '',
                 comData: {
                     type: 1,
                     googleCode: '',
@@ -261,22 +261,19 @@
                 // 6.邮箱、谷歌验证和手机号码，短信验证 type = 1
 
                 userApi.getUserState((data) => {
-                    console.log('data', data)
-                    this.mobileState = data.mobileAuthState
-                    this.googleState = data.googleState
 
                     if (data.emailAuthEnable === 1  && data.googleState === 0 && data.mobileAuthState === 0) {
-                      // 邮箱验证
-                      this.type = 3
+                        // 邮箱验证
+                        this.type = 3
                     } else if (data.emailAuthEnable === 1  && data.googleState === 1 && data.mobileAuthState === 0) {
-                      // 邮箱 + Google 验证码验证
-                      this.type = 2
+                        // 邮箱 + Google 验证码验证
+                        this.codePlaceholder = this.$t('usercontent.user62')
+                        this.type = 2
                     } else if (data.mobileAuthState === 1) {
-                      // 短信验证
-                      this.type = 1
+                        // 短信验证
+                        this.codePlaceholder = this.$t('market.user_SMS_code')
+                        this.type = 1
                     }
-
-
                 }, (msg) => {
                     console.error(msg)
                 })
