@@ -76,6 +76,7 @@
         },
         watch: {
             'param.status'(){
+                this.list = []
                 this.getList()
             }
         },
