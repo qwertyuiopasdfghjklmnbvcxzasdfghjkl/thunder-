@@ -87,7 +87,7 @@ export default {
       }
       // if (this.alipayData.alipay_QRcode) {
         let formData = new FormData(this.$refs.alipayForm)
-        if (!this.alipayData.alipay_QRcode){
+        if (this.alipayData.alipay_QRcode){
           formData.delete('source')
         }
         Indicator.open('Loading...')
