@@ -329,15 +329,23 @@ const formatSystemMessage = function (msg, isI18n) {
   }
   msg = (msg || '').split(' ')
   let joinSplit = ' '
+
+  let order = msg[1]
+
   if (msg.length === 1) {
     joinSplit = ''
-    msg[0] = this.$t('error_code.' + msg[0])
-  } else if (msg.length === 2) {
-    msg[1] = this.$t('error_code.' + msg[1])
-  } else if (msg.length === 3) {
-    msg[0] = this.$t('error_code.' + msg[0])
-    msg[2] = this.$t('error_code.' + msg[2])
+  } else if (msg.length >= 2) {
+    msg.splice(1, 1)
   }
+
+  msg.forEach((item, index) => {
+    msg[index] = this.$t('error_code.' + msg[index])
+  })
+
+  if (msg.length >= 2) {
+    msg.splice(1, 0, order)
+  }
+
   return msg.join(joinSplit)
 }
 utils.formatSystemMessage = formatSystemMessage
