@@ -3,13 +3,13 @@
     	<top-back>
 			<template slot="right">
 				<div class="tab">
-					<label :class="{'active':tab === 1}" v-tap="{methods:()=>{tab=1}}">{{$t('qotc.flash')}}</label>
+					<!-- <label :class="{'active':tab === 1}" v-tap="{methods:()=>{tab=1}}">{{$t('qotc.flash')}}</label> -->
 					<label :class="{'active':tab === 2}" v-tap="{methods:()=>{tab=2}}">{{$t('qotc.self_select')}}</label>
 				</div>
 			</template>
 		</top-back>
 		<div>
-			<flash v-show="tab===1" ref="flash"/>
+			<!-- <flash v-show="tab===1" ref="flash"/> -->
 			<otc-index v-show="tab===2" :pay="pay"/>
 		</div>
     </div>
@@ -26,7 +26,7 @@ export default {
 	components: {Flash,OtcIndex},
 	data(){
 		return {
-			tab:1
+			tab: 2
 		}
 	},
 	computed:{
