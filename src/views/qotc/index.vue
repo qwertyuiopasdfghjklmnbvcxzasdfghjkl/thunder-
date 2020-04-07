@@ -9,8 +9,9 @@
 			</template>
 		</top-back>
 		<div>
-			<!-- <flash v-show="tab===1" ref="flash"/> -->
+			<flash style="visibility: hidden;" v-show="tab===1" ref="flash"/>
 			<otc-index v-show="tab===2" :pay="pay"/>
+			<ad-service></ad-service>
 		</div>
     </div>
 </template>
@@ -22,8 +23,14 @@ import Flash from "./flash";
 import OtcIndex from "../otc/index"
 import store from '@/store'
 import { MessageBox, Toast } from 'mint-ui'
+import adService from './components/ad_service' // 跳转广告和客服
+
 export default {
-	components: {Flash,OtcIndex},
+	components: {
+		Flash,
+		OtcIndex,
+		adService
+	},
 	data(){
 		return {
 			tab: 2

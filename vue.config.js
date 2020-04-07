@@ -8,6 +8,7 @@ module.exports = {
   css: undefined,
   devServer: {
     hotOnly: false,
+    open: true,
     proxy:{
       "/api":{
         target: 'http://ltpro-pre.ssss.so',//这里后台的地址模拟的;应该填写你们真实的后台接口

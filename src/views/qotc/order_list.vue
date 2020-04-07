@@ -61,10 +61,10 @@
       <p class="ft-c-default f36">{{$t('qotc.otc_manage')}}<!-- OTC管理 --></p>
       <p class="mt60 ft-c-note f26">{{$t('otc_ad.otc_ad_status')}}<!-- 状态 --></p>
       <ul class="mt30 options">
-        <li :class="{active:state=== null}" v-tap="{methods:setState, state:0}">{{$t('home.home59')}}<!-- 全部 --></li>
-        <li :class="{active:state===1}" v-tap="{methods:setState, state:1}">{{$t('otc_ad.otc_ad_uncompleted')}}<!-- 未完成 --></li>
-        <li :class="{active:state===2}" v-tap="{methods:setState, state:2}">{{$t('otc_ad.otc_ad_completed')}}<!-- 已完成 --></li>
-        <li :class="{active:state===3}" v-tap="{methods:setState, state:3}">{{$t('public0.public25')}}<!-- 已取消 --></li>
+        <li :class="{active:state === null}" v-tap="{methods:setState, state: null}">{{$t('user.all')}}<!-- 全部 --></li>
+        <li :class="{active:state === 1}" v-tap="{methods:setState, state: 1}">{{$t('otc_ad.otc_ad_uncompleted')}}<!-- 未完成 --></li>
+        <li :class="{active:state === 2}" v-tap="{methods:setState, state: 2}">{{$t('otc_ad.otc_ad_completed')}}<!-- 已完成 --></li>
+        <li :class="{active:state === 3}" v-tap="{methods:setState, state: 3}">{{$t('public0.public25')}}<!-- 已取消 --></li>
       </ul>
     </mt-popup>
   </div>
@@ -88,7 +88,7 @@ export default {
       allLoaded:false,
       datas:[],
       page:1,
-      state:null,
+      state: null,
       size:4,
       totalPage:1,
       intervals: [],
