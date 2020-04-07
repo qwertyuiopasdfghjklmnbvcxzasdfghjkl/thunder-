@@ -12,6 +12,7 @@
                 v-tap="{methods:tabs,val:item.val}"
                 :class="{'active':nav===item.val}">{{item.name}}
             </li>
+            <li style="display: none">new test</li>
         </ul>
 
         <div class="page-main">
@@ -76,6 +77,7 @@
         },
         watch: {
             'param.status'(){
+                this.list = []
                 this.getList()
             }
         },
