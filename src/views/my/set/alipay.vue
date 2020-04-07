@@ -85,9 +85,11 @@ export default {
         $('input[name=alipay_number]').focus()
         return
       }
-      // if (this.alipayData.alipay_QRcode) {
+
         let formData = new FormData(this.$refs.alipayForm)
-        if (this.alipayData.alipay_QRcode){
+        // if (!this.alipayData.alipay_QRcode){
+        // 如果没有修改图片
+        if(formData.get('source').type === 'application/octet-stream'){
           formData.delete('source')
         }
         Indicator.open('Loading...')
