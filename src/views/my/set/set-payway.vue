@@ -1,23 +1,30 @@
 <template>
   <div class="page">
-    <top-back>{{$t('otc_legal.otc_legal_currency')}}<!--收款方式设置--></top-back>
+    <!--收款方式设置-->
+    <top-back>
+      {{$t('otc_legal.otc_legal_currency')}}
+
+      <!-- 右上角添加图标 -->
+      <!-- <i slot="right" class="icon_ add" v-tap="{methods: handleClickAdd}"></i> -->
+    </top-back>
 
     <div class="page-main">
       <div class="mt20">
         <!--1-1已设置银行卡-->
-        <template v-if="false">
         <section v-if="bankData.card_number" class="item block" v-tap="{methods: checkVerifyState, to: 'bank-pay'}">
             <h3><img :src="bankimg">{{$t('otc_legal.oyc_legal_Bank_card')}}<!--银行卡--><span class="right-icon"></span></h3>
             <p> <span>{{$t('otc_legal.otc_legal_Name')}}：<!--姓名--></span><span>{{bankData.card_name}}</span></p>
             <p><span>{{$t('otc_legal.otc_legal_Bank')}}：<!--开户行--></span><span>{{bankData.card_bank}}</span></p>
             <p><span>{{$t('otc_legal.otc_legal_Bank_number')}}：<!--银行卡号--></span><span>{{bankData.card_number}}</span></p>
         </section>
+
         <!--1-2未设置银行卡-->
         <section v-if="!bankData.card_number" class="item block" v-tap="{methods: checkVerifyState, to: 'bank-pay'}">
             <h3><img :src="bankimg">{{$t('otc_legal.oyc_legal_Bank_card')}}<!--银行卡--><span class="right-icon"></span></h3>
             <p><span>{{$t('public0.public196')}}</span><!--请设置银行卡信息--><span></span></p>
         </section>
 
+        <template v-if="false">
         <!--2-1已设置微信-->
         <section v-if="wechatData.wechat_number" class="item block" v-tap="{methods:checkVerifyState, to:'wechat-pay'}">
             <h3><img :src="wechatimg">{{$t('public0.public198')}}<!--微信--><span class="right-icon"></span></h3>
@@ -57,6 +64,10 @@
         </template>
       </div>
     </div>
+
+    <!-- 每种支付方式可以添加多个账号 -->
+    <!-- <set-paytype :show="show" @onChange="checkVerifyState"></set-paytype> -->
+
   </div>
 </template>
 
@@ -65,10 +76,16 @@ import { mapGetters, mapActions } from 'vuex'
 import { MessageBox } from 'mint-ui'
 import utils from '@/assets/js/utils'
 import otcApi from '@/api/otc'
+// import set_paytype from './components/set_paytype'
+
 export default {
   name: 'set-payway',
+  components: {
+    // setPaytype: set_paytype
+  },
   data () {
     return {
+      show: false,
       bankimg: require("@/assets/img/icon-bank-big.png"),
       wechatimg: require("@/assets/img/icon-wechat-big.png"),
       alipayimg: require("@/assets/img/icon-alipay-big.png"),
@@ -161,6 +178,10 @@ export default {
           })
         }
       })
+    },
+
+    handleClickAdd() {
+      this.show = !this.show
     }
   }
 }
@@ -201,5 +222,13 @@ export default {
 	    background: url('../../../assets/img/nav_right.png') no-repeat center center / 100% auto;
 	  }
 	}
+}
+
+.add {
+  width: 100%;
+  height: 0.9rem;
+  background-image: url('../../../assets/img/add.png');
+  background-position: center;
+  background-size: 0.38rem auto;
 }
 </style>
