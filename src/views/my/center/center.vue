@@ -5,7 +5,15 @@
         </top-back>
         <div class="page-main">
             <div class="mt20 full box">
-                <rail-bar v-for="data in data1" :item="data" class="hr"></rail-bar>
+                <rail-bar v-for="data in data1" :key="data.id" :item="data" class="hr"></rail-bar>
+
+                <div class="bar hr name" v-tap="{methods: () => {isShow=true}}">
+                    <p>{{$t('vote_mining.nick_name')}}<!--昵称-->
+                        <font class="f24 ft-c-lightGray" v-if="!getUserInfo.headerImagePath">
+                            （{{$t('account.user_center_change')}}）<!--修改--></font>
+                    </p>
+                    <p class="right-name ft-c-lightGray">{{getUserInfo.nickname}}</p>
+                </div>
                 <div class="bar hr">
                     <p>{{$t('account.user_center_avatar')}}<!--头像-->
                         <font class="f24 ft-c-lightGray" v-if="!getUserInfo.headerImagePath">
@@ -52,23 +60,26 @@ export default {
     },
     data () {
         return {
-            isShow:false,
+            isShow: false,
             state: null,
             orignal:config.headUrl,
             data1: [
                 {
+                    id: 1,
                     name: this.$t('account.user_center_account'),
                     small:'',
                     rightIcon:true,
                     disabled:true,
-                },
-                {
-                    name: this.$t('public0.public190'),
-                    small:'',
-                    rightIcon:true,
-                    disabled:true,
-                    action:null
                 }
+                // ,
+                // {
+                //     id: 2,
+                //     name: this.$t('public0.public190'),
+                //     small:'',
+                //     rightIcon:true,
+                //     disabled:true,
+                //     action:null
+                // }
             ],
             // data3:{
             //     route: 'kyc',
@@ -211,6 +222,9 @@ export default {
     left: 0.3rem;
     right: 0.3rem;
 }
+.name {
+    border-bottom: 0.01rem solid #273246;
+}
 .hr {
     position: relative;
 
@@ -279,6 +293,10 @@ export default {
         }
     }
     /*&.disabled p { color: #999; }*/
+    .right-name {
+        margin-right: 0.2rem;
+        text-align: right
+    }
 }
 .small {
     color: #fff;
