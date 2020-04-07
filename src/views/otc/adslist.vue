@@ -181,6 +181,14 @@
                 Indicator.open()
                 otcApi.getAdvertisementList(this.paramsChange, (res) => {
                     Indicator.close()
+                    let _tempRes = [], _ids = []
+                    res.data.forEach(item=>{
+                        if(!_ids.includes(item.ad_id)){ //去除重复广告记录
+                            _ids.push(item.ad_id)
+                            _tempRes.push(item)
+                        }
+                    })
+                    res.data = _tempRes
                     res.data.forEach((item) => { // 广告列表数据格式化处理
                         item.cur_price = item.cur_price ? utils.removeEndZero(parseFloat(item.cur_price).toFixed(2)) : 0
                         if (this.params.ad_type === 2) {
