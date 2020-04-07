@@ -98,15 +98,15 @@
     import { Toast, MessageBox } from 'mint-ui'
     import Dialog from '@/components/common/dialog'
     import nikeNameForm from '@/views/my/center/nikeNameForm' // 修改昵称
-    import select_paytype from './components/select_paytype'
+    // import select_paytype from './components/select_paytype'
     import otcConfig from '@/assets/js/otcconfig'
 
     export default {
         components: {
             numberbox,
             Dialog,
-            nikeNameForm,
-            SelectPaytype: select_paytype
+            nikeNameForm
+            // SelectPaytype: select_paytype
         },
         data(){
             return {
