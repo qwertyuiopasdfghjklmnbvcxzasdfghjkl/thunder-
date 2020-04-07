@@ -40,7 +40,12 @@
                 </div>
                 <div class="mt10 grey f26" v-if="getApiToken">{{$t('qotc.account_balance')}}<!-- 账户余额 --> {{balance}} {{token}}</div>
             </div>
-            <div class="full bgblock mt20" v-show="getApiToken">
+
+            <!-- 选择账号 -->
+            <!-- <select-paytype :payments="payments"></select-paytype> -->
+
+            <div class="full bgblock mt20" v-if="false">
+            <!-- <div class="full bgblock mt20" v-show="getApiToken"> -->
                 <p class="f26 grey">{{$t('qotc.select_collection_method')}}<!-- 选择收款方式 --></p>
                 <ul class="mt25 payments">
                     <li v-tap="{methods:()=>{payType = 1}}" class="ui-flex ui-flex-justify" :class="{active:payType==1}" v-if="payments.card_number">
@@ -64,8 +69,7 @@
                 </ul>
             </div>
         </div>
-        <router-link class="icon_ add-advertisement" v-if="isMerchant" tag="span" :to="{name:'qotcAddOrUpdate'}"></router-link>
-        <span class="icon_ online-service" v-tap="{methods:goOnlineService}"></span>
+
         <div class="bottom-layer">
             <template v-if="getApiToken">
                 <mt-button type="primary" size="large" :disabled="locked" v-tap="{methods:buyOrSell}">{{type==1?$t('qotc.buy_now'):$t('qotc.sell_now')}}<!-- '立即购买':'立即卖出' --></mt-button>
@@ -94,7 +98,7 @@
     import { Toast, MessageBox } from 'mint-ui'
     import Dialog from '@/components/common/dialog'
     import nikeNameForm from '@/views/my/center/nikeNameForm' // 修改昵称
-
+    // import select_paytype from './components/select_paytype'
     import otcConfig from '@/assets/js/otcconfig'
 
     export default {
@@ -102,6 +106,7 @@
             numberbox,
             Dialog,
             nikeNameForm
+            // SelectPaytype: select_paytype
         },
         data(){
             return {
@@ -127,7 +132,6 @@
                 isShow:false,
                 notMatched:false,
                 locked:false,
-                isMerchant:false,
             }
         },
         computed:{
@@ -212,7 +216,6 @@
             this.getOtcCurrency()
             this.getPaySettings()
             this.getReferencePrice()
-            this.getAdPermission()
         },
         methods:{
             ...mapActions(['setUserInfo', 'setUserWallets']),
@@ -329,9 +332,6 @@
                     this.currencyCount = utils.toFixed(numUtils.mul(this.balance, this.refPrice), 2)
                 }
             },
-            goOnlineService(){
-                this.$router.push({name:'online'})
-            },
             hideDialog(key){
                 if(key===true){
                     this.getInfo()
@@ -370,14 +370,6 @@
                     this.refPrice = numUtils.mul(res[0], res[1]).toFixed(2)
                 })
 
-            },
-            getAdPermission () { // 获取是否有商家权限
-                if(!this.getApiToken){
-                    return
-                }
-                otcApi.getAdPermission((res) => {
-                    this.isMerchant = res.otcMerchantsPermission==1?true:false
-                })
             },
             getPaySettings(){ //获取用户支付方式
                 if(!this.getApiToken){
@@ -454,24 +446,6 @@
         left: 0.3rem;
         right: 0.3rem;
         bottom:0.6rem;
-    }
-    .online-service {
-        position: absolute;
-        bottom:2.16rem;
-        right: 0.3rem;
-        width: 0.9rem;
-        height: 0.9rem;
-        z-index: 9999;
-        background-image: url('../../assets/img/icon_service.png');
-    }
-    .add-advertisement {
-        position: absolute;
-        bottom:3.36rem;
-        right: 0.3rem;
-        width: 0.9rem;
-        height: 0.9rem;
-        z-index: 9999;
-        background-image: url('../../assets/img/icon_add_advertisement.png');
     }
     .tab{
         height: 0.9rem;
