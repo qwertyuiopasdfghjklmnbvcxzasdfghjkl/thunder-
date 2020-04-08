@@ -39,12 +39,10 @@
             $route(_new) {
                 this.setTab()
                 if (window.StatusBar) {
-                  if(_new.name==='ucenter'){
-                    StatusBar.backgroundColorByHexString('#3B48C8')
-                  } else if(_new.name==='kline' || _new.name==='full-screen'){
-                    StatusBar.backgroundColorByHexString('#131e30')
+                  if(_new.name==='home'){
+                    StatusBar.backgroundColorByHexString('#101724')
                   } else {
-                    StatusBar.backgroundColorByHexString('#FFFFFF')
+                    StatusBar.backgroundColorByHexString('#151C2C')
                   }
                 }
             },

@@ -237,14 +237,14 @@
                 if ( window.httpd ) {
                     window.httpd.getURL((url)=>{
                         if(url.length > 0) {
-                            window.httpdURL = 'http://127.0.0.1:8080'
+                            window.httpdURL = 'http://127.0.0.1:8081'
                         } else {
                             try{
                                 window.httpd.startServer({
                                     'www_root' : wwwroot,
-                                    'port' : 8080
+                                    'port' : 8081
                                 }, (url)=>{
-                                    window.httpdURL = 'http://127.0.0.1:8080'
+                                    window.httpdURL = 'http://127.0.0.1:8081'
                                 });
                             } catch(e){console.warn(e.message)}
                         }

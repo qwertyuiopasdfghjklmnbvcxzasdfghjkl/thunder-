@@ -30,7 +30,7 @@ export default {
         ...mapGetters(['getInitMarket', 'getLang']),
         klineURL(){
             if(window['cordova']){
-                window.httpdURL = window.httpdURL?window.httpdURL:'https://etvcoins.com/kline/'
+                window.httpdURL = window.httpdURL?window.httpdURL:this.domain+'/kline/'
             }
             let _url = window.httpdURL?window.httpdURL:'/kline/'
             return `${_url}?symbol=${this.symbol}&domain=${this.domain}&lang=${this.getLang=='zh-CN'?'zh':'en'}`
