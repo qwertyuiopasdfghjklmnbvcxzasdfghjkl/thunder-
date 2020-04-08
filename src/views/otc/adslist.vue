@@ -190,7 +190,7 @@
                     })
                     res.data = _tempRes
                     res.data.forEach((item) => { // 广告列表数据格式化处理
-                        item.cur_price = item.cur_price ? utils.removeEndZero(parseFloat(item.cur_price).toFixed(2)) : 0
+                        item.cur_price = item.cur_price ? utils.toFixed(item.cur_price) : 0
                         if (this.params.ad_type === 2) {
                             item.min_amount = utils.removeEndZero(parseFloat(item.min_amount).toFixed(2))
                             item.max_amount = utils.removeEndZero(parseFloat(item.max_amount).toFixed(2))
