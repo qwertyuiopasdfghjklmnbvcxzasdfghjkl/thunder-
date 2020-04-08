@@ -95,9 +95,15 @@
     <mt-popup class="place_order_popup" v-model="placeOrderVisible" position="bottom">
       <placeorder :params="active === 'buys'? buyParams: sellParams" :ad_id="adsId" @hidePlaceOrderDialog="hidePlaceOrderDialog"></placeorder>
     </mt-popup>
-      <mt-popup class="place_order_popup" v-model="payTypeShow" position="bottom">
-          <pay-type @hidePay="hidePay"/>
-      </mt-popup>
+    <mt-popup class="place_order_popup" v-model="payTypeShow" position="bottom">
+        <pay-type @hidePay="hidePay"/>
+    </mt-popup>
+
+    <!-- 二次确认 -->
+    <confirm
+      ref="confirm"
+      @callBack="createOrders"
+    ></confirm>
   </div>
 </template>
 
@@ -111,15 +117,17 @@ import orderlist from '@/views/otc/orderlist'
 import placeorder from '@/views/otc/placeorder'
 import myadslist from '@/views/otc/myadslist'
 import PayType from "./payType";
+import confirm from '@/views/qotc/components/confirm'
 
 export default {
   name: 'otc',
   components: {
-      PayType,
+    PayType,
     adslist,
     orderlist,
     placeorder,
-    myadslist
+    myadslist,
+    confirm
   },
     props:['pay'],
   data () {
@@ -142,6 +150,7 @@ export default {
         params: {},
         symbol: "USDT",
         currency: 'CNY',
+        submitData: ''
     }
   },
     computed: {
@@ -335,14 +344,22 @@ export default {
           }
       },
       subOrder(data){
-          otcApi.createOrders(data, (id, msg) => {
-              Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
-              this.$router.replace({name:'orderDetail', params:{orderId:id}})
-          }, (msg) => {
-              console.log(msg)
-              let errMsg = typeof msg === 'string' ? msg : msg[0]
-              Tip({type: 'danger', message: this.$t(`error_code.${errMsg}`)})
-          })
+          this.submitData = data
+          this.$refs.confirm.openConfirm()
+      },
+      createOrders(data) {
+        const _data = {
+          ...this.submitData,
+          orderFinishDto: data
+        }
+        otcApi.createOrders(_data, (id, msg) => {
+            Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+            this.$router.replace({name:'orderDetail', params:{orderId:id}})
+        }, (msg) => {
+            console.log(msg)
+            let errMsg = typeof msg === 'string' ? msg : msg[0]
+            Tip({type: 'danger', message: this.$t(`error_code.${errMsg}`)})
+        })
       },
     placeOrderClick (item) {
       this.placeOrderVisible = true

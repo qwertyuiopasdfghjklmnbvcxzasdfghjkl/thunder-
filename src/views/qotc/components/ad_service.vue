@@ -1,4 +1,5 @@
 <template>
+  <!-- 添加广告和客服跳转 -->
   <div>
     <router-link class="icon_ add-advertisement" v-if="isMerchant" tag="span" :to="{name:'qotcAddOrUpdate'}"></router-link>
     <span class="icon_ online-service" v-tap="{methods: goOnlineService}"></span>

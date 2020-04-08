@@ -44,8 +44,7 @@
             <!-- 选择账号 -->
             <!-- <select-paytype :payments="payments"></select-paytype> -->
 
-            <div class="full bgblock mt20" v-if="false">
-            <!-- <div class="full bgblock mt20" v-show="getApiToken"> -->
+            <div class="full bgblock mt20" v-show="getApiToken">
                 <p class="f26 grey">{{$t('qotc.select_collection_method')}}<!-- 选择收款方式 --></p>
                 <ul class="mt25 payments">
                     <li v-tap="{methods:()=>{payType = 1}}" class="ui-flex ui-flex-justify" :class="{active:payType==1}" v-if="payments.card_number">
@@ -84,6 +83,12 @@
         <Dialog :show="notMatched" :title="$t('public0.tip')" :showBtns="false" :hide="hideMTDialog">
             <p class="tc ft-c-default f28 lh17">{{$t('qotc.no_matched_tip')}}<!-- 未匹配成功，建议您分多笔小额下单，更容易匹配成功。 --></p>
         </Dialog>
+
+        <!-- 二次确认 -->
+        <confirm
+            ref="confirm"
+            @callBack="quickMatch"
+        ></confirm>
     </div>
 </template>
 
@@ -100,12 +105,14 @@
     import nikeNameForm from '@/views/my/center/nikeNameForm' // 修改昵称
     // import select_paytype from './components/select_paytype'
     import otcConfig from '@/assets/js/otcconfig'
+    import confirm from '@/views/qotc/components/confirm'
 
     export default {
         components: {
             numberbox,
             Dialog,
-            nikeNameForm
+            nikeNameForm,
+            confirm
             // SelectPaytype: select_paytype
         },
         data(){
@@ -269,9 +276,17 @@
                     Tip({type:'error', message:this.$t('qotc.insufficient_account_balance').format(this.token)}) //{0}账户余额不足
                     return
                 }
-                this.quickMatch()
+                this.confirm()
             },
-            quickMatch(){
+            confirm() {
+                // 卖币二次确认
+                if (this.type == 2) {
+                    this.$refs.confirm.openConfirm()
+                } else {
+                    this.quickMatch()
+                }
+            },
+            quickMatch(data){
                 this.locked = true
                 let _data = {
                     currency: this.currency,
@@ -284,6 +299,11 @@
                     bench_marking_id: otcConfig.benchMarkingId,
                     isCurrentPriceMatch: 1
                 }
+
+                if (this.type == 2) {
+                    _data.orderFinishDto = data
+                }
+
                 otcApi.quickMatchAndCreate(_data, orderId=>{
                     this.locked = false
                     if(this.type==2){ //卖币成功刷新用户余额
