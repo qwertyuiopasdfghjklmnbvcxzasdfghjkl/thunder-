@@ -7,9 +7,9 @@
             <div class="mt20 full box">
                 <rail-bar v-for="data in data1" :key="data.id" :item="data" class="hr"></rail-bar>
 
-                <div class="bar hr name" v-tap="{methods: () => {isShow=true}}">
+                <div class="bar hr name" v-tap="{methods:showDialog}">
                     <p>{{$t('vote_mining.nick_name')}}<!--昵称-->
-                        <font class="f24 ft-c-lightGray" v-if="!getUserInfo.headerImagePath">
+                        <font class="f24 ft-c-lightGray" v-if="!getUserInfo.nickname">
                             （{{$t('account.user_center_change')}}）<!--修改--></font>
                     </p>
                     <p class="right-name ft-c-lightGray">{{getUserInfo.nickname}}</p>
@@ -22,7 +22,7 @@
                     <img src="../../../assets/img/user_img@2x.png" v-if="!getUserInfo.headerImagePath">
                     <img :src="orignal+getUserInfo.headerImagePath" @error="setDefaultIcon($event)" v-else>
                     <form class="imgform" ref="form">
-                      <input type="file" name="source" title=" " accept="image/*" capture="camera" @change="uploadImage"/>
+                      <input type="file" title=" " accept="image/*" :capture="capture" @change="uploadImage"/>
                     </form>
                 </div>
                 <!--<rail-bar :item="data4" class="hr"></rail-bar>-->
@@ -51,6 +51,7 @@ import Dialog from '@/components/common/dialog'
 import avatar from '@/assets/img/user_img@2x.png'
 import utils from '@/assets/js/utils'
 import config from '@/api/config'
+import photoCompress from '@/assets/js/photoCompress'
 export default {
     name: 'myInfo',
     components: {
@@ -101,6 +102,9 @@ export default {
     },
     computed:{
         ...mapGetters(['getUserInfo']),
+        capture(){
+          return this.$root.getPhonePlatform()=='ios'?false:'camera' //兼容ios,android 均调用相册
+        },
     },
     created () {
         this.getKYCstate()
@@ -128,13 +132,6 @@ export default {
         },
         initData(){
             this.data1[0].small = `<span class="ft-c-lightGray">${this.getUserInfo.username}</span>`
-            if(this.getUserInfo.nickname){
-                this.data1[1].small = `<span class="ft-c-lightGray">${this.getUserInfo.nickname}</span>`
-                this.data1[1].action = null
-            } else {
-                this.data1[1].small = `<a>${this.$t('public0.public40')}</a>`
-                this.data1[1].action = this.showDialog
-            }
         },
         modifyNickname(){
             this.$refs.nikeNameForm.submit()
@@ -166,24 +163,19 @@ export default {
         },
         uploadImage (e) {
           // 上传头像
-          var target = e.target
-          if (config.imageType.test(target.files.item(0).name) === false) {
+          let _file = e.target.files[0]
+          if (!config.imageType.test(_file.name.toLowerCase())) {
             return Tip({type: 'danger', message: this.$t('public0.public43')}) // 请上传JPG、PNG、JPEG、BMP格式的图片
           }
-          let isTrue = utils.limitUploadImage(target, (msg) => {
-            Tip({type: 'danger', message: this.$t(msg).format('3')})
-          }, 3)
-          if (!isTrue) {
-            target.value = ''
-            return
-          }
-          var formData = new FormData(this.$refs.form)
-          console.log(formData.getAll('source'))
-          userUtils.uploadHeader(formData, (msg) => {
-            this.getInfo()
-            Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
-          }, (msg) => {
-            Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+          photoCompress(_file, {width:120, height:120}, (blob)=>{
+            var formData = new FormData(this.$refs.form)
+            formData.append('source',new window.File([blob], _file.name, {type: _file.type}))
+            userUtils.uploadHeader(formData, (msg) => {
+              this.getInfo()
+              Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+            }, (msg) => {
+              Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+            })
           })
         },
         loginOut () {
