@@ -1,4 +1,4 @@
-let domain = process.env.NODE_ENV === 'development' ? 'thunder-test.lab.ssss.so' : location.host.split(':')[0]
+let domain = process.env.NODE_ENV === 'development' ? 'thunder-dev.lab.ssss.so' : location.host.split(':')[0]
 // let domain = process.env.NODE_ENV === 'development' ? 'ltpro-pre.ssss.so' : location.host.split(':')[0]
 // let domain = process.env.NODE_ENV === 'development' ? 'ltpro.vip' : location.host.split(':')[0]
 
@@ -24,12 +24,12 @@ const config = {
   version:'1.0.0',
   updateInfo:{  //更新日志
   	'zh-CN':`
-    <p class="tl">1. 优化部分页面界面显示</p>
-    <p class="tl">2. 优化内部转账功能</p>
+    <p class="tl">1. 临时关闭快捷买卖功能</p>
+    <p class="tl">2. 优化部分页面界面显示</p>
     `,
   	'en':`
-    <p class="tl">1. Optimize partial page interface display</p>
-    <p class="tl">2. Optimize internal transfer function</p>
+    <p class="tl">1. Temporarily close the quick sale function</p>
+    <p class="tl">2. Optimize partial page interface display</p>
     `
   }
 }

@@ -239,14 +239,14 @@
                         if(url.length > 0) {
                             window.httpdURL = 'http://127.0.0.1:8080'
                         } else {
-                            window.httpd.startServer({
-                                'www_root' : wwwroot,
-                                'port' : 8080
-                            }, (url)=>{
-                                window.httpdURL = 'http://127.0.0.1:8080'
-                            }, (error)=>{
-                                Tip({type:'error', message:'failed to start server: '+ error});
-                            });
+                            try{
+                                window.httpd.startServer({
+                                    'www_root' : wwwroot,
+                                    'port' : 8080
+                                }, (url)=>{
+                                    window.httpdURL = 'http://127.0.0.1:8080'
+                                });
+                            } catch(e){console.warn(e.message)}
                         }
 
                     },()=>{});

@@ -46,11 +46,6 @@ export default {
 			console.log(e)
 		}
 	},
-	created(){
-		this.$nextTick(()=>{
-			console.log( this.$refs.flash)
-		})
-	},
 	beforeRouteEnter (to, from, next) {
 		console.log(store.getters.getApiToken)
 		if(store.getters.getApiToken && store.getters.getUserInfo.mobileAuthEnable!=1){
@@ -63,9 +58,6 @@ export default {
 		} else {
 			next()
 		}
-	},
-	mounted(){
-		console.log(this.$refs.flash.hasPay)
 	},
 	methods: {}
 }
