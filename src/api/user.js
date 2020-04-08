@@ -35,7 +35,7 @@ user.login = login
 
 // 获取用户信息
 const getUserInfo = function (success, error) {
-  api.get(`${domain}api/v2/user/info`, (res) => {
+  api.get(`${domain}api/v2/user/info?_t=${Math.random(1000000)}`, (res) => {
     if (res.rst === 1) {
       success && success(res.data)
     } else {
