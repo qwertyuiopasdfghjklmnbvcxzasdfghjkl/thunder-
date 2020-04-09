@@ -1,19 +1,23 @@
 <template>
     <div class="page">
         <top-back :back="true">
-            {{getUserInfo.mobileAuthEnable !==
-            1?$t('account.user_bind_SMS_verification'):$t('account.user_unbind_SMS_verification')}}
+            {{ getUserInfo.mobileAuthEnable !== 1
+            ? $t('account.user_bind_SMS_verification')
+            : $t('business.MOBILE')
+            }}
+            <!-- : $t('account.user_unbind_SMS_verification') -->
         </top-back>
 
         <div class="page-main">
-            <p class="mt20 f24 ft-c-main" v-if="getUserInfo.mobileAuthEnable === 1">
-                （{{$t('public0.public245')}}）<!--为了您的资产安全，不建议您解除手机短信验证码功能。--></p>
+            <!--为了您的资产安全，不建议您解除手机短信验证码功能。-->
+            <!-- <p class="mt20 f24 ft-c-main" v-if="getUserInfo.mobileAuthEnable === 1">
+                （{{$t('public0.public245')}}）</p> -->
             <!--1、绑定短信认证-->
             <div class="input_cont mt20">
-                <div class="form">
-                    <div class="form-row countryCode" v-if="getUserInfo.mobileAuthEnable !== 1">
+                <div class="form" v-if="getUserInfo.mobileAuthEnable === 0">
+                    <div class="form-row countryCode">
                         <select v-model="mobileFormData.countryCode">
-                            <option v-for="item in areaCodeList" :value="item.code">{{item.name}}<!--中国大陆-->&nbsp;{{item.code}}</option>
+                            <option v-for="item in areaCodeList" :key="item.key" :value="item.code">{{item.name}}<!--中国大陆-->&nbsp;{{item.code}}</option>
                         </select>
                         <ui-input class="mobile"
                                   :label="$t('account.user_center_phone')"
@@ -46,10 +50,26 @@
                            v-tap="{methods: ()=>{showpwd = !showpwd}}"></i>
                     </div>
                 </div>
+
+                <!-- 已绑定 -->
+                <div class="form" v-if="getUserInfo.mobileAuthEnable === 1">
+                    <div class="form-row countryCode">
+                        <ui-input
+                            :label="$t('account.user_center_phone')"
+                            v-model="mobileFormData.phoneNumber"
+                            :placeholder="true"
+                            :readonly="true"
+                            :title="$t('account.user_center_phone')"></ui-input><!--手机号-->
+                    </div>
+                </div>
             </div>
-            <mt-button type="primary" class="mt50" size="large" :disabled="lock" v-tap="{methods: bindMobile}">
-                {{getUserInfo.mobileAuthEnable !== 1 ? $t('account.user_center_operate_bind') :
-                $t('account.user_center_operate_unbind')}}<!--绑定--></mt-button>
+
+            <!--绑定-->
+            <mt-button v-if="getUserInfo.mobileAuthEnable === 0" type="primary" class="mt50" size="large" :disabled="lock" v-tap="{methods: bindMobile}">
+                {{$t('account.user_center_operate_bind')}}</mt-button>
+            <!-- <mt-button type="primary" class="mt50" size="large" :disabled="lock" v-tap="{methods: bindMobile}">
+            {{getUserInfo.mobileAuthEnable !== 1 ? $t('account.user_center_operate_bind') :
+            $t('account.user_center_operate_unbind')}}</mt-button> -->
         </div>
         <div v-show="false"> <!-- 用于表单验证 -->
             <input name="phoneNumber" v-model="mobileFormData.phoneNumber" v-validate="'required|telphone'">

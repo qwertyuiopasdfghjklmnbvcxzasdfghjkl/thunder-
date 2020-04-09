@@ -38,6 +38,7 @@
                                v-validate="`required|intOrDecimal${buyType ? '|minTradeLimit:2|maxTradeLimit:2' : ''}`"
                                data-vv-name="currency_count" :accuracy="2"/>
                     <em>{{params.currency}}</em>
+                    <!-- <em>￥</em> -->
                 </section>
             </section>
             <section class="form-buttons">
@@ -46,24 +47,36 @@
                     <!--确认--></mt-button>
             </section>
         </section>
+
+        <!-- 二次确认 -->
+        <confirm
+            ref="confirm"
+            :title="$t('qotc.confirm_release_symbol')"
+            :desc="$t('qotc.release_symbol_tip')"
+            @callBack="finishOrder"
+        ></confirm>
     </section>
 </template>
 
 <script>
+    import { mapGetters } from 'vuex'
     import {Validator} from 'vee-validate'
     // import Tip from '@/assets/js/tip'
     import utils from '@/assets/js/utils'
     import numUtils from '@/assets/js/numberUtils'
     import otcApi from '@/api/otc'
     import numberbox from '@/components/numberInput'
+    import confirm from '@/views/qotc/components/confirm'
 
     export default {
         props: ['params', 'ad_id'],
         components: {
-            numberbox
+            numberbox,
+            confirm,
         },
         data() {
             return {
+                fbShow: false,
                 detailData: {},
                 symbol_count: '',
                 currency_count: '',
@@ -73,6 +86,7 @@
             }
         },
         computed: {
+            ...mapGetters(['getUserInfo']),
             msgs() {
                 return {
                     symbol_count: {required: this.$t('public0.public12')}, // 请输入数量
@@ -217,6 +231,14 @@
                     this.$emit('hidePlaceOrderDialog', true, data)
                     this.locked = false
                 })
+            },
+
+            hideFBDialog(){
+                this.fbShow = false
+            },
+
+            finishOrder() {
+
             }
         }
     }
@@ -351,5 +373,11 @@
     .form-buttons /deep/ button:last-of-type {
         margin-left: 0.3rem;
         flex: 1;
+    }
+    .verify_popup{
+        width: 100%;
+        border-top-left-radius: 0.32rem;
+        border-top-right-radius: 0.32rem;
+        overflow: hidden;
     }
 </style>

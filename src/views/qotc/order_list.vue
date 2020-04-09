@@ -20,7 +20,7 @@
         :autoFill="false"
           ref="loadmore">
           <ul class="list mt20">
-            <li v-for="item in datas" v-tap="{methods:$root.routeTo, to:'orderDetail',params:{orderId:item.order_id}}">
+            <li v-for="item in datas" :key="item.ad_id" v-tap="{methods:$root.routeTo, to:'orderDetail',params:{orderId:item.order_id}}">
               <div class="header ui-flex ui-flex-justify">
                 <span class="f32">
                   <font :class="[!isBuyType(item) ? 'red_color' : 'green_color']">{{getTradeType(item)}}</font> {{item.symbol}}

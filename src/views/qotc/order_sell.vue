@@ -58,7 +58,7 @@
 
       <div class="ui-flex ui-flex-justify btns" v-if="orderState.state==2">
         <mt-button type="cancel" size="large" :disabled="canAppeal" v-tap="{methods:$root.routeTo, to:'qotcAppeal', params:{orderNumber:orderInfo.order_number}}">{{canAppeal?`${$t('qotc.appeal')}${appealTime}`:$t('qotc.appeal')}}<!-- 申诉 --></mt-button>
-        <mt-button type="primary" size="large" class="ml30" v-tap="{methods:()=>{fbShow = true}}">{{$t('qotc.release_symbol')}}<!-- 放币 --></mt-button>
+        <mt-button type="primary" size="large" class="ml30" v-tap="{methods:()=>{$refs.confirm.openConfirm()}}">{{$t('qotc.release_symbol')}}<!-- 放币 --></mt-button>
       </div>
       <div class="btns" v-if="orderState.state==21">
         <mt-button type="cancel" size="large" disabled>{{$t('qotc.appealed')}}<!-- '已申诉' --></mt-button>
@@ -75,9 +75,14 @@
         <p class="ft-c-default f48 mt20 tc">{{orderInfo.toUserMobile}}&nbsp;</p>
         <a class="mint-button mt40 mint-button--primary mint-button--large" style="line-height: 0.9rem;" :href="`tel:${orderInfo.toUserMobile}`">{{$t('qotc.call_right_now')}}<!-- 立即呼叫 --></a>
     </Dialog>
-    <mt-popup class="verify_popup" v-model="fbShow" position="bottom">
-      <vertify ref="vertify" :params="params" :mobileState="getUserInfo.mobileAuthEnable" :googleState="getUserInfo.googleAuthEnable" @removeDialog="hideFBDialog" @okCallback="finishOrder"></vertify>
-    </mt-popup>
+
+    <!-- 二次确认 -->
+    <confirm
+      ref="confirm"
+      :title="$t('qotc.confirm_release_symbol')"
+      :desc="$t('qotc.release_symbol_tip')"
+      @callBack="finishOrder"
+    ></confirm>
   </div>
 </template>
 
@@ -89,14 +94,12 @@ import utils from '@/assets/js/utils'
 import Dialog from '@/components/common/dialog'
 import { Toast } from 'mint-ui'
 import otcConfig from '@/assets/js/otcconfig'
-import vertify from './vertify'
-
-
+import confirm from './components/confirm'
 
 export default {
   components: {
     Dialog,
-    vertify,
+    confirm,
   },
   props: {
     adInfo: {
@@ -113,7 +116,7 @@ export default {
   },
   data(){
     return {
-      fbShow:false,
+      fbShow: false,
       dialShow:false,
       payInfo:null,
       canAppeal:false,
@@ -128,15 +131,6 @@ export default {
   },
   computed:{
     ...mapGetters(['getUserInfo']),
-    params () {
-      return {
-        title:this.$t('qotc.confirm_release_symbol'),//'放币确认'
-        desc:this.$t('qotc.release_symbol_tip'), //请务必登录网上银行或第三方支付账号，确认收到该笔款项后，再进行放币。
-        phoneNumber: this.getUserInfo.mobile,
-        countryCode: this.getUserInfo.countryCode || '+86',
-        email: this.getUserInfo.email || this.getUserInfo.username
-      }
-    },
     payTrans(){
       let _payTrans = {}
       for(let item of otcConfig.payments){
@@ -330,6 +324,7 @@ export default {
     finishOrder (data) { // 释放货币
       if (this.orderInfo.state === 1 && this.orderInfo.pay_state === 1) {
         data.id = this.orderInfo.order_id
+
         otcApi.finishOrder(data, (msg) => {
           this.orderInfo.state = 2
           this.fbShow = false

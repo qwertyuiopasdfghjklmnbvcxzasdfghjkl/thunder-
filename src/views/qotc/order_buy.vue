@@ -29,6 +29,13 @@
           <p class="white f32 tc mt30">{{orderInfo.cur_price}}</p>
         </div>
       </div>
+
+      <!-- 选择支付方式  -->
+      <!-- <div class="ui-flex ui-flex-justify">
+        <span>选择</span>
+        <i class="icon_ icon-right">alipay</i>
+      </div> -->
+
       <div class="user_info grey f32" v-if="orderInfo.cancelType!=2">
         <div class="ui-flex ui-flex-justify">
           <span>{{$t('user.name')}}<!-- 姓名 --></span>
@@ -43,6 +50,11 @@
             v-clipboard:copy="currentPayInfo.number"
             v-clipboard:success="onCopy"
             v-clipboard:error="onError"></i></span>
+        </div>
+        <!-- 开户行 -->
+        <div class="ui-flex ui-flex-justify">
+          <span>{{$t('otc_legal.otc_legal_Bank')}}</span>
+          <span class="white">{{currentPayInfo.bank}}</span>
         </div>
         <div class="ui-flex ui-flex-justify" v-if="orderInfo.pay_type==2||orderInfo.pay_type==3">
           <span>{{$t('qotc.collection_qrcode')}}<!-- 收款二维码 --></span>

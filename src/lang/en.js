@@ -1887,6 +1887,8 @@ export default {
 			"min_single_quota": "Minimum single limit",
 			"insufficient_account_balance": "{0} insufficient account balance",
 			"check_to_release_symbol": "Be sure to log in to your beneficiary account and confirm that the deposit will be made within {0} minutes after receiving the payment",
+			"confirmation_of_collections": "Please confirm that I have logged into the collection account and that the collection is correct.",
+			"confirmation_of_collections2": "Please confirm payment information.",
 			"contact_buyer": "Contact Buyer",
 			"trans_object": "Trading partners",
 			"input_premium_rate": "Please enter a premium rate",

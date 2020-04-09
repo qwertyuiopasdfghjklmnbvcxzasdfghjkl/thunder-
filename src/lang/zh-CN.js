@@ -1903,6 +1903,8 @@ export default {
 			"min_single_quota": "最小单笔限额",
 			"insufficient_account_balance": "{0}账户余额不足",
 			"check_to_release_symbol": "请务必登录收款账户，并确认收到该笔款项后的 {0} 分钟内进行放币",
+			"confirmation_of_collections": "我确认已登录收款账户，并核对收款无误。",
+			"confirmation_of_collections2": "请确认收款信息",
 			"contact_buyer": "联系买家",
 			"trans_object": "交易对象",
 			"input_premium_rate": "请输入溢价率",

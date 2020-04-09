@@ -9,8 +9,10 @@
 			</template>
 		</top-back>
 		<div>
-			<flash style="visibility: hidden;" v-show="tab===1" ref="flash"/>
+			<flash v-show="tab===1" ref="flash"/>
 			<otc-index v-show="tab===2" :pay="pay"/>
+
+			<!-- 跳转广告和客服 -->
 			<ad-service></ad-service>
 		</div>
     </div>

@@ -86,6 +86,12 @@
         <mt-button type="primary" size="large" v-tap="{methods:saveAds}">{{ad_id?$t('update.update'):$t('qotc.publish')}}<!-- '更新':'发布' --></mt-button>
       </div>
     </div>
+
+    <!-- 二次确认 -->
+    <confirm
+      ref="confirm"
+      @callBack="createAds"
+    ></confirm>
   </div>
 </template>
 
@@ -101,12 +107,14 @@ import { Validator } from 'vee-validate'
 import { MessageBox } from 'mint-ui'
 import store from '@/store'
 import otcConfig from '@/assets/js/otcconfig'
+import confirm from '@/views/qotc/components/confirm'
 
 
 export default {
   components: {
     numberbox,
-    Dialog
+    Dialog,
+    confirm
   },
   data(){
     return {
@@ -340,16 +348,26 @@ export default {
           return
         }
         this.locked = true
-        Indicator.open('Loading...')
         if (this.ad_id) {
           this.updateAds()
         } else {
-          this.createAds()
+          // this.createAds()
+          this.confirm()
         }
       })
     },
-    createAds () {
-      var formData = JSON.parse(JSON.stringify(this.formData))
+
+    confirm() {
+      this.$refs.confirm.openConfirm()
+    },
+
+    createAds (data) {
+      Indicator.open('Loading...')
+      let _data = {
+        ...this.formData,
+        orderFinishDto: data
+      }
+      var formData = JSON.parse(JSON.stringify(_data))
       otcApi.createAdvertisement(formData, (msg) => {
         this.locked = false
         Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
@@ -368,6 +386,7 @@ export default {
       })
     },
     updateAds () {
+      Indicator.open('Loading...')
       var formData = JSON.parse(JSON.stringify(this.formData))
       otcApi.updateAdvertisement(this.ad_id, formData, (msg) => {
         this.locked = false
