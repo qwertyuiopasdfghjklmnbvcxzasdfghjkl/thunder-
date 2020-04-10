@@ -346,7 +346,11 @@ export default {
       },
       subOrder(data){
           this.submitData = data
-          this.$refs.confirm.openConfirm()
+          if(data.trade_type === 2){
+            this.$refs.confirm.openConfirm()
+          } else {
+            this.createOrders({})
+          }
       },
       createOrders(data) {
         const _data = {
