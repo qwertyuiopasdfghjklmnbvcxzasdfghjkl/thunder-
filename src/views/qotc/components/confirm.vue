@@ -186,7 +186,7 @@ export default {
         }
         let _data = {
           verifyType: this.type,
-          googleCode: this.form.googleCode,
+          // googleCode: this.form.googleCode,
           code: this.form.smsCode,
           mobileNumber: this.phoneNumber
         };
