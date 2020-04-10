@@ -184,14 +184,7 @@
             },
             symbol() {
                 this.dataSocket && this.dataSocket.switchSymbol(this.symbol)
-            },
-            'market'() {
-                this.showMarkets = false
-                console.log(this.symbol)
-                this.dataSocket.close()
-                this.InitDataSoket()
                 this.getCNYPrice()
-                // this.dataSocket.switchSymbol(this.symbol)
             },
             curMarket() {
                 this.checkMarket()

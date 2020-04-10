@@ -351,8 +351,11 @@ export default {
         if (this.ad_id) {
           this.updateAds()
         } else {
-          // this.createAds()
-          this.confirm()
+          if(this.formData.ad_type==2){
+            this.confirm()
+          } else {
+            this.createAds()
+          }
         }
       })
     },
