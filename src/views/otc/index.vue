@@ -96,7 +96,7 @@
       <placeorder :params="active === 'buys'? buyParams: sellParams" :ad_id="adsId" @hidePlaceOrderDialog="hidePlaceOrderDialog"></placeorder>
     </mt-popup>
     <mt-popup class="place_order_popup" v-model="payTypeShow" position="bottom">
-        <pay-type @hidePay="hidePay"/>
+        <pay-type @hidePay="hidePay" :pay_type="pay_type" :payTypeShow="payTypeShow"/>
     </mt-popup>
 
     <!-- 二次确认 -->
@@ -136,6 +136,7 @@ export default {
       scroll: false,
       active: 'buys',
       adsId: null,
+      pay_type: '', // 广告对应的收款方式
       symbolList: otcConfig.coins,
       currencyList: otcConfig.currencys,
       swiperOption: {
@@ -146,7 +147,7 @@ export default {
         spaceBetween: 15,
         freeMode: true
       },
-        payTypeShow:false,
+        payTypeShow: false,
         params: {},
         symbol: "USDT",
         currency: 'CNY',
@@ -364,6 +365,7 @@ export default {
     placeOrderClick (item) {
       this.placeOrderVisible = true
       this.adsId = item.ad_id
+      this.pay_type = item.pay_type &&item.pay_type.split(',')
     },
   }
 }

@@ -58,7 +58,7 @@
         </div>
         <span class="f30 grey mt10 ml20 mr20" style="line-height: 0.9rem;"> ~ </span>
         <div class="kuan ui-flex-1"  :class="{error: errors.has('max_amount')}">
-          <numberbox id="ads_max_amount" v-model="formData.max_amount" :size="tradeLimitAccuracy.size" :accuracy="tradeLimitAccuracy.accuracy" v-validate="'required|intOrDecimal|maxamount|maxInputValue:9999999999,public0.public259'" data-vv-name="max_amount" :placeholder="$t('qotc.max_single_quota')"/><!-- 最大单笔限额 -->
+          <numberbox id="ads_max_amount" v-model="formData.max_amount" :size="tradeLimitAccuracy.size" :accuracy="tradeLimitAccuracy.accuracy" v-validate="'required|intOrDecimal|maxamount|maxVerification|maxInputValue:9999999999,public0.public259'" data-vv-name="max_amount" :placeholder="$t('qotc.max_single_quota')"/><!-- 最大单笔限额 -->
         </div>
       </div>
       <div class="f30 mt40">{{formData.ad_type==1?$t('gcox_otc.payment_method'):$t('gcox_otc.currency_way')}}<!-- '付款方式':'收款方式' --></div>
@@ -300,6 +300,28 @@ export default {
           }
         }
       })
+      Validator.extend('maxVerification', {
+        getMessage: (field, args) => {
+          if (this.formData.ad_type === 1) {
+            // 最大单笔限额额必须小于等于交易数量
+            return this.$t('otc_ad.maximum_single_limit_must_be_less').format(this.coinMinLimit)
+          } else {
+            // 最大单笔限额 ≤ 单笔最大金额=交易数量*交易价格
+            return this.$t('otc_ad.no_more_than_the_maximum_limit')
+          }
+        },
+        validate: (value, args) => {
+          value = parseFloat(value)
+          if (this.formData.ad_type === 1) {
+            return this.formData.symbol_count >= this.formData.max_amount
+          } else if (this.formData.ad_type === 2) {
+            return this.formData.symbol_count * this.formData.lowest_price >= this.formData.max_amount
+          } else {
+            return true
+          }
+        }
+      })
+
     },
     isPayChecked(_type){
       return this.formData.pay_type.includes(_type)

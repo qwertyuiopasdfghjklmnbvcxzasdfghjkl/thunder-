@@ -2,8 +2,15 @@
     <div class="pay_type">
         <h4 class="title">{{$t('shop.payment')}}</h4>
         <ul>
-            <li v-for="item in payments" v-tap="{methods:getPay,data:item}"
-                :class="{'active': payType.payType === item.payType}">
+            <li
+                v-for="item in payments"
+                :key="item.payType"
+                v-tap="{methods:getPay,data:item}"
+                :class="{
+                        'active': payType.payType === item.payType,
+                        'disabled': checkPayType(item.payType)
+                    }"
+            >
                 <p>{{item.title}}</p>
                 <span>{{item.number}}</span>
             </li>
@@ -22,6 +29,8 @@
     import otcApi from '@/api/otc'
     export default {
         name: "payType",
+        // 广告对应的收款方式
+        props: ['pay_type', "payTypeShow"],
         data() {
             return {
                 payments: [],
@@ -33,11 +42,24 @@
                 return !this.payType.payType
             },
         },
+        watch: {
+            payTypeShow(newVal, oldVal) {
+                if (!newVal) {
+                    this.payType = {}
+                }
+            }
+        },
 
         created() {
             this.getPaySettings()
         },
         methods: {
+            // 验证广告对应的收款方式
+            checkPayType(type) {
+                type += ''
+                return !this.pay_type.includes(type)
+            },
+
             getPaySettings(){ //获取用户支付方式
                 otcApi.getPaySettings(res=>{
                     let type = res.data.pay_type.split(',') || []
@@ -88,8 +110,10 @@
                 this.$emit('hidePay')
             },
             getPay(d){
-                console.log(d.data)
-                this.payType = d.data
+                const type = d.data.payType + ''
+                if (this.pay_type.includes(type)) {
+                    this.payType = d.data
+                }
             },
             sub(){
                 this.$emit('hidePay',this.payType)
@@ -125,6 +149,9 @@
                 background-size: 0.4rem;
                 background-repeat: no-repeat;
             }
+        }
+        .disabled {
+            color: #6d7fac;
         }
     }
 }

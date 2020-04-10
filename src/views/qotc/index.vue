@@ -19,8 +19,6 @@
 </template>
 
 <script>
-
-
 import Flash from "./flash";
 import OtcIndex from "../otc/index"
 import store from '@/store'

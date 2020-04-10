@@ -225,8 +225,7 @@
                         symbol: this.detailData.symbol,
                         currency: this.detailData.currency,
                         symbol_count: this.symbol_count,
-                        currency_count: this.currency_count,
-                        payType: 2
+                        currency_count: this.currency_count
                     }
                     this.$emit('hidePlaceOrderDialog', true, data)
                     this.locked = false

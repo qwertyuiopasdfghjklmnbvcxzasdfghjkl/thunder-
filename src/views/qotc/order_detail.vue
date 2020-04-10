@@ -4,7 +4,13 @@
       <i class="icon_service" slot="right" v-tap="{methods:goOnlineService}"></i>
     </top-back>
     <div class="page-main">
-      <component :is="isBuyer" :adInfo="adInfo" :orderInfo="orderInfo" :serveTime="serveTime"></component>
+      <component
+        :is="isBuyer"
+        :adInfo="adInfo"
+        :orderInfo="orderInfo"
+        :serveTime="serveTime"
+        :pay_type="pay_type"
+      ></component>
     </div>
   </div>
 </template>
@@ -25,7 +31,8 @@ export default {
   },
   data(){
     return {
-      data:{}
+      data:{},
+      pay_type: null // 广告收款方式
     }
   },
   computed:{
@@ -41,6 +48,8 @@ export default {
     },
     orderInfo(){
       let orderInfo = this.data.orderInfo || {}
+      this.pay_type = this.data.adInfo.pay_type.split(',')
+
       orderInfo.total_price = utils.removeEndZero(utils.toFixed(orderInfo.currency_count,2)).toMoney()
       orderInfo.cur_price = utils.removeEndZero(utils.toFixed(orderInfo.cur_price,2)).toMoney()
       orderInfo.symbol_count = utils.removeEndZero(utils.toFixed(orderInfo.symbol_count,8)).toMoney()

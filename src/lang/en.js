@@ -904,7 +904,11 @@ export default {
 			"otc_ad_management": "My Offers",
 			"otc_others": "Others",
 			"otc_ad_Order_Management": "Order Management",
-			"otc_ad_end_time": "End Time"
+			"otc_ad_end_time": "End Time",
+			"minimum_transaction_amount": "Minimum transaction amount",
+			"minimum_number_of_transactions": "Minimum number of transactions",
+			"maximum_single_limit_must_be_less": "Maximum single limit must be less than or equal to the number of transactions",
+			"no_more_than_the_maximum_limit": "No more than the maximum limit"
 		},
 		"public0": {
 			"reason": "Cause of failure",

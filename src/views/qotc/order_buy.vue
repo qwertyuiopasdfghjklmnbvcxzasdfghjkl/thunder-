@@ -30,36 +30,45 @@
         </div>
       </div>
 
-      <!-- 选择支付方式  -->
-      <!-- <div class="ui-flex ui-flex-justify">
-        <span>选择</span>
-        <i class="icon_ icon-right">alipay</i>
-      </div> -->
-
+      <!-- 广告收款方式 -->
       <div class="user_info grey f32" v-if="orderInfo.cancelType!=2">
         <div class="ui-flex ui-flex-justify">
           <span>{{$t('user.name')}}<!-- 姓名 --></span>
-          <span class="white">{{currentPayInfo.name}} <i class="icon_ copy"
-            v-clipboard:copy="currentPayInfo.name"
+
+          <span class="white">{{getRealName}} <i class="icon_ copy"
+            v-clipboard:copy="getRealName"
             v-clipboard:success="onCopy"
             v-clipboard:error="onError"></i></span>
         </div>
-        <div class="ui-flex ui-flex-justify">
-          <span>{{currentPayInfo.label}}</span>
-          <span class="white">{{currentPayInfo.number}} <i class="icon_ copy"
-            v-clipboard:copy="currentPayInfo.number"
-            v-clipboard:success="onCopy"
-            v-clipboard:error="onError"></i></span>
-        </div>
-        <!-- 开户行 -->
-        <div class="ui-flex ui-flex-justify">
-          <span>{{$t('otc_legal.otc_legal_Bank')}}</span>
-          <span class="white">{{currentPayInfo.bank}}</span>
-        </div>
-        <div class="ui-flex ui-flex-justify" v-if="orderInfo.pay_type==2||orderInfo.pay_type==3">
-          <span>{{$t('qotc.collection_qrcode')}}<!-- 收款二维码 --></span>
+
+        <template v-for="(item, index) of currentPayInfo" v-if="pay_type.includes(item.type)">
+          <div class="ui-flex ui-flex-justify">
+            <span>{{item.label}}</span>
+            <span class="white">{{item.number}} <i class="icon_ copy"
+              v-clipboard:copy="item.number"
+              v-clipboard:success="onCopy"
+              v-clipboard:error="onError"></i></span>
+          </div>
+
+           <!-- 开户行 -->
+          <div class="ui-flex ui-flex-justify" v-if="pay_type.includes(item.type) && item.type === '1'">
+            <span>{{$t('otc_legal.otc_legal_Bank')}}</span>
+            <span class="white">{{item.bank}}</span>
+          </div>
+
+          <!-- 收款二维码 -->
+          <div class="ui-flex ui-flex-justify" v-if="pay_type.includes(item.type) && ['2', '3'].includes(item.type)">
+            <span>{{$t('qotc.collection_qrcode')}}</span>
+            <span class="white"><i class="icon_ qrcode" v-tap="{methods: handleClickQRCode, index: index}"></i></span>
+          </div>
+        </template>
+
+        <!-- 收款二维码 -->
+       <!--  <div class="ui-flex ui-flex-justify" v-if="pay_type.includes('2') || pay_type.includes('3')">
+          <span>{{$t('qotc.collection_qrcode')}}</span>
           <span class="white"><i class="icon_ qrcode" v-tap="{methods:()=>{qrShow = true}}"></i></span>
-        </div>
+        </div> -->
+
         <div class="ui-flex ui-flex-justify">
           <span>{{$t('usercontent.user90')}}<!-- 备注 --></span>
           <span class="white">{{$t('qotc.pay_note_tip')}}<!-- 转账时请勿备注任何信息 --></span>
@@ -89,7 +98,7 @@
 
     </div>
     <Dialog :show="qrShow" :title="$t('qotc.collection_qrcode')" :hide="hideQRDialog" :showCancel="false" :submit="hideQRDialog"><!-- 收款二维码 -->
-        <div class="tc"><img :src="currentPayInfo.url"></div>
+        <div class="tc"><img :src="QRcodeUrl"></div>
         <p class="ft-c-note mt25 f28 tc">{{$t('qotc.press_to_save_qrcode')}}<!-- 长按二维码保存到手机 --></p>
     </Dialog>
     <Dialog :show="ccShow" :title="$t('qotc.confirm_order_cancel')" :cancelText="$t('qotc.think_again')" :hide="hideCCDialog" :submit="cancelOrder"> <!-- 确认取消订单;我再想想 -->
@@ -107,11 +116,11 @@
                 <td>{{$t('qotc.payment_amount')}}<!-- 支付金额 --></td><td>： <strong class="f40 bold">{{orderInfo.currency_count}} {{orderInfo.currency}}</strong></td>
               </tr>
               <tr>
-                <td>{{$t('user.name')}}<!-- 姓名 --></td><td>： {{currentPayInfo.name}}</td>
+                <td>{{$t('user.name')}}<!-- 姓名 --></td><td>： {{getRealName}}</td>
               </tr>
-              <tr>
+           <!--    <tr>
                 <td>{{currentPayInfo.label}}</td><td>： {{currentPayInfo.number}}</td>
-              </tr>
+              </tr> -->
             </table>
           </div>
         </div>
@@ -152,6 +161,10 @@ export default {
     orderInfo: {
       type: Object,
       default: {}
+    },
+    pay_type: {
+      type: Array,
+      default: []
     }
   },
   data(){
@@ -160,20 +173,27 @@ export default {
       ccShow:false,
       zfShow:false,
       dialShow:false,
-      payInfo:null,
+      payInfo: null,
       canAppeal:false,
       appealTime:'00:00',
       surplusTime: '00:00',
-      interval:null
+      interval:null,
+      pay_typeObj: '',
+      QRcodeUrl: ''
     }
   },
   watch:{
     orderInfo(){
-      console.log('orderInfo')
+      console.log('orderInfo', this.orderInfo)
     }
+  },
+  mounted() {
   },
   computed:{
     ...mapGetters(['getUserInfo']),
+    getRealName() {
+      return this.payInfo && this.payInfo.real_name
+    },
     payTrans(){
       let _payTrans = {}
       for(let item of otcConfig.payments){
@@ -269,51 +289,73 @@ export default {
     },
     currentPayInfo () {
       if (this.payInfo) {
-        switch (this.orderInfo.pay_type) {
-          case '1': // 银行卡
-            return {
-              label: this.$t(this.payTrans[1]), // 银行卡号
-              name: this.payInfo.real_name,
-              bank: this.payInfo.data.card_bank,
-              number: this.payInfo.data.card_number
-            }
-          case '2': // 支付宝
-            return {
-              label: this.$t(this.payTrans[2]), // 支付宝账号
-              name: this.payInfo.real_name,
-              number: this.payInfo.data.alipay_number,
-              url: this.payInfo.data.alipay_image_path
-            }
-          case '3': // 微信
-            return {
-              label: this.$t(this.payTrans[3]), // 微信账号
-              name: this.payInfo.real_name,
-              number: this.payInfo.data.wechat_number,
-              url: this.payInfo.data.wechat_image_path
-            }
-          case '4': // paypal
-            return {
-              label: this.$t(this.payTrans[4]), // PayPal账号
-              name: this.payInfo.real_name,
-              number: this.payInfo.data.paypal_number
-            }
-          default:
-            return {
-              label: null,
-              name: null,
-              bank: null,
-              number: null,
-              url: null
-            }
-        }
+        return this.pay_typeObj = [{
+            type: '1',
+            label: this.$t(this.payTrans[1]), // 银行卡号
+            bank: this.payInfo.data.card_bank,
+            number: this.payInfo.data.card_number
+          }, {
+            type: '2',
+            label: this.$t(this.payTrans[2]), // 支付宝账号
+            number: this.payInfo.data.alipay_number,
+            url: this.payInfo.data.alipay_image_path
+          }, {
+            type: '3',
+            label: this.$t(this.payTrans[3]), // 微信账号
+            number: this.payInfo.data.wechat_number,
+            url: this.payInfo.data.wechat_image_path
+          }, {
+            type: '4',
+            label: this.$t(this.payTrans[4]), // PayPal账号
+            number: this.payInfo.data.paypal_number
+        }]
+        // switch (type) {
+        //   case '1': // 银行卡
+        //     return {
+        //       label: this.$t(this.payTrans[1]), // 银行卡号
+        //       name: this.payInfo.real_name,
+        //       bank: this.payInfo.data.card_bank,
+        //       number: this.payInfo.data.card_number
+        //     }
+        //   case '2': // 支付宝
+        //     return {
+        //       label: this.$t(this.payTrans[2]), // 支付宝账号
+        //       name: this.payInfo.real_name,
+        //       number: this.payInfo.data.alipay_number,
+        //       url: this.payInfo.data.alipay_image_path
+        //     }
+        //   case '3': // 微信
+        //     return {
+        //       label: this.$t(this.payTrans[3]), // 微信账号
+        //       name: this.payInfo.real_name,
+        //       number: this.payInfo.data.wechat_number,
+        //       url: this.payInfo.data.wechat_image_path
+        //     }
+        //   case '4': // paypal
+        //     return {
+        //       label: this.$t(this.payTrans[4]), // PayPal账号
+        //       name: this.payInfo.real_name,
+        //       number: this.payInfo.data.paypal_number
+        //     }
+        //   default:
+        //     return {
+        //       label: null,
+        //       name: null,
+        //       bank: null,
+        //       number: null,
+        //       url: null
+        //     }
+        // }
+        // }
       } else {
-        return {
-          label: null,
-          name: null,
-          bank: null,
-          number: null,
-          url: null
-        }
+        this.pay_typeObj = []
+        // return {
+        //   label: null,
+        //   name: null,
+        //   bank: null,
+        //   number: null,
+        //   url: null
+        // }
       }
     },
   },
@@ -326,6 +368,12 @@ export default {
     this.interval = null
   },
   methods:{
+    // 显示收款二维码
+    handleClickQRCode(params) {
+      this.QRcodeUrl = this.currentPayInfo[params.index].url
+      this.qrShow = true
+    },
+
     getSurplusTime(){
       this.interval = utils.countDown(this.orderInfo.surplus_Time, (time) => {
 

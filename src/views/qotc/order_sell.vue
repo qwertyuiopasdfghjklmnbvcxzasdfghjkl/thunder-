@@ -327,16 +327,15 @@ export default {
 
         otcApi.finishOrder(data, (msg) => {
           this.orderInfo.state = 2
-          this.fbShow = false
+          this.$refs.confirm.closeConfirm()
+          // this.fbShow = false
           Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
         }, (msg) => {
           Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
         })
       }
     },
-    hideFBDialog(){
-      this.fbShow = false
-    },
+
     hidedDialDialog(){
       this.dialShow = false
     },
