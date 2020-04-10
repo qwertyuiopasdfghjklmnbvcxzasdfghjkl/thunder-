@@ -17,7 +17,7 @@
 
       <div class="form">
         <!-- google 验证码 -->
-        <input
+        <!-- <input
           v-if="type === 2"
           class="input"
           v-validate="'required|pInteger'"
@@ -28,7 +28,7 @@
           v-model="form.googleCode"
           :title="$t('account.user_center_Google_verification_code')"
           :placeholder="$t('account.user_center_Google_verification_code')"
-        />
+        /> -->
 
         <!-- 短信/邮箱验证码 -->
         <div class="smsCode">
