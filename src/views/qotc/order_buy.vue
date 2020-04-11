@@ -33,6 +33,21 @@
       <!-- 广告收款方式 -->
       <div class="user_info grey f32" v-if="orderInfo.cancelType!=2">
         <div class="ui-flex ui-flex-justify">
+          <span>
+            <i class="icon_ icon-left i_bank" v-if="(currentPayType[0].type||'').indexOf('1') !== -1"></i>
+            <i class="icon_ icon-left i_alipay" v-if="(currentPayType[0].type||'').indexOf('2') !== -1"></i>
+            <i class="icon_ icon-left i_wechat" v-if="(currentPayType[0].type||'').indexOf('3') !== -1"></i>
+            <i class="icon_ icon-left i_paypal" v-if="(currentPayType[0].type||'').indexOf('4') !== -1"></i>
+
+            {{currentPayType[0].title}}
+          </span>
+          <span v-tap="{methods: handleSelectTypeClick}">
+            <span v-if="!currentPayType[0].type">{{$t('otc_exchange.otc_exchange_Payment_Method')}}</span>
+            <i class="icon_ icon-right"></i>
+          </span>
+
+        </div>
+        <div class="ui-flex ui-flex-justify">
           <span>{{$t('user.name')}}<!-- 姓名 --></span>
 
           <span class="white">{{getRealName}} <i class="icon_ copy"
@@ -41,7 +56,7 @@
             v-clipboard:error="onError"></i></span>
         </div>
 
-        <template v-for="(item, index) of currentPayInfo" v-if="pay_type.includes(item.type)">
+        <template v-for="(item, index) of currentPayType" v-if="pay_type.includes(item.type)">
           <div class="ui-flex ui-flex-justify">
             <span>{{item.label}}</span>
             <span class="white">{{item.number}} <i class="icon_ copy"
@@ -118,9 +133,9 @@
               <tr>
                 <td>{{$t('user.name')}}<!-- 姓名 --></td><td>： {{getRealName}}</td>
               </tr>
-           <!--    <tr>
-                <td>{{currentPayInfo.label}}</td><td>： {{currentPayInfo.number}}</td>
-              </tr> -->
+              <tr>
+                <td>{{currentPayType[0].label}}</td><td>： {{currentPayType[0].number}}</td>
+              </tr>
             </table>
           </div>
         </div>
@@ -134,6 +149,14 @@
         <p class="ft-c-default f48 mt20 tc">{{orderInfo.fromUserMobile}}&nbsp;</p>
         <a class="mint-button mt40 mint-button--primary mint-button--large" style="line-height: 0.9rem;" :href="`tel:${orderInfo.fromUserMobile}`">{{$t('qotc.call_right_now')}}<!-- 立即呼叫 --></a>
     </Dialog>
+
+    <!-- payList所有收款方式，payType 广告收款方式   -->
+    <pay-type
+      ref="payType"
+      :payType="pay_type"
+      :payList="currentPayInfo"
+      @hidePay="hidePay"
+    />
   </div>
 </template>
 
@@ -145,13 +168,12 @@ import utils from '@/assets/js/utils'
 import Dialog from '@/components/common/dialog'
 import { Toast } from 'mint-ui'
 import otcConfig from '@/assets/js/otcconfig'
-
-
+import PayType from "./components/pay_type.vue"
 
 export default {
   components: {
     Dialog,
-
+    PayType
   },
   props: {
     adInfo: {
@@ -169,6 +191,7 @@ export default {
   },
   data(){
     return {
+      payTypeShow: true,
       qrShow:false,
       ccShow:false,
       zfShow:false,
@@ -178,14 +201,21 @@ export default {
       appealTime:'00:00',
       surplusTime: '00:00',
       interval:null,
-      pay_typeObj: '',
-      QRcodeUrl: ''
+      payList: [],
+      QRcodeUrl: '',
+      currentPayType: [{}]
     }
   },
   watch:{
-    orderInfo(){
-      console.log('orderInfo', this.orderInfo)
-    }
+    // orderInfo(){
+    //   console.log('orderInfo', this.orderInfo)
+    // },
+    // currentPayType: {
+    //   immediate: true,
+    //   handler: function() {
+    //     console.log('this.currentPayType' ,this.currentPayType)
+    //   }
+    // }
   },
   mounted() {
   },
@@ -289,26 +319,46 @@ export default {
     },
     currentPayInfo () {
       if (this.payInfo) {
-        return this.pay_typeObj = [{
+         this.payList = [{
             type: '1',
+            title: this.$t('otc_legal.oyc_legal_Bank_card'),
             label: this.$t(this.payTrans[1]), // 银行卡号
             bank: this.payInfo.data.card_bank,
-            number: this.payInfo.data.card_number
+            number: this.payInfo.data.card_number,
+            icon: 'bank'
           }, {
             type: '2',
+            title: this.$t('public0.public199'),//'支付宝',
             label: this.$t(this.payTrans[2]), // 支付宝账号
             number: this.payInfo.data.alipay_number,
-            url: this.payInfo.data.alipay_image_path
+            url: this.payInfo.data.alipay_image_path,
+            icon: 'alipay'
           }, {
             type: '3',
+            title: this.$t('otc_ad.otc_ad_WeChatPay'),//'微信支付',
             label: this.$t(this.payTrans[3]), // 微信账号
             number: this.payInfo.data.wechat_number,
-            url: this.payInfo.data.wechat_image_path
+            url: this.payInfo.data.wechat_image_path,
+            icon: 'wechat'
           }, {
             type: '4',
+            title: 'Paypal',
             label: this.$t(this.payTrans[4]), // PayPal账号
-            number: this.payInfo.data.paypal_number
+            number: this.payInfo.data.paypal_number,
+            icon: 'paypay'
         }]
+
+
+        if (this.pay_type.length === 1) {
+          this.payList.forEach(item => {
+            if (item.type == this.pay_type[0]) {
+              this.currentPayType = [{...item}]
+              console.log('this.currentPayType', this.currentPayType)
+            }
+          })
+        }
+
+        return this.payList
         // switch (type) {
         //   case '1': // 银行卡
         //     return {
@@ -348,7 +398,7 @@ export default {
         // }
         // }
       } else {
-        this.pay_typeObj = []
+        this.payList = []
         // return {
         //   label: null,
         //   name: null,
@@ -372,6 +422,17 @@ export default {
     handleClickQRCode(params) {
       this.QRcodeUrl = this.currentPayInfo[params.index].url
       this.qrShow = true
+    },
+
+    handleSelectTypeClick() {
+      if (this.orderState.state == 1) {
+        this.$refs.payType.open()
+      }
+    },
+
+    hidePay(currentPayType) {
+      this.currentPayType = [{...currentPayType}]
+      this.$refs.payType.close()
     },
 
     getSurplusTime(){
@@ -420,7 +481,7 @@ export default {
       this.zfShow = false
       if (this.orderInfo.pay_state == 0) {
         otcApi.payFinish(this.orderInfo.order_id, {
-          pay_type: this.orderInfo.pay_type
+          pay_type: this.currentPayType[0].type
         }, (msg) => {
           this.orderInfo.pay_state = 1
           Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
@@ -491,6 +552,38 @@ export default {
     width: 0.3rem; height: 0.3rem; margin-left: 0.15rem;
     &.copy {background-image: url('../../assets/img/icon_copy.png');}
     &.qrcode {background-image: url('../../assets/img/icon_qrcode.png');}
+    &.icon-right {
+      width: .2rem;
+      height: .32rem;
+      background-image: url('../../assets/img/icon_arrow_right.png');
+    }
+
+    &.icon-left {
+      width: .35rem;
+      height: .35rem;
+      margin-right: .05rem;
+    }
+
+    &.i_bank {
+        background-image: url('../../assets/img/icon-bank-big.png');
+    }
+
+    &.i_alipay {
+        background-image: url('../../assets/img/icon-alipay-big.png');
+    }
+
+    &.i_wechat {
+        background-image: url('../../assets/img/icon-wechat-big.png');
+    }
+
+    &.i_paypal {
+        background-image: url('../../assets/img/icon-paypal-big.png');
+    }
+    &.icon-pay-type {
+      // background-color
+      // icon-paypal-big.png
+      // #0C6AC9
+    }
   }
 }
 .payinfo {
@@ -531,4 +624,5 @@ export default {
   padding: 0.25rem 0 0;
 }
 .btns {margin-top: 2.5rem;}
+.place_order_popup{width:100%;}
 </style>

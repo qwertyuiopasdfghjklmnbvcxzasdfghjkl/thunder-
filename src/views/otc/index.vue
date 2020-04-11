@@ -93,7 +93,12 @@
     </div>
 
     <mt-popup class="place_order_popup" v-model="placeOrderVisible" position="bottom">
-      <placeorder :params="active === 'buys'? buyParams: sellParams" :ad_id="adsId" @hidePlaceOrderDialog="hidePlaceOrderDialog"></placeorder>
+      <placeorder
+        :params="active === 'buys'? buyParams: sellParams"
+        :ad_id="adsId"
+        :pay_type="pay_type"
+        @hidePlaceOrderDialog="hidePlaceOrderDialog"
+      ></placeorder>
     </mt-popup>
     <mt-popup class="place_order_popup" v-model="payTypeShow" position="bottom">
         <pay-type @hidePay="hidePay" :pay_type="pay_type" :payTypeShow="payTypeShow"/>
@@ -370,6 +375,7 @@ export default {
       this.placeOrderVisible = true
       this.adsId = item.ad_id
       this.pay_type = item.pay_type &&item.pay_type.split(',')
+      console.log('pay_type', this.pay_type)
     },
   }
 }

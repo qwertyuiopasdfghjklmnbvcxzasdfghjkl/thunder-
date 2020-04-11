@@ -122,7 +122,7 @@
             }
         },
         created(){
-            this.status()
+            // this.status()
         },
         mounted() {
             this.mobileFormData.phoneNumber = this.getUserInfo.mobile
@@ -132,20 +132,20 @@
         },
         methods: {
             ...mapActions(['setUserInfo', 'setUserState']),
-            status(){
-                if(this.getUserState.emailAuthEnable=== 0 && this.getUserState.mobileAuthState=== 1){
-                    MessageBox({
-                        title: this.$t('public0.public242'),
-                        message: this.$t('market.no_bind_email_unbind_phone'),
-                        confirmButtonText: this.$t('public0.ok'),
-                        closeOnClickModal: false
-                    }).then(action => {
-                        if (action === 'confirm') {
-                            this.$router.push({name: 'safe'})
-                        }
-                    })
-                }
-            },
+            // status(){
+            //     if(this.getUserState.emailAuthEnable=== 0 && this.getUserState.mobileAuthState=== 1){
+            //         MessageBox({
+            //             title: this.$t('public0.public242'),
+            //             message: this.$t('market.no_bind_email_unbind_phone'),
+            //             confirmButtonText: this.$t('public0.ok'),
+            //             closeOnClickModal: false
+            //         }).then(action => {
+            //             if (action === 'confirm') {
+            //                 this.$router.push({name: 'safe'})
+            //             }
+            //         })
+            //     }
+            // },
             bindMobile() {
                 this.$validator.validateAll(this.mobileFormData).then((validResult) => {
                     if (!validResult) {

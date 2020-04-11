@@ -17,8 +17,8 @@
             <ul class="item" v-for="(data, index) in datas" :key="index">
                 <li>
                     <section>
-                        <img class="avatar" :src="setHeader(data.from_user_id, index)"
-                             :class="'pos'+index" @error="setDefaultIcon($event)">
+                        <span class="avatar">{{data | formatName}}</span>
+
                         <span class="ft-c-white f28">{{data.nickname||data.username}}</span>
                     </section>
                     <section></section>
@@ -95,7 +95,20 @@
                 sport: '',
                 page: 1,
                 isShow: false,
-                pay: null
+                pay: null,
+                timer: null
+            }
+        },
+        filters: {
+            formatName(data) {
+                const firstNickname = data.nickname && data.nickname.charAt(0)
+
+                if (firstNickname) {
+                    return firstNickname
+                } else {
+                    const firstUsername = data.username && data.username.charAt(0)
+                    return firstUsername
+                }
             }
         },
         computed: {
@@ -142,7 +155,17 @@
                 console.log(res)
                 this.pay = res
             })
+            this.timer = setInterval(() => {
+                this.getList()
+            }, 20000)
         },
+
+        beforeDestroy() {
+            // 清除定时器
+            clearInterval(this.timer)
+            this.timer = null
+        },
+
         methods: {
             ...mapActions(['setUserInfo', 'setUserWallets']),
             async setHeader(id, idx) {
@@ -306,9 +329,13 @@
                 .avatar {
                     width: .4rem;
                     height: 0.4rem;
-                    object-fit: contain;
+                    line-height: 0.4rem;
+                    text-align: center;
+                    display: inline-block;
                     margin-right: 0.15rem;
-                    vertical-align: middle;
+                    color: #FFF;
+                    border-radius: 50%;
+                    background-color: #0C6AC9;
                 }
             }
 

@@ -304,10 +304,10 @@ export default {
         getMessage: (field, args) => {
           if (this.formData.ad_type === 1) {
             // 最大单笔限额额必须小于等于交易数量
-            return this.$t('otc_ad.maximum_single_limit_must_be_less').format(this.coinMinLimit)
+            return this.$t('otc_ad.maximum_single_limit_must_be_less').format(this.formData.symbol_count)
           } else {
             // 最大单笔限额 ≤ 单笔最大金额=交易数量*交易价格
-            return this.$t('otc_ad.no_more_than_the_maximum_limit')
+            return this.$t('otc_ad.no_more_than_the_maximum_limit').format(this.formData.symbol_count * this.ratePrice)
           }
         },
         validate: (value, args) => {
@@ -315,7 +315,8 @@ export default {
           if (this.formData.ad_type === 1) {
             return this.formData.symbol_count >= this.formData.max_amount
           } else if (this.formData.ad_type === 2) {
-            return this.formData.symbol_count * this.formData.lowest_price >= this.formData.max_amount
+            console.log('--------', this.formData.symbol_count * this.ratePrice)
+            return this.formData.symbol_count * this.ratePrice >= this.formData.max_amount
           } else {
             return true
           }

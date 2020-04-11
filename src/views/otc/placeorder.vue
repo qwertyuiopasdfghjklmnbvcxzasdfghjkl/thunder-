@@ -69,7 +69,7 @@
     import confirm from '@/views/qotc/components/confirm'
 
     export default {
-        props: ['params', 'ad_id'],
+        props: ['params', 'ad_id', 'pay_type'],
         components: {
             numberbox,
             confirm,
@@ -219,13 +219,15 @@
                         return
                     }
                     this.locked = true
+                    console.log('this.pay_type',  this.pay_type)
                     let data = {
                         ad_id: this.ad_id,
                         trade_type: this.params.ad_type === 1 ? 2 : 1,
                         symbol: this.detailData.symbol,
                         currency: this.detailData.currency,
                         symbol_count: this.symbol_count,
-                        currency_count: this.currency_count
+                        currency_count: this.currency_count,
+                        payType: this.pay_type[0],
                     }
                     this.$emit('hidePlaceOrderDialog', true, data)
                     this.locked = false
