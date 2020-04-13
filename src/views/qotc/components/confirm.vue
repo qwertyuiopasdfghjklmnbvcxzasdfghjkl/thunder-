@@ -282,6 +282,10 @@ export default {
 
     closeConfirm() {
       this.show = false;
+
+      this.form.googleCode = ""
+      this.form.smsCode = ""
+      this.disabled = false
     },
 
     openConfirm() {

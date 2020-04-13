@@ -32,7 +32,7 @@
 
       <!-- 广告收款方式 -->
       <div class="user_info grey f32" v-if="orderInfo.cancelType!=2">
-        <div class="ui-flex ui-flex-justify">
+        <div class="ui-flex ui-flex-justify" v-tap="{methods: handleSelectTypeClick}">
           <span>
             <i class="icon_ icon-left i_bank" v-if="(currentPayType[0].type||'').indexOf('1') !== -1"></i>
             <i class="icon_ icon-left i_alipay" v-if="(currentPayType[0].type||'').indexOf('2') !== -1"></i>
@@ -41,7 +41,7 @@
 
             {{currentPayType[0].title}}
           </span>
-          <span v-tap="{methods: handleSelectTypeClick}">
+          <span>
             <span v-if="!currentPayType[0].type">{{$t('otc_exchange.otc_exchange_Payment_Method')}}</span>
             <i class="icon_ icon-right"></i>
           </span>
@@ -92,7 +92,7 @@
 
       <div class="ui-flex ui-flex-justify btns" v-if="orderState.state==1">
         <mt-button type="cancel" size="large" v-tap="{methods:()=>{ccShow = true}}">{{$t('qotc.cancel_order')}}<!-- 取消交易 --></mt-button>
-        <mt-button type="primary" size="large" class="ml30" v-tap="{methods:()=>{zfShow = true}}">{{$t('public0.public154')}}<!-- 已付款 --></mt-button>
+        <mt-button type="primary" size="large" class="ml30" v-tap="{methods: handleZfShowClick}">{{$t('public0.public154')}}<!-- 已付款 --></mt-button>
       </div>
 
       <div class="btns" v-if="orderState.state==2">
@@ -433,6 +433,15 @@ export default {
     hidePay(currentPayType) {
       this.currentPayType = [{...currentPayType}]
       this.$refs.payType.close()
+    },
+
+    handleZfShowClick() {
+      console.log(this.currentPayType[0].type)
+      if (this.currentPayType[0].type) {
+        zfShow = true
+      } else {
+        Tip({type: 'danger', message: this.$t('error_code.SET_PAY_TYPE_FIRST')})
+      }
     },
 
     getSurplusTime(){
