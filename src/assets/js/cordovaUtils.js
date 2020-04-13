@@ -159,9 +159,9 @@ document.addEventListener('deviceready', function(){
       );
     } catch(e){}
   }
-
+  
   // 检测更新
-      if (window.chcp) {
+      if (process.env.VUE_APP_CURRENTMODE=='app' && window.chcp) {
         console.log('--chcp ready--');
         let chcp = window.chcp;
         // 检测更新
