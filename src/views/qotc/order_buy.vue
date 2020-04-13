@@ -438,7 +438,7 @@ export default {
     handleZfShowClick() {
       console.log(this.currentPayType[0].type)
       if (this.currentPayType[0].type) {
-        zfShow = true
+        this.zfShow = true
       } else {
         Tip({type: 'danger', message: this.$t('error_code.SET_PAY_TYPE_FIRST')})
       }
