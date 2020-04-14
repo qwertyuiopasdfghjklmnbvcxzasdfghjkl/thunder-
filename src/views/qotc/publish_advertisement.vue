@@ -313,9 +313,8 @@ export default {
         validate: (value, args) => {
           value = parseFloat(value)
           if (this.formData.ad_type === 1) {
-            return this.formData.symbol_count >= this.formData.max_amount
+            return Number(this.formData.max_amount) <= Number(this.formData.symbol_count)
           } else if (this.formData.ad_type === 2) {
-            console.log('--------', this.formData.symbol_count * this.ratePrice)
             return this.formData.symbol_count * this.ratePrice >= this.formData.max_amount
           } else {
             return true
