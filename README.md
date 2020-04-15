@@ -3,16 +3,14 @@
 ## Project setup
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
+cordova-icon
+cordova-splash
 ```
 
 ### Compiles and minifies for production
 ```
 npm run build
+cordova-hcp build
 ```
 
 ### Prepare app
@@ -32,6 +30,10 @@ cordova build ios
 ```
 
 
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
 
 
