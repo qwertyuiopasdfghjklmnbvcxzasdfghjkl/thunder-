@@ -39,11 +39,19 @@
             $route(_new) {
                 this.setTab()
                 if (window.StatusBar) {
-                  if(_new.name==='home'){
-                    StatusBar.backgroundColorByHexString('#101724')
-                  } else {
-                    StatusBar.backgroundColorByHexString('#151C2C')
-                  }
+                    let _color = '#151C2C'
+                    switch(_new.name){
+                    case 'home':
+                        _color = '#101724'
+                        break
+                    case 'incubation':
+                    case 'trading':
+                    case 'wallet-detail':
+                        _color = '#0C6AC9'
+                        break
+                    }
+
+                    StatusBar.backgroundColorByHexString(_color)
                 }
             },
         },

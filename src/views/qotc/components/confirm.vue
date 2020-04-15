@@ -47,7 +47,7 @@
           <!--发送验证码-->
           <mt-button
             type="primary"
-            style="font-size: 0.28rem;"
+            style="font-size: 0.28rem; margin-left: 0.3rem;"
             :disabled="disabled"
             v-tap="{methods: sendCode}"
           >{{$t('account.user_center_send_SMS')}}{{disabled ? `（${time}s）` : ''}}</mt-button>

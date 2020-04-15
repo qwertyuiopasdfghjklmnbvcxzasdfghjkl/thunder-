@@ -25,7 +25,6 @@
     import dataList from './index/data_list'
     import Utils from "../../assets/js/utils"
     import KLineWebSocket from '@/assets/js/websocket'
-    import vote from './index/vote'
     import top from "./index/top";
     import Data_box from "./index/data_box";
     import otc from "./index/otc";
@@ -39,7 +38,6 @@
             banner,
             notice,
             dataList,
-            vote,
             otc
         },
         created () {

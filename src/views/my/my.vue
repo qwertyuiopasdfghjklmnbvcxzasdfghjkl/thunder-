@@ -14,6 +14,7 @@
                         <div>
                             <p class="f36">{{getUserInfo.username}}</p>
                             <p class="f28">UID：{{getUserInfo.uidSort}}</p>
+                            <p class="f28">用户等级：普通会员</p>
                         </div>
                         <span>
                             <img src="../../assets/img/i_rig_w@3x.png" style="opacity:0.6;">
