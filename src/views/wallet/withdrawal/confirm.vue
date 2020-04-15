@@ -64,6 +64,7 @@
     import userApi from '@/api/individual'
     import myApi from '@/api/user'
     import userUtils from '@/api/wallet'
+    import user from '@/api/user'
 
     export default {
         props: ['params', 'withdrawalType', 'toUserType'],
@@ -110,6 +111,8 @@
         },
         methods: {
             auth() {
+                console.log('auth');
+
                 this.$validator.validateAll().then((valid) => {
                     if (!valid) {
                         let items = this.errors.items
@@ -136,23 +139,51 @@
             // 站内转账
             insetWithdrawal() {
                 let formData = {
-                    toUserType: this.toUserType,
-                    toAccountName: this.params.selToAddress,
-                    quantity: this.params.amount,
+                    uType: this.toUserType,
+                    name: this.params.selToAddress,
+                    amount: this.params.amount,
                     symbol: this.params.symbol,
-                    symbolType: this.params.symbolType,
+                    sType: this.params.symbolType,
                     type: this.type,
-                    googleCode: this.comData.googleCode,
-                    smsCode: this.comData.smsCode,
-                    // memo: this.form.memo,
+                    google: this.comData.googleCode,
+                    code: this.comData.smsCode
                 }
-                userUtils.insetWithdraw(formData, res=>{
-                    Tip({type: 'success', message: res})
-                    this.$router.push({name: 'trading'})
-                },msg=>{
-                    this.once = false
-                    Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+                user.getRsaPublicKey((rsaPublicKey) => {
+                    const temp = JSON.stringify(formData)
+                    const param = utils.encryptPwd(rsaPublicKey, temp)
+
+                    const _temp = {
+                        param: param,
+                        pubKey: rsaPublicKey
+                    }
+                    // user.forgetPwdChangePwd(formData, () => {
+                    //     Tip({type: 'success', message: this.$t('account.user_center_Successful')}) // 操作成功
+                    //     setTimeout(() => {
+                    //     this.$router.replace({name: 'login'})
+                    //     }, 1500)
+                    // }, (msg) => {
+                    //     this.locked = false
+                    //     Tip({type: 'danger', message: this.$t(`error_code.${typeof msg === 'string' ? msg : msg[0]}`)})
+                    // })
+                    userUtils.insetWithdraw(_temp, res=>{
+                        Tip({type: 'success', message: res})
+                        this.$router.push({name: 'trading'})
+                    },msg=>{
+                        this.once = false
+                        Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+                    })
+
+                }, () => {
                 })
+
+
+                // userUtils.insetWithdraw(formData, res=>{
+                //     Tip({type: 'success', message: res})
+                //     this.$router.push({name: 'trading'})
+                // },msg=>{
+                //     this.once = false
+                //     Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
+                // })
             },
 
             // 普通提币
@@ -248,6 +279,10 @@
             },
 
             closeDialog() {
+                console.log('close');
+                this.comData.googleCode = ""
+                this.comData.smsCode = ""
+                this.disabled = false
                 this.$emit('removeDialog')
             },
 
