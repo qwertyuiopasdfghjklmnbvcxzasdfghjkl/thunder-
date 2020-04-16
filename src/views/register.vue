@@ -114,7 +114,7 @@
 
                     </div>
                     <div class="to_login">
-                        <router-link :to="{name: 'login'}">{{$t('public0.login')}}<!--登录--></router-link>
+                        <div v-tap="{methods: handleNavToLogin}">{{$t('public0.login')}}<!--登录--></div>
                     </div>
                     <div class="findpwd-content-row service">
                         <label for="service">
@@ -338,7 +338,7 @@
                                 this.locked = false
                                 Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
                                 setTimeout(() => {
-                                    this.$router.push({name: 'login'})
+                                    this.handleNavToLogin()
                                 }, 1500)
                             }, (msg) => {
                                 this.locked = false
@@ -352,6 +352,12 @@
                     })
                 })
             },
+
+            // 跳转登录
+            handleNavToLogin() {
+                const list = ['mail', 'phone']
+                this.$router.push({name: 'login', query: {active: list[this.formData.registerType]}})
+            }
         }
     }
 </script>
@@ -545,7 +551,7 @@
         }
     }
     .to_login{
-        a{
+        div{
             border-radius: 0.1rem;
             border: 0.02rem solid #0C6AC9;
             display: block;

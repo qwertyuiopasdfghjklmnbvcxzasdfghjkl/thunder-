@@ -54,7 +54,7 @@
         },
 
         created() {
-
+            this.active = this.$route.query.active || 'phone'
         },
         methods: {
 
