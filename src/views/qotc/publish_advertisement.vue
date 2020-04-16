@@ -322,6 +322,7 @@ export default {
           if (this.formData.ad_type === 1) {
             return Number(this.formData.max_amount) <= Number(this.formData.symbol_count)
           } else if (this.formData.ad_type === 2) {
+            // return true
             return this.formData.symbol_count * this.ratePrice >= this.formData.max_amount
           } else {
             return true
@@ -363,6 +364,11 @@ export default {
         delete _formData['lowest_price']
       }
       this.$validator.validateAll(_formData).then((validResult) => {
+        if(this.formData.ad_type==2 && numUtils.BN(this.formData.symbol_count).gt(this.balance)){
+          Tip({type:'danger', message: `${this.formData.symbol} ${this.$t('exchange.exchange_Insufficient_balance')}`}) //余额不足
+          return
+        }
+
         if (!validResult) {
           let items = this.errors.items
           if (items && items.length && items[0]) {
@@ -372,10 +378,7 @@ export default {
           }
           return
         }
-        if(this.formData.ad_type==2 && numUtils.BN(this.formData.symbol_count).gt(this.balance)){
-          Tip({type:'danger', message: `${this.formData.symbol} ${this.$t('exchange.exchange_Insufficient_balance')}`}) //余额不足
-          return
-        }
+
         this.locked = true
         if (this.ad_id) {
           this.updateAds()
