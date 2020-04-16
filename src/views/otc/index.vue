@@ -63,10 +63,10 @@
     </div>
 
     <div class="page-main" :class="{nobar:active==='incomplete'}">
-      <adslist v-show="active === 'buys'"
+      <adslist ref="buyAdList" v-show="active === 'buys'"
                :hasPay="pay" :params="buyParams"
                @placeOrderClick="placeOrderClick"></adslist>
-      <adslist v-show="active === 'sells'"
+      <adslist ref="sellAdList" v-show="active === 'sells'"
                :params="sellParams"
                @placeOrderClick="placeOrderClick"></adslist>
       <!--<mt-tab-container v-model="active" :swipeable="true">-->
@@ -152,11 +152,11 @@ export default {
         spaceBetween: 15,
         freeMode: true
       },
-        payTypeShow: false,
-        params: {},
-        symbol: "USDT",
-        currency: 'CNY',
-        submitData: ''
+      payTypeShow: false,
+      params: {},
+      symbol: "USDT",
+      currency: 'CNY',
+      submitData: ''
     }
   },
     computed: {
@@ -196,6 +196,12 @@ export default {
         this.adsId = null
       }
     },
+    active: {
+      immediate: true,
+      handler: function() {
+        this.$emit('tabChange', this.active)
+      }
+    }
     // 'globalParams.symbol'(_new){
     //   this.$router.replace({name:'otc', query:{tab:this.active,symbol:_new}})
     // },
@@ -358,6 +364,7 @@ export default {
           }
       },
       createOrders(data) {
+        Indicator.open('Loading...')
         const _data = {
           ...this.submitData,
           orderFinishDto: data
@@ -372,11 +379,42 @@ export default {
         })
       },
     placeOrderClick (item) {
-      this.placeOrderVisible = true
+      // this.placeOrderVisible = true
       this.adsId = item.ad_id
-      this.pay_type = item.pay_type &&item.pay_type.split(',')
-      console.log('pay_type', this.pay_type)
+      this.pay_type = item.pay_type && item.pay_type.split(',')
+      // console.log('pay_type', this.pay_type)
+
+      console.log('item', item);
+      const status = `${item.cur_price}|${item.remain_count}|${item.status}`
+      // 广告单价、剩余数量、是否被隐藏、是否已下架
+      // cur_price remain_count   status
+
+      this.getAdDetails(status)
     },
+
+    getAdDetails(status) {
+      Indicator.open('Loading...')
+
+      otcApi.getAdvertisementDetail(this.adsId, (res) => {
+        const detailData = res || {}
+        const _status = `${Math.floor(detailData.cur_price*100)/100}|${detailData.remain_count}|${detailData.status}`
+        console.log('status', status);
+        console.log('status', _status);
+
+        if (status === _status) {
+          this.placeOrderVisible = true
+        } else {
+          if (this.active === 'buys') {
+            this.$refs.buyAdList.getRefreshList()
+          } else if (this.active === 'sells'){
+            this.$refs.sellAdList.getRefreshList()
+          }
+          Tip({type: 'danger', message: this.$t('otc_ad.advertising_information_has_changed')}) // 广告信息已发生变动，请重新下单
+        }
+
+      })
+    }
+
   }
 }
 </script>

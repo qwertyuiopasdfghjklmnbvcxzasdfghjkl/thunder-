@@ -1,7 +1,11 @@
 <template>
   <!-- 添加广告和客服跳转 -->
   <div>
-    <router-link class="icon_ add-advertisement" v-if="isMerchant" tag="span" :to="{name:'qotcAddOrUpdate'}"></router-link>
+    <router-link
+      class="icon_ add-advertisement"
+      v-if="isMerchant" tag="span"
+      :to="{name:'qotcAddOrUpdate', query: {type}}"
+    ></router-link>
     <span class="icon_ online-service" v-tap="{methods: goOnlineService}"></span>
   </div>
 </template>
@@ -11,6 +15,11 @@ import { mapGetters, mapActions } from 'vuex'
 import otcApi from '@/api/otc'
 
 export default {
+  props: {
+    type: {
+      type: String
+    }
+  },
   data() {
     return {
        isMerchant: false

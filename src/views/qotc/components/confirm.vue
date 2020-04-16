@@ -139,7 +139,7 @@ export default {
     this.countryCode = this.getUserInfo.countryCode || "+86";
     this.email = this.getUserInfo.email || this.getUserInfo.username;
 
-    console.log("mobile/google", this.mobileState, "/", this.googleState);
+    // console.log("mobile/google", this.mobileState, "/", this.googleState);
 
     if (
       this.emailState === 1 &&
@@ -195,7 +195,7 @@ export default {
     },
 
     sendCode() {
-      console.log("sendCode  type", this.type);
+      // console.log("sendCode  type", this.type);
       if (this.type === 2 || this.type === 3) {
         this.sendEMAILCode();
       } else if (this.type === 1) {

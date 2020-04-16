@@ -918,7 +918,8 @@ export default {
 			"minimum_transaction_amount": "最小交易金额{0}",
 			"minimum_number_of_transactions": "最少交易数量{0}",
 			"maximum_single_limit_must_be_less": "最大单笔限额额必须小于等于交易数量",
-			"no_more_than_the_maximum_limit": "不能大于最大限额"
+			"no_more_than_the_maximum_limit": "不能大于最大限额",
+			"advertising_information_has_changed": "广告信息已发生变动，请重新下单"
 		},
 		"public0": {
 			"reason": "失败原因",

@@ -15,7 +15,7 @@
       <div class="f30 mt40">{{$t('trade_record.trade_record_currency')}}<!-- 币种 --></div>
       <div class="kuan">
         <select v-model="formData.symbol">
-          <option v-for="(item,index) in tokens" :value="item.symbol">{{item.symbol}}</option>
+          <option v-for="item in tokens" :key="item.symbol_id" :value="item.symbol">{{item.symbol}}</option>
         </select>
       </div>
       <div class="f30 mt40">{{$t('exchange.exchange_price')}}<!-- 价格 --></div>
@@ -257,7 +257,14 @@ export default {
     })
   },
   created(){
-    this.ad_id = this.$route.params.orderId || null
+    this.ad_id = this.$route.query.id || null
+
+    // 从自选区跳转到对应类型
+    const type = this.$route.query.type
+    if (type) {
+       this.formData.ad_type = type === 'buys' ? 1 : 2
+    }
+
     this.setValidate()
     this.getOtcTokens()
     this.getOtcCurrency()
@@ -315,6 +322,7 @@ export default {
           if (this.formData.ad_type === 1) {
             return Number(this.formData.max_amount) <= Number(this.formData.symbol_count)
           } else if (this.formData.ad_type === 2) {
+            // return true
             return this.formData.symbol_count * this.ratePrice >= this.formData.max_amount
           } else {
             return true
@@ -356,6 +364,11 @@ export default {
         delete _formData['lowest_price']
       }
       this.$validator.validateAll(_formData).then((validResult) => {
+        if(this.formData.ad_type==2 && numUtils.BN(this.formData.symbol_count).gt(this.balance)){
+          Tip({type:'danger', message: `${this.formData.symbol} ${this.$t('exchange.exchange_Insufficient_balance')}`}) //余额不足
+          return
+        }
+
         if (!validResult) {
           let items = this.errors.items
           if (items && items.length && items[0]) {
@@ -365,10 +378,7 @@ export default {
           }
           return
         }
-        if(this.formData.ad_type==2 && numUtils.BN(this.formData.symbol_count).gt(this.balance)){
-          Tip({type:'danger', message: `${this.formData.symbol} ${this.$t('exchange.exchange_Insufficient_balance')}`}) //余额不足
-          return
-        }
+
         this.locked = true
         if (this.ad_id) {
           this.updateAds()
