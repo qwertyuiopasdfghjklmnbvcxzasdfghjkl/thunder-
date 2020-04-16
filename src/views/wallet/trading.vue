@@ -34,21 +34,28 @@
                     </router-link>
                 </span>
             </div>
+            <div class="tab-bar">
+                <mt-navbar v-model="type">
+                  <mt-tab-item :id="1"><span>{{$t('币币账户')}}<!--币币账户--></span></mt-tab-item>
+                  <mt-tab-item :id="2"><span>{{$t('孵息账户')}}<!--孵息账户--></span></mt-tab-item>
+                </mt-navbar>
+            </div>
+            <div class="list_title">
+                <label :class="{active:showZero}">
+                <span>
+                    <!--<img :src="showZero ? require('../../../assets/img/check@3x.png'): require('../../../assets/img/no-check.png')">-->
+                    <i>√</i>
+                    <input type="checkbox" v-model="showZero">
+                </span>
+                    <span>{{$t('home.home52')}}</span>
+                </label>
+            </div>
         </div>
 
         <div class="page-main">
             <div class="cont_list full ">
-                <div class="list_title">
-                    <label :class="{active:showZero}">
-                    <span>
-                        <!--<img :src="showZero ? require('../../../assets/img/check@3x.png'): require('../../../assets/img/no-check.png')">-->
-                        <i>√</i>
-                        <input type="checkbox" v-model="showZero">
-                    </span>
-                        <span>{{$t('home.home52')}}</span>
-                    </label>
-                </div>
-                <ul class="box">
+                <transition enter-active-class="animated short slideInLeft" leave-active-class="animated short slideOutLeft">
+                <ul class="box" v-show="type==1">
                     <li v-for="data in filterSymboltList" v-tap="{methods: toWallet, item:data}">
                         <p>
                             <img :src="'data:image/png;base64,'+data.iconBase64"/>
@@ -60,6 +67,21 @@
                         </label>
                     </li>
                 </ul>
+                </transition>
+                <transition enter-active-class="animated short slideInRight" leave-active-class="animated short slideOutRight">
+                <ul class="box" v-show="type==2">
+                    <li v-for="data in filterSymboltList" v-tap="{methods: toIncubationWallet, item:data}">
+                        <p>
+                            <img :src="'data:image/png;base64,'+data.iconBase64"/>
+                            <span>{{data.accountName}}</span>
+                        </p>
+                        <label>
+                            <p>{{data.totalBalance | number}}</p>
+                            <span><img src="../../assets/img/i_rig_c@3x.png"/></span>
+                        </label>
+                    </li>
+                </ul>
+                </transition>
             </div>
 
         </div>
@@ -84,7 +106,8 @@
                 showZero: false,
                 showMoney: true,
                 totalUSDT: 0,
-                curCNYPrice:null
+                curCNYPrice:null,
+                type:1
             }
         },
         computed: {
@@ -131,15 +154,18 @@
             }
         },
         created() {
+            this.type = this.$route.query.type == 2?2:1
             this.showMoney = JSON.parse(localStorage.getItem('showAssets') || 'true')
             this.getCNYPrice()
             this.getAssets()
             this.gettTotalUSDTAmount()
-            console.log(this.getBTCValuation, this.getBtcPrice.USDT)
         },
         watch: {
             showMoney(_new) {
                 localStorage.setItem('showAssets', _new)
+            },
+            type(_new) {
+                this.$router.replace({name:'trading', query:{type:_new}})
             }
         },
         methods: {
@@ -228,7 +254,10 @@
             toWallet(params) {
                 this.setSymbol(params.item.symbol)
                 this.$router.push({name: 'wallet-detail'})
-            }
+            },
+            toIncubationWallet(params) {
+                this.$router.push({name: 'incubationDetail', params:{token:params.item.symbol}})
+            },
         }
     }
 </script>
@@ -268,7 +297,8 @@
     }
 
     .page-main {
-        top: 5rem;
+        top: 7rem;
+        overflow-x: hidden;
     }
 
     .wallet-feature {
@@ -362,6 +392,7 @@
     }
 
     .list_title {
+        background-color: #151C2C;
         padding: 0.3rem;
         display: flex;
         justify-content: space-between;
@@ -374,8 +405,8 @@
                 display: inline-block;
                 width: 0.3rem;
                 height: 0.3rem;
-                background: #1D273C;
-                color: #1D273C;
+                background: #4B5875;
+                color: #4B5875;
                 font-weight: bold;
                 font-size: 0.2rem;
                 text-align: center;
@@ -385,7 +416,7 @@
             &.active span {
                 color: #ffffff;
                 i{
-                    color: #0C6AC9;
+                    color: #fff;
                 }
             }
 
@@ -413,11 +444,11 @@
     }
 
     .cont_list {
-        /*background: #fff;*/
-        /*padding: 0 0.3rem;*/
+        position:relative;
         font-size: 0.3rem;
-
         ul {
+            position:absolute;
+            width: 100%;
             li {
                 display: flex;
                 justify-content: space-between;
@@ -454,6 +485,30 @@
                         margin-right: 0.24rem;
                     }
                 }
+            }
+        }
+    }
+
+    .tab-bar {
+        padding-top:0.8rem;
+        background-color: #151C2C;
+        /deep/ .mint-navbar {border-bottom: 1px solid #131e30; background-color: #151C2C;}
+        /deep/ .mint-tab-item {
+            height: 0.9rem;
+            color: #6C6F8B;
+            padding: 0;
+            &.is-selected {
+                color: #0067e7; border-bottom: none; margin-bottom: 0;
+                .mint-tab-item-label span{
+                    padding: 0 0.3rem;
+                    border-bottom: 2px solid #0067e7;
+                    margin-bottom: -2px;
+                }
+            }
+            .mint-tab-item-label {
+                font-size: 0.3rem;
+                line-height: 0.9rem;
+                span {display: inline-block; height: 100%;}
             }
         }
     }

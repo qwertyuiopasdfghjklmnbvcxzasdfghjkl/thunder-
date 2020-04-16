@@ -211,6 +211,7 @@
                             _tempRes.push(item)
                         }
                     })
+                    console.log(_ids)
                     res.data = _tempRes
                     res.data.forEach((item) => { // 广告列表数据格式化处理
                         item.cur_price = item.cur_price ? utils.toFixed(item.cur_price,2) : 0

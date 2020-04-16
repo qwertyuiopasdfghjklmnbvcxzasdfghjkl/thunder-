@@ -3,38 +3,39 @@
         <top-back>
             {{$t('详情')}}
         </top-back>
-        <div class="tab-bar">
-            <mt-navbar v-model="label">
-              <mt-tab-item :id="1"><span>{{$t('进行中')}}<!--进行中--></span></mt-tab-item>
-              <mt-tab-item :id="2"><span>{{$t('已结束')}}<!--已结束--></span></mt-tab-item>
-            </mt-navbar>
-        </div>
         <div class="page-main">
-            <ul class="full items">
-                <li>
-                    <div class="full pl30 pr30 bline ui-flex ui-flex-justify">
-                        <span class="f32">30天孵息</span>
-                        <span class="green">进行中</span>
-                    </div>
-                    <div class="ui-flex ui-flex-justify">
-                        <span class="f32 cgray">孵息数量</span>
-                        <span class="f32">400 TPP</span>
-                    </div>
-                    <div class="ui-flex ui-flex-justify">
-                        <span class="f32 cgray">孵息释放</span>
-                        <span class="f32">400 TPP</span>
-                    </div>
-                    <div class="ui-flex ui-flex-justify">
-                        <span class="f32 cgray">开始时间</span>
-                        <span class="f32">2020-03-12</span>
-                    </div>
-                    <div class="ui-flex ui-flex-justify">
-                        <span class="f32 cgray">结束时间</span>
-                        <span class="f32">2020-04-12</span>
-                    </div>
-                </li>
-                
-            </ul>
+            <div class="mt20 full bgblock pl30 pr30 pb40">
+                <div class="pt50 tc f60">4000</div>
+                <div class="mt10 tc f24 cgray">总释放 TPP</div>
+                <div class="mt60 ui-flex ui-flex-justify">
+                    <span class="f32 cgray">孵息数量</span>
+                    <span class="f32">1000 TPP</span>
+                </div>
+                <div class="mt50 ui-flex ui-flex-justify">
+                    <span class="f32 cgray">锁仓时间</span>
+                    <span class="f32">30天</span>
+                </div>
+                <div class="mt50 ui-flex ui-flex-justify">
+                    <span class="f32 cgray">开始时间</span>
+                    <span class="f32">2020-03-12</span>
+                </div>
+                <div class="mt50 ui-flex ui-flex-justify">
+                    <span class="f32 cgray">状态</span>
+                    <span class="f32" :class="[data.status==1?'green':'red']">已结束</span>
+                </div>
+            </div>
+            <div class="mt20 full bgblock pl30 pr30 pt30 pb40">
+                <div class="f32">释放记录</div>
+                <ul class="items mt20">
+                    <router-link :to="{name:'incubationTransDetail'}" tag="li">
+                        <p class="cgray f24">订阅Pick的实盘</p>
+                        <div class="ui-flex ui-flex-justify f28">
+                            <span>2019-09-04 15:32:35</span>
+                            <span>6</span>
+                        </div>
+                    </router-link>
+                </ul>
+            </div>
         </div>
     </div>
 </template>
@@ -45,6 +46,7 @@
         data() {
             return {
                 label:1,
+                data:{status:1}
             }
         },
         created() {
@@ -58,39 +60,15 @@
 
 <style scoped lang="less">
 @green:#0FB475;
+@red:#E11B39;
 @cgray:#4B5875;
 .green {color: @green;}
 .cgray {color: @cgray;}
-.page-main {top: 1.86rem;}
-.tab-bar {
-    margin-top: 0.9rem;
-    /deep/ .mint-navbar {border-bottom: 1px solid #131e30; background-color: #131e30;}
-    /deep/ .mint-tab-item {
-        height: 0.9rem;
-        color: #6C6F8B;
-        padding: 0;
-        &.is-selected {
-            color: #0067e7; border-bottom: none; margin-bottom: 0;
-            .mint-tab-item-label span{
-                padding: 0 0.3rem;
-                border-bottom: 2px solid #0067e7;
-                margin-bottom: -2px;
-            }
-        }
-        .mint-tab-item-label {
-            font-size: 0.3rem;
-            line-height: 0.9rem;
-            span {display: inline-block; height: 100%;}
-        }
-    }
-}
+.red {color: @red;}
+
+.bgblock {background-color: #151C2C;}
 .items li{
-    background-color: #151C2C;
-    padding: 0.1rem 0.3rem 0.2rem;
-    margin-top: 0.2rem;
-    line-height: 0.75rem;
-    .bline {
-        border-bottom:1px solid #1D273C;
-    }
+    line-height: 0.6rem;
+    border-bottom:1px solid #1D273C;
 }
 </style>

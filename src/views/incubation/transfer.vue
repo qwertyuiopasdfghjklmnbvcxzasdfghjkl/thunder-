@@ -5,20 +5,20 @@
             <div class="full">
                 <div class="symbol mt20 bgc pl30 pr30 ui-flex ui-flex-justify">
                      <span class="cgray">币种</span>
-                     <span class="f32">TPP</span>
+                     <span class="f32">{{token}}</span>
                 </div>
                 <div class="desc mt20 bgc pl30 pr30 pt15 ui-flex">
                      <span class="cgray ui-flex ui-flex-column ui-flex-center">从</span>
                      <div class="ui-flex-1 bline">
                          <p class="f32">币币账户</p>
-                         <p class="cgray f24">TPP</p>
+                         <p class="cgray f24">{{token}}</p>
                      </div>
                 </div>
                 <div class="desc bgc pl30 pr30 pt15 ui-flex">
                      <span class="cgray ui-flex ui-flex-column ui-flex-center">到</span>
                      <div class="ui-flex-1">
                          <p class="f32">孵息账户</p>
-                         <p class="cgray f24">TPP</p>
+                         <p class="cgray f24">{{token}}</p>
                      </div>
                 </div>
                 <div class="bgc mt20 pl30 pr30 pt40 pb20">
@@ -27,7 +27,7 @@
                          <numberbox class="ui-flex-1" v-model="formData.total" :accuracy="fixnumber" :placeholder="$t('请输入数量')"></numberbox>
                          <span class="f32 blue lh80" v-tap="{methods:allIn}">全部划转</span>
                      </div>
-                     <div class="lh80 cgray">最多可转8888.88888 TPP</div>
+                     <div class="lh80 cgray">最多可转8888.88888 {{token}}</div>
                 </div>
             </div>
             <div class="mt120">
@@ -53,13 +53,14 @@ import confirm from '@/views/qotc/components/confirm'
         data() {
             return {
                 fixnumber:8,
+                token:'',
                 formData:{
                     total:''
                 }
             }
         },
         created() {
-
+            this.token = this.$route.params.token
         },
         methods: {
             allIn(){},

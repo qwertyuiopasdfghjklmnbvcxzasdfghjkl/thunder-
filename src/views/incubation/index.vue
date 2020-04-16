@@ -7,7 +7,7 @@
         <div class="page-main">
             <div class="full">
                 <div class="top-view text-center">
-                    <p class="f24">预期收益（TPP）</p>
+                    <p class="f24">预期收益（{{token}}）</p>
                     <p class="f60 mt20">1.4234566</p>
                     <p class="f24 mt20">≈24.00%月均孵化量</p>
                 </div>
@@ -16,12 +16,12 @@
                 <div class="ml30 mr30">
                     <div class="pt30 f32">锁仓数量</div>
                     <div class="mt20 ui-flex bbline">
-                        <numberbox class="ui-flex-1" v-model="formData.total" :accuracy="fixnumber" :placeholder="$t('10000 TPP 起')"></numberbox>
+                        <numberbox class="ui-flex-1" v-model="formData.total" :accuracy="fixnumber" :placeholder="$t(`10000 ${token} 起`)"></numberbox>
                         <span class="allin" v-tap="{methods:allIn}">全部</span>
                     </div>
                     <div class="mt25 pb25 ui-flex ui-flex-justify">
                         <span class="cgray">可用0.00000000</span>
-                        <router-link class="blue" :to="{name:'transfer'}" tag="span">划转 <font class="icon_ circle ml5"><i class="icon_ icon-swap f24"></i></font></router-link>
+                        <router-link class="blue" :to="{name:'transfer', params:{token:token}}" tag="span">划转 <font class="icon_ circle ml5"><i class="icon_ icon-swap f24"></i></font></router-link>
                     </div>
                 </div>
             </div>
@@ -57,6 +57,7 @@ import confirm from '@/views/qotc/components/confirm'
         data() {
             return {
                 fixnumber:8,
+                token:'TPP',
                 periods:[30,60,90,180,360],
                 formData:{
                     total:'',
@@ -65,7 +66,7 @@ import confirm from '@/views/qotc/components/confirm'
             }
         },
         created() {
-
+            this.token = this.$route.params.token || 'TPP'
         },
         methods: {
             allIn(){
