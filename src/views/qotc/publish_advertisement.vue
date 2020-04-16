@@ -257,7 +257,7 @@ export default {
     })
   },
   created(){
-    this.ad_id = this.$route.params.orderId || null
+    this.ad_id = this.$route.query.id || null
     this.setValidate()
     this.getOtcTokens()
     this.getOtcCurrency()
