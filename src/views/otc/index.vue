@@ -199,7 +199,6 @@ export default {
     active: {
       immediate: true,
       handler: function() {
-        console.log('this.active', this.active);
         this.$emit('tabChange', this.active)
       }
     }
@@ -365,6 +364,7 @@ export default {
           }
       },
       createOrders(data) {
+        Indicator.open('Loading...')
         const _data = {
           ...this.submitData,
           orderFinishDto: data
