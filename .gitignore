@@ -3,13 +3,7 @@ node_modules
 /dist
 /www
 /plugins
-/platforms/android
-/platforms/ios/www
-/platforms/ios/www
-/platforms/ios/build
-/platforms/ios/cordova
-/platforms/ios/CordovaLib
-/platforms/ios/platform_www
+/platforms
 
 # local env files
 .env.local
