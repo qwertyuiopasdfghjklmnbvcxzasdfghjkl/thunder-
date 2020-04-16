@@ -196,6 +196,13 @@ export default {
         this.adsId = null
       }
     },
+    active: {
+      immediate: true,
+      handler: function() {
+        console.log('this.active', this.active);
+        this.$emit('tabChange', this.active)
+      }
+    }
     // 'globalParams.symbol'(_new){
     //   this.$router.replace({name:'otc', query:{tab:this.active,symbol:_new}})
     // },
@@ -386,11 +393,10 @@ export default {
     },
 
     getAdDetails(status) {
-      // loading
       Indicator.open('Loading...')
+
       otcApi.getAdvertisementDetail(this.adsId, (res) => {
         const detailData = res || {}
-        // Math.floor(15.7784514000 * 100) / 100
         const _status = `${Math.floor(detailData.cur_price*100)/100}|${detailData.remain_count}|${detailData.status}`
         console.log('status', status);
         console.log('status', _status);
@@ -405,7 +411,7 @@ export default {
           }
           Tip({type: 'danger', message: this.$t('otc_ad.advertising_information_has_changed')}) // 广告信息已发生变动，请重新下单
         }
-        // console.log('detailData', detailData);
+
       })
     }
 

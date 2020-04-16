@@ -104,7 +104,7 @@ input, select, button {
 }
 input{cursor:pointer;}
 
-/* 去除 select 默认样式 */
+/* 修改 select 默认样式 */
 select {
   appearance: none;
   -moz-appearance: none;

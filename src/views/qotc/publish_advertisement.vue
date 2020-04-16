@@ -15,7 +15,7 @@
       <div class="f30 mt40">{{$t('trade_record.trade_record_currency')}}<!-- 币种 --></div>
       <div class="kuan">
         <select v-model="formData.symbol">
-          <option v-for="(item,index) in tokens" :value="item.symbol">{{item.symbol}}</option>
+          <option v-for="item in tokens" :key="item.symbol_id" :value="item.symbol">{{item.symbol}}</option>
         </select>
       </div>
       <div class="f30 mt40">{{$t('exchange.exchange_price')}}<!-- 价格 --></div>
@@ -258,6 +258,13 @@ export default {
   },
   created(){
     this.ad_id = this.$route.query.id || null
+
+    // 从自选区跳转到对应类型
+    const type = this.$route.query.type
+    if (type) {
+       this.formData.ad_type = type === 'buys' ? 1 : 2
+    }
+
     this.setValidate()
     this.getOtcTokens()
     this.getOtcCurrency()

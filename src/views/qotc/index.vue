@@ -9,11 +9,18 @@
 			</template>
 		</top-back>
 		<div>
+			<!-- 快捷区 -->
 			<flash v-show="tab===1" ref="flash"/>
-			<otc-index v-show="tab===2" :pay="pay"/>
+
+			<!-- 自选区 -->
+			<otc-index
+				v-show="tab===2"
+				:pay="pay"
+				@tabChange="handletabChange"
+			/>
 
 			<!-- 跳转广告和客服 -->
-			<ad-service></ad-service>
+			<ad-service :type="type"></ad-service>
 		</div>
     </div>
 </template>
@@ -33,7 +40,8 @@ export default {
 	},
 	data(){
 		return {
-			tab: 2
+			tab: 2,
+			type: ''
 		}
 	},
 	computed:{
@@ -59,7 +67,11 @@ export default {
 			next()
 		}
 	},
-	methods: {}
+	methods: {
+		handletabChange(type) {
+			this.type = type
+		}
+	}
 }
 </script>
 
