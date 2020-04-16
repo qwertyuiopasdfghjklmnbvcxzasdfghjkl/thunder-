@@ -384,8 +384,8 @@ export default {
       this.pay_type = item.pay_type && item.pay_type.split(',')
       // console.log('pay_type', this.pay_type)
 
-      console.log('item', item);
-      const status = `${item.cur_price}|${item.remain_count}|${item.status}`
+      // console.log('item', item);
+      const status = `${Number(item.cur_price)}|${item.remain_count}|${item.status}`
       // 广告单价、剩余数量、是否被隐藏、是否已下架
       // cur_price remain_count   status
 
@@ -397,9 +397,11 @@ export default {
 
       otcApi.getAdvertisementDetail(this.adsId, (res) => {
         const detailData = res || {}
+        // console.log(detailData);
+
         const _status = `${Math.floor(detailData.cur_price*100)/100}|${detailData.remain_count}|${detailData.status}`
-        console.log('status', status);
-        console.log('status', _status);
+        // console.log('status', status);
+        // console.log('status', _status);
 
         if (status === _status) {
           this.placeOrderVisible = true

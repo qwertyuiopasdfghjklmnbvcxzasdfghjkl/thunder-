@@ -120,7 +120,7 @@ export default {
     }
   },
   created () {
-    // this.state = this.$route.query.state || 2
+    this.state = this.$route.query.state || 2
     this.getOrderList()
     this.addOtcSocketEvent(this.systemEvent)
   },

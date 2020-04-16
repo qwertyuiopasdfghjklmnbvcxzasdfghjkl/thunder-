@@ -70,11 +70,11 @@
             <span>{{$t('otc_legal.otc_legal_Bank')}}</span>
             <span class="white">{{item.bank}}</span>
           </div>
-
+    {{index}}
           <!-- 收款二维码 -->
           <div class="ui-flex ui-flex-justify" v-if="pay_type.includes(item.type) && ['2', '3'].includes(item.type)">
             <span>{{$t('qotc.collection_qrcode')}}</span>
-            <span class="white"><i class="icon_ qrcode" v-tap="{methods: handleClickQRCode, index: index}"></i></span>
+            <span class="white"><i class="icon_ qrcode" v-tap="{methods: handleClickQRCode, item: item}"></i></span>
           </div>
         </template>
 
@@ -420,7 +420,7 @@ export default {
   methods:{
     // 显示收款二维码
     handleClickQRCode(params) {
-      this.QRcodeUrl = this.currentPayInfo[params.index].url
+      this.QRcodeUrl = params.item.url
       this.qrShow = true
     },
 
