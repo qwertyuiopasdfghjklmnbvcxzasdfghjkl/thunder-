@@ -96,7 +96,8 @@
                 page: 1,
                 isShow: false,
                 pay: null,
-                timer: null
+                timer: null,
+                total: 0 // 请求的全部广告数目
             }
         },
         filters: {
@@ -156,7 +157,8 @@
                 this.pay = res
             })
             this.timer = setInterval(() => {
-                this.getList()
+                // 20s 后刷新整个（已加载的全部数据）列表
+            //    this.getRefreshList()
             }, 20000)
         },
 
@@ -171,6 +173,11 @@
             async setHeader(id, idx) {
                 let res = await this.getHeader(id)
                 $('.avatar.pos' + idx).attr('src', res)
+            },
+            getRefreshList() {
+                let params = this.paramsChange
+                params.show = this.total
+                this.getList(true, params)
             },
             getHeader(id) {
                 // 下载当前用户头像
@@ -200,9 +207,9 @@
                     this.setUserInfo(res)
                 })
             },
-            getList() { // 获取广告列表
+            getList(refresh = false, data = this.paramsChange) { // 获取广告列表
                 Indicator.open()
-                otcApi.getAdvertisementList(this.paramsChange, (res) => {
+                otcApi.getAdvertisementList(data, (res) => {
                     Indicator.close()
                     let _tempRes = [], _ids = []
                     res.data.forEach(item=>{
@@ -212,6 +219,7 @@
                         }
                     })
                     res.data = _tempRes
+
                     res.data.forEach((item) => { // 广告列表数据格式化处理
                         item.cur_price = item.cur_price ? utils.toFixed(item.cur_price,2) : 0
                         if (this.params.ad_type === 2) {
@@ -227,10 +235,15 @@
 
                     if (this.sport === 'bottom') { // 加载更多数据
                         this.allLoaded = false
-                        res.data.forEach(res => {
-                            this.datas.push(res)
-                        })
-                        console.log(this.datas)
+                        if (!refresh) {
+                            res.data.forEach(res => {
+                                this.datas.push(res)
+                            })
+                            this.total += res.total
+                            // console.log('this.total----------------------', this.total);
+                        } else {
+                            this.datas = res.data
+                        }
                         this.$refs.loadmore.onBottomLoaded();
                     } else if (this.sport === 'top') { // 下拉刷新
                         this.datas = res.data
@@ -240,6 +253,13 @@
                     } else {
                         this.datas = []
                         this.datas = res.data
+                        console.log('this.datas', this.datas);
+
+                        if (!refresh) {
+                            this.total += res.total
+                            // console.log('2 this.total----------------------', this.total);
+                        }
+
                     }
                     if (this.datas.length >= res.total) { // 没有更多数据
                         this.noMoreData = Boolean(res.total)
@@ -281,6 +301,11 @@
                 // console.log(this.hasPay)
                 if (!this.pay) { //买卖需添加收款支付方式
                     Tip({type: 'error', message: this.$t('qotc.add_payway')})//请添加支付方式
+
+                    // 跳转到
+                    setTimeout(() => {
+                        this.$router.push({path: '/ucenter/set-payway'})
+                    }, 3000)
                     return
                 }
                 // if (!this.payType) { //如果是卖需选择收款方式

@@ -908,7 +908,9 @@ export default {
 			"minimum_transaction_amount": "Minimum transaction amount",
 			"minimum_number_of_transactions": "Minimum number of transactions",
 			"maximum_single_limit_must_be_less": "Maximum single limit must be less than or equal to the number of transactions",
-			"no_more_than_the_maximum_limit": "No more than the maximum limit"
+			"no_more_than_the_maximum_limit": "No more than the maximum limit",
+			"advertising_information_has_changed": "Advertising information has changed, please reorder"
+
 		},
 		"public0": {
 			"reason": "Cause of failure",
