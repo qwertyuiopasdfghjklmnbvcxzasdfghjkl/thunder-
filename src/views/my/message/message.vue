@@ -100,7 +100,7 @@
                         res.data.forEach(res=>{
                             this.list.push(res)
                         })
-                        console.log(this.list)
+                        // console.log(this.list)
                         this.$refs.loadmore.onBottomLoaded();
                     } else if (this.sport === 'top') { // 下拉刷新
                         this.list = res.data

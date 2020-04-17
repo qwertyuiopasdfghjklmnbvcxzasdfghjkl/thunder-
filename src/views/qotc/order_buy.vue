@@ -70,7 +70,6 @@
             <span>{{$t('otc_legal.otc_legal_Bank')}}</span>
             <span class="white">{{item.bank}}</span>
           </div>
-    {{index}}
           <!-- 收款二维码 -->
           <div class="ui-flex ui-flex-justify" v-if="pay_type.includes(item.type) && ['2', '3'].includes(item.type)">
             <span>{{$t('qotc.collection_qrcode')}}</span>

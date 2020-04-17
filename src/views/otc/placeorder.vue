@@ -178,7 +178,8 @@
                 }
                 otcApi.getAdvertisementDetail(this.ad_id, (res) => {
                     this.detailData = res || {}
-                    this.detailData.cur_price = utils.removeEndZero(numUtils.BN(this.detailData.cur_price).toFixed(2))
+                    // this.detailData.cur_price = utils.removeEndZero(numUtils.BN(this.detailData.cur_price).toFixed(2))
+                    this.detailData.cur_price = utils.removeEndZero(Math.floor(numUtils.BN(this.detailData.cur_price)*100)/100)
                     this.detailData.min_amount = utils.removeEndZero(numUtils.BN(this.detailData.min_amount).toFixed(8))
                     this.detailData.max_amount = utils.removeEndZero(numUtils.BN(this.detailData.max_amount).toFixed(8))
                     this.detailData.remain_count = utils.removeEndZero(numUtils.BN(this.detailData.remain_count).toFixed(8))
