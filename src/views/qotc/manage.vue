@@ -50,14 +50,14 @@ export default {
   },
   computed:{
     ...mapGetters(['getUserInfo']),
-    
+
   },
   created(){
     this.getSuccessOrders()
     this.getInProcessOrders()
     this.getAdPermission()
   },
-  
+
   methods:{
     ...mapActions([]),
     getSuccessOrders(){

@@ -13,7 +13,7 @@
                 :bottom-loading-text="$t('home.loading-text')"
                 :autoFill="false"
                 ref="loadmore">
-
+            <!-- @click="getRefreshList" -->
             <ul class="item" v-for="(data, index) in datas" :key="index">
                 <li>
                     <section>
@@ -158,7 +158,7 @@
             })
             this.timer = setInterval(() => {
                 // 20s 后刷新整个（已加载的全部数据）列表
-            //    this.getRefreshList()
+               this.getRefreshList()
             }, 20000)
         },
 
@@ -177,6 +177,7 @@
             getRefreshList() {
                 let params = this.paramsChange
                 params.show = this.total
+                params.page = 1
                 this.getList(true, params)
             },
             getHeader(id) {
@@ -208,7 +209,7 @@
                 })
             },
             getList(refresh = false, data = this.paramsChange) { // 获取广告列表
-                Indicator.open()
+                // Indicator.open()
                 otcApi.getAdvertisementList(data, (res) => {
                     Indicator.close()
                     let _tempRes = [], _ids = []
@@ -240,8 +241,8 @@
                             res.data.forEach(res => {
                                 this.datas.push(res)
                             })
-                            this.total += res.total
-                            // console.log('this.total----------------------', this.total);
+                            this.total += res.data.length
+                            console.log('this.total----------------------', this.total);
                         } else {
                             this.datas = res.data
                         }
@@ -257,8 +258,8 @@
                         console.log('this.datas', this.datas);
 
                         if (!refresh) {
-                            this.total += res.total
-                            // console.log('2 this.total----------------------', this.total);
+                            this.total += res.data.length
+                            console.log('2 this.total----------------------', this.total);
                         }
 
                     }
