@@ -9,7 +9,7 @@ cordova-splash
 
 ### Compiles and minifies for production
 ```
-npm run build
+npm run build-app
 cordova-hcp build
 ```
 
