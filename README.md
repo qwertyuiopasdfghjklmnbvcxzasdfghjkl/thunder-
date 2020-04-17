@@ -75,3 +75,10 @@ cordova-hcp build
 ```
 cordova build android --release -- --keystore=./keyStore2.jks --storePassword=123456 --alias=key0 --password=123456
 ```
+### cordova build iOS project shell script
+```
+$ cd project_root_dir
+$ chmod u+x run_cordova_to_ios.sh (Only need run 1 times is enough, remember!!!)
+$ ./run_cordova_to_ios.sh
+
+```
