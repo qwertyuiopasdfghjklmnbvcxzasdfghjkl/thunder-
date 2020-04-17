@@ -9,7 +9,8 @@ cordova-splash
 
 ### Compiles and minifies for production
 ```
-npm run build-app
+npm run build-app 
+//其他环境打包，请参照 package.json 的 scripts，如：npm run build-sit
 cordova-hcp build
 ```
 
