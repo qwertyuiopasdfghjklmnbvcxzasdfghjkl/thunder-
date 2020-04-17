@@ -16,6 +16,7 @@
 			<otc-index
 				v-show="tab===2"
 				:pay="pay"
+				:type="param"
 				@tabChange="handletabChange"
 			/>
 
@@ -41,6 +42,7 @@ export default {
 	data(){
 		return {
 			tab: 2,
+			param: '',
 			type: ''
 		}
 	},
@@ -53,6 +55,9 @@ export default {
 		pay(e){
 			console.log(e)
 		}
+	},
+	mounted() {
+		this.param = this.$route.params.type
 	},
 	beforeRouteEnter (to, from, next) {
 		console.log(store.getters.getApiToken)

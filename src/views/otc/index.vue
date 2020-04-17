@@ -134,7 +134,7 @@ export default {
     myadslist,
     confirm
   },
-    props:['pay'],
+  props:['pay', 'type'],
   data () {
     return {
       placeOrderVisible: false,
@@ -201,6 +201,10 @@ export default {
       handler: function() {
         this.$emit('tabChange', this.active)
       }
+    },
+    type() {
+      // console.log('this.type', this.type);
+      this.active = this.type === 1 ? 'buys' : 'sells'
     }
     // 'globalParams.symbol'(_new){
     //   this.$router.replace({name:'otc', query:{tab:this.active,symbol:_new}})
@@ -253,6 +257,7 @@ export default {
   },
   mounted(){
     let self = this
+
     $('[iscroll]').scroll(function(){
       if(($(this)[0].scrollTop + $(this).height() + window.innerHeight/1.5) >= $(this)[0].scrollHeight) {
         self.$refs[$(this).attr('iscroll')].loadMore()

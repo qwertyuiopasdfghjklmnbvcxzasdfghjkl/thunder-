@@ -77,7 +77,8 @@
           <i :class="[isPayChecked(4) ? 'icon-checkbox-checked' : 'icon-checkbox-unchecked']"></i> {{$t(payTrans[4])}}<!--PayPal-->
         </li>
 
-        <router-link v-if="hasAllPays" :to="{name:'set-payway'}" class="active" tag="li">{{formData.ad_type==1?$t('qotc.add_payment_method'):$t('qotc.add_collection_method')}}<!-- '添加付款方式':'添加收款方式' --></router-link>
+        <li v-if="hasAllPays" class="active" v-tap="{methods: handleNavToSetPay}">{{formData.ad_type==1?$t('qotc.add_payment_method'):$t('qotc.add_collection_method')}}<!-- '添加付款方式':'添加收款方式' --></li>
+
       </ul>
       <!--<div class="f26 mt60 grey agreement" :class="{active:agree}" v-tap="{methods:()=>{agree = !agree}}">-->
         <!--<i class="icon_"></i> {{$t('login_register.agree_Service')}}&lt;!&ndash; 我已阅读并同意 &ndash;&gt;<a href="#" class="blue">《{{$t('qotc.trading_rules')}}&lt;!&ndash; 交易规则 &ndash;&gt;》</a>-->
@@ -108,7 +109,6 @@ import { MessageBox } from 'mint-ui'
 import store from '@/store'
 import otcConfig from '@/assets/js/otcconfig'
 import confirm from '@/views/qotc/components/confirm'
-
 
 export default {
   components: {
@@ -144,7 +144,7 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(['getUserWallets', 'getUserInfo']),
+    ...mapGetters(['getUserWallets', 'getUserInfo', 'getAdFormData']),
     msgs () {
       return {
         lowest_price: {required: this.$t('qotc.input_trans_price')}, // 请输入交易单价
@@ -238,6 +238,9 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
+    if (from.name !== 'set-payway') {
+      store.dispatch('changeAdData', '') // 清空表单数据
+    }
     otcApi.getAdPermission((res) => { //检测是否商家用户，否则无权限进入此页面
       let _isMerchant = res.otcMerchantsPermission==1?true:false
       if(_isMerchant){
@@ -273,6 +276,12 @@ export default {
     })
     this.getBenchSymbolInfo()
 
+  },
+
+  mounted() {
+    if (this.getAdFormData) {
+      this.formData = this.getAdFormData
+    }
   },
   methods:{
     ...mapActions(['setUserWallets']),
@@ -406,6 +415,9 @@ export default {
       otcApi.createAdvertisement(formData, (msg) => {
         this.locked = false
         Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+
+        store.dispatch('changeAdData', '') // 清空表单数据
+
         this.$router.replace({name:'adManage'})
       }, (msg) => {
         this.locked = false
@@ -514,6 +526,12 @@ export default {
         this.formData.ad_type = args.type
       }
     },
+
+    // 跳转到设置支付方式
+    handleNavToSetPay() {
+      store.dispatch('changeAdData', this.formData)
+      this.$router.push({name: 'set-payway'})
+    }
   }
 }
 </script>

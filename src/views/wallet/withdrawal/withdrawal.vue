@@ -278,10 +278,11 @@
                 }
                 if(this.withdrawalType === 2){
                     // 内部转账
-                    if(this.once){
-                        return
-                    }
-                    this.once = true
+
+                    // if(this.once){
+                    //     return
+                    // }
+                    // this.once = true
                     if (Number(this.form.amount) < Number(this.symbolInfo.stationWithdrawMin)) {
                         Tip({
                             type: 'danger',
