@@ -44,7 +44,9 @@
             <string>Scan QrCode</string>
         </config-file>
         <preference name="DisallowOverscroll" value="true"/>
-        <preference name="StatusBarStyle" value="default" />
+        <preference name="StatusBarStyle" value="lightcontent" />
+        <preference name="StatusBarOverlaysWebView" value="false" />
+        <preference name="StatusBarBackgroundColor" value="#151C2C" />
     </platform>
     <chcp>
         <config-file url="http://res.ssss.so/hotfix/thunder/www/chcp.json"/>
