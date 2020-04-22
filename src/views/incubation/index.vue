@@ -17,7 +17,7 @@
                     <div class="ml30 mr30">
                         <div class="pt30 f32">{{$t('account.stake_amount')}}<!-- 锁仓数量 --></div>
                         <div class="mt20 ui-flex bbline">
-                            <numberbox class="ui-flex-1" name="amount" v-model="formData.amount" v-validate="'required|limitMin|balance'" :accuracy="fixnumber" :placeholder="$t('incubation.least_amount').format(toFixed(lockMin, token))" v-focus><!-- 最少{0}{1}起 --></numberbox>
+                            <numberbox class="ui-flex-1" name="amount" v-model="formData.amount" v-validate="'required|limitMin|balance'" :accuracy="fixnumber" :placeholder="$t('incubation.least_amount').format(toFixed(lockMin), token)" v-focus><!-- 最少{0}{1}起 --></numberbox>
                             <span class="allin" v-tap="{methods:allIn}">{{$t('user.all')}}<!-- 全部 --></span>
                         </div>
                         <div class="mt25 pb25 ui-flex ui-flex-justify">
