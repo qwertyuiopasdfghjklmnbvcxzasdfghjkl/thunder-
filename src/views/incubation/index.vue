@@ -10,7 +10,7 @@
                     <div class="top-view text-center">
                         <p class="f24">{{$t('incubation.expected_profit')}}<!-- 预期收益 -->（{{token}}）</p>
                         <p class="f60 mt20">{{expected|toFixed(fixnumber)}}</p>
-                        <p class="f24 mt20">≈ {{$t('incubation.avg_inc_vol').format(toFixed(selectedToken.releaseRatio*selectedToken.lockDays,2))}}<!-- {0}%月均孵化量 --></p>
+                        <p class="f24 mt20">≈ {{$t('incubation.avg_inc_vol').format(avgIncVol)}}<!-- {0}%月均孵化量 --></p>
                     </div>
                 </div>
                 <div class="full bgblock">
@@ -96,10 +96,14 @@ import Hoc from '@/components/common/hoc'
                 return {
                     amount:{
                         required: this.$t('incubation.input_stake_amount'),//请输入锁仓数量
-                        limitMin: this.$t('incubation.least_stake_amount').format(this.toFixed(this.lockMin,2), this.token),//锁仓数量不能低于{0}{1}
+                        limitMin: this.$t('incubation.least_stake_amount').format(this.toFixed(this.lockMin), this.token),//锁仓数量不能低于{0}{1}
                         balance: this.$t('incubation.insufficient_to_transfer'),//当前余额不足，请您去划转
                     }
                 }
+            },
+            avgIncVol(){
+                let _percent = numUtils.mul(this.selectedToken.monthRatio||0, 100)
+                return _percent.toFixed(4)
             },
             expected(){
                 return numUtils.mul(numUtils.mul(this.formData.amount, this.formData.days), this.selectedToken.releaseRatio)
