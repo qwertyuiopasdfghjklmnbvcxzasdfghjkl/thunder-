@@ -35,18 +35,18 @@
                               :readonly="true"
                               :placeholder="true"></ui-input><!--邮箱-->
                 </div>
-                <!--<div class="mt50 switch">-->
-                    <!--<label>-->
-                        <!--<span>{{$t('public0.public159')}}</span>-->
-                        <!--<cp-switch v-model="switchStatus" :size="'leg'" :openText="'ON'"></cp-switch>-->
-                    <!--</label>-->
-                <!--</div>-->
+                <!-- <div class="mt50 switch">
+                    <label>
+                        <span>{{$t('public0.public159')}}</span>
+                        <cp-switch v-model="switchStatus" :size="'leg'" :openText="'ON'"></cp-switch>
+                    </label>
+                </div> -->
             </div>
 
             <!--确认框-->
-            <!--<mt-popup class="place_bind_popup" v-model="bindConfirm" position="bottom">-->
-                <!--<bind-confirm @removeDialog="removeDialog"/>-->
-            <!--</mt-popup>-->
+            <!-- <mt-popup class="place_bind_popup" v-model="bindConfirm" position="bottom">
+                <bind-confirm @removeDialog="removeDialog"/>
+            </mt-popup> -->
         </div>
     </div>
 </template>
@@ -88,16 +88,16 @@
             }
         },
         created() {
-
+            
         },
-        // beforeRouteEnter(from, to, next) {
-        //     myApi.getUserState((data) => {
-        //         data.email ? window.vm.$router.replace({name: 'safe'}) : next()
-        //     }, (msg) => {
-        //         console.error(msg)
-        //         window.vm.$router.replace({name: 'safe'})
-        //     })
-        // },
+        beforeRouteEnter(from, to, next) {
+            myApi.getUserState((data) => {
+                data.email ? window.vm.$router.replace({name: 'safe'}) : next()
+            }, (msg) => {
+                console.error(msg)
+                window.vm.$router.replace({name: 'safe'})
+            })
+        },
         methods: {
             removeDialog() {
                 this.bindConfirm = false

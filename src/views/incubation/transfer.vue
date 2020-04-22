@@ -1,37 +1,37 @@
 <template>
     <div class="page">
-        <top-back> 孵息加速器 </top-back>
+        <top-back> {{$t('incubation.accelerator')}}<!-- 孵息加速器 --> </top-back>
         <div class="page-main">
             <div class="full">
                 <div class="symbol mt20 bgc pl30 pr30 ui-flex ui-flex-justify">
-                     <span class="cgray">币种</span>
+                     <span class="cgray">{{$t('trade_record.trade_record_currency')}}<!-- 币种 --></span>
                      <span class="f32">{{token}}</span>
                 </div>
                 <div class="desc mt20 bgc pl30 pr30 pt15 ui-flex">
-                     <span class="cgray ui-flex ui-flex-column ui-flex-center">从</span>
+                     <span class="cgray ui-flex ui-flex-column ui-flex-center">{{$t('public0.public54')}}<!-- 从 --></span>
                      <div class="ui-flex-1 bline">
-                         <p class="f32">币币账户</p>
+                         <p class="f32">{{$t('account.currency_account')}}<!-- 币币账户 --></p>
                          <p class="cgray f24">{{token}}</p>
                      </div>
                 </div>
                 <div class="desc bgc pl30 pr30 pt15 ui-flex">
-                     <span class="cgray ui-flex ui-flex-column ui-flex-center">到</span>
+                     <span class="cgray ui-flex ui-flex-column ui-flex-center">{{$t('public0.to')}}<!-- 到 --></span>
                      <div class="ui-flex-1">
-                         <p class="f32">孵息账户</p>
+                         <p class="f32">{{$t('incubation.incubation_account')}}<!-- 孵息账户 --></p>
                          <p class="cgray f24">{{token}}</p>
                      </div>
                 </div>
                 <div class="bgc mt20 pl30 pr30 pt40 pb20">
-                     <div class="cgray">数量</div>
+                     <div class="cgray">{{$t('business.QUANTITY')}}<!-- 数量 --></div>
                      <div class="mt20 ui-flex ui-flex-justify bline">
-                         <numberbox class="ui-flex-1" name="amount" v-model="formData.amount" v-validate="'required|balance'" :accuracy="fixnumber" :placeholder="$t(`请输入划转数量`)" v-focus></numberbox>
-                         <span class="f32 blue lh80" v-tap="{methods:allIn}">全部划转</span>
+                         <numberbox class="ui-flex-1" name="amount" v-model="formData.amount" v-validate="'required|balance'" :accuracy="fixnumber" :placeholder="$t(`public0.public58`)" v-focus><!-- 请输入划转数量 --></numberbox>
+                         <span class="f32 blue lh80" v-tap="{methods:allIn}">{{$t('incubation.transfer_all')}}<!-- 全部划转 --></span>
                      </div>
-                     <div class="lh80 cgray">最多可转 {{(wallet.availableBalance?wallet.availableBalance:'0')|removeEndZero}} {{token}}</div>
+                     <div class="lh80 cgray">{{$t('incubation.most_transfer')}}<!-- 最多可转 --> {{(wallet.availableBalance?wallet.availableBalance:'0')|removeEndZero}} {{token}}</div>
                 </div>
             </div>
             <div class="mt120">
-                <mt-button type="primary" size="large" :disabled="locked" v-tap="{methods:transfer}">确定划转</mt-button>
+                <mt-button type="primary" size="large" :disabled="locked" v-tap="{methods:transfer}">{{$t('incubation.confirm_transfer')}}<!-- 确定划转 --></mt-button>
             </div>
         </div>
         <confirm
@@ -71,8 +71,8 @@ import incubationApi from '@/api/incubation'
             msgs(){
                 return {
                     amount:{
-                        required: this.$t('请输入划转数量'),
-                        balance: this.$t('当前余额不足，请您去充值'),
+                        required: this.$t('public0.public58'),//请输入划转数量
+                        balance: this.$t('incubation.insufficient_to_recharge'),//当前余额不足，请您去充值
                     }
                 }
             },

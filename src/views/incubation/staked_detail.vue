@@ -1,36 +1,36 @@
 <template>
     <div class="page">
         <top-back>
-            {{$t('详情')}}
+            {{$t('public0.detail')}}<!-- 详情 -->
         </top-back>
         <div class="page-main">
             <div class="mt20 full bgblock pl30 pr30 pb40">
                 <div class="pt50 tc f60">{{info.incomeAmount}}</div>
-                <div class="mt10 tc f24 cgray">总释放 {{info.symbol}}</div>
+                <div class="mt10 tc f24 cgray">{{$t('incubation.total_release')}}<!-- 总释放 --> {{info.symbol}}</div>
                 <div class="mt60 ui-flex ui-flex-justify">
-                    <span class="f32 cgray">孵息数量</span>
+                    <span class="f32 cgray">{{$t('incubation.incubation_amount')}}<!-- 孵息数量 --></span>
                     <span class="f32">{{info.lockAmount}} {{info.symbol}}</span>
                 </div>
                 <div class="mt50 ui-flex ui-flex-justify">
-                    <span class="f32 cgray">锁仓时间</span>
-                    <span class="f32">{{$t('{0}天').format(info.lockDays)}}</span>
+                    <span class="f32 cgray">{{$t('incubation.lock_period')}}<!-- 锁仓期限 --></span>
+                    <span class="f32">{{info.lockDays}}{{$t('exchange.exchange_day')}}<!-- 天 --></span>
                 </div>
                 <div class="mt50 ui-flex ui-flex-justify">
-                    <span class="f32 cgray">开始时间</span>
+                    <span class="f32 cgray">{{$t('referral.start_date')}}<!-- 开始时间 --></span>
                     <span class="f32">{{info.createdAt.split(' ')[0]}}</span>
                 </div>
                 <div class="mt50 ui-flex ui-flex-justify">
-                    <span class="f32 cgray">状态</span>
-                    <span class="f32 green" v-if="info.status==1">进行中</span>
-                    <span class="f32 red" v-else>已结束</span>
+                    <span class="f32 cgray">{{$t('exchange.exchange_status')}}<!-- 状态 --></span>
+                    <span class="f32 green" v-if="info.status==1">{{$t('ieo.status_processing')}}<!--进行中--></span>
+                    <span class="f32 red" v-else>{{$t('ieo.status_over')}}<!--已结束--></span>
                 </div>
             </div>
             <hoc @getData="getData" :params="params" size="large">
                 <div class="mt20 full bgblock pl30 pr30 pt30 pb40">
-                    <div class="f32">释放记录</div>
+                    <div class="f32">{{$t('incubation.release_record')}}<!-- 释放记录 --></div>
                     <ul class="items mt20">
                         <router-link :to="{name:'stakedTransDetail', query:item}" tag="li" v-for="item in data">
-                            <p class="cgray f24">{{distributeType[item.distributeType]}}</p>
+                            <p class="cgray f24">{{$t(`incubation.distribute_type_${item.distributeType}`)}} <!-- '1':'孵息收益', '2':'本金释放', '3':'认证奖励', '4':'业绩奖励' --></p>
                             <div class="ui-flex ui-flex-justify f28">
                                 <span>{{item.createdAt}}</span>
                                 <span>{{item.distributeAmount}} {{item.symbol}}</span>
@@ -72,7 +72,6 @@ export default {
             },
             info:{},
             data:[],
-            distributeType:{'1':'孵息收益', '2':'本金释放', '3':'认证奖励', '4':'业绩奖励'}
         }
     },
     created() {

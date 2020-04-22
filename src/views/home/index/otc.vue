@@ -9,8 +9,8 @@
         </router-link>
         <router-link :to="{name:'incubation'}" class="box">
             <label>
-                <p>{{$t('孵息加速器')}}<!-- 孵息加速器 --></p>
-                <span>{{$t('让资产更有价值')}}<!-- 让资产更有价值 --></span>
+                <p>{{$t('incubation.accelerator')}}<!-- 孵息加速器 --></p>
+                <span>{{$t('incubation.description')}}<!-- 让资产更有价值 --></span>
             </label>
             <img src="../../../assets/img/flash_sell.png"/>
         </router-link>

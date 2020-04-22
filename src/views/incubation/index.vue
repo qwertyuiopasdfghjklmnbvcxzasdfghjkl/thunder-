@@ -1,41 +1,41 @@
 <template>
     <div class="page">
         <top-back style="background: #0C6AC9;">
-            孵息加速器
-            <router-link slot="right" class="stake-btn" :to="{name:'stakedHistory'}" tag="span">锁仓记录</router-link>
+            {{$t('incubation.accelerator')}}<!-- 孵息加速器 -->
+            <router-link slot="right" class="stake-btn" :to="{name:'stakedHistory'}" tag="span">{{$t('account.history_staked')}}<!-- 锁仓记录 --></router-link>
         </top-back>
         <div class="page-main">
             <hoc @getData="getData" :params="params" size="large">
                 <div class="full">
                     <div class="top-view text-center">
-                        <p class="f24">预期收益（{{token}}）</p>
+                        <p class="f24">{{$t('incubation.expected_profit')}}<!-- 预期收益 -->（{{token}}）</p>
                         <p class="f60 mt20">{{expected|toFixed(fixnumber)}}</p>
-                        <p class="f24 mt20">≈{{selectedToken.releaseRatio*100}}%月均孵化量</p>
+                        <p class="f24 mt20">≈ {{$t('incubation.avg_inc_vol').format(selectedToken.releaseRatio*selectedToken.lockDays)}}<!-- {0}%月均孵化量 --></p>
                     </div>
                 </div>
                 <div class="full bgblock">
                     <div class="ml30 mr30">
-                        <div class="pt30 f32">锁仓数量</div>
+                        <div class="pt30 f32">{{$t('account.stake_amount')}}<!-- 锁仓数量 --></div>
                         <div class="mt20 ui-flex bbline">
-                            <numberbox class="ui-flex-1" name="amount" v-model="formData.amount" v-validate="'required|limitMin|balance'" :accuracy="fixnumber" :placeholder="$t(`${toFixed(lockMin)} ${token} 起`)" v-focus></numberbox>
-                            <span class="allin" v-tap="{methods:allIn}">全部</span>
+                            <numberbox class="ui-flex-1" name="amount" v-model="formData.amount" v-validate="'required|limitMin|balance'" :accuracy="fixnumber" :placeholder="$t('incubation.least_amount').format(toFixed(lockMin, token))" v-focus><!-- 最少{0}{1}起 --></numberbox>
+                            <span class="allin" v-tap="{methods:allIn}">{{$t('user.all')}}<!-- 全部 --></span>
                         </div>
                         <div class="mt25 pb25 ui-flex ui-flex-justify">
-                            <span class="cgray">可用 {{(wallet.availableBalance?wallet.availableBalance:'0')|removeEndZero}} {{token}}</span>
-                            <router-link class="blue" :to="{name:'transfer', params:{token:token}}" tag="span">划转 <font class="icon_ circle ml5"><i class="icon_ icon-swap f24"></i></font></router-link>
+                            <span class="cgray">{{$t('exchange.value_available')}}<!-- 可用 --> {{(wallet.availableBalance?wallet.availableBalance:'0')|removeEndZero}} {{token}}</span>
+                            <router-link class="blue" :to="{name:'transfer', params:{token:token}}" tag="span">{{$t('public0.public35')}}<!-- 划转 --> <font class="icon_ circle ml5"><i class="icon_ icon-swap f24"></i></font></router-link>
                         </div>
                     </div>
                 </div>
                 <div class="mt20 full bgblock pb60">
                     <div class="ml30 mr30">
-                        <div class="pt25 f32">锁仓期限</div>
+                        <div class="pt25 f32">{{$t('incubation.lock_period')}}<!-- 锁仓期限 --></div>
                         <ul class="days pt10 clearfix">
-                            <li v-for="item in tokenInfo" :class="{active:formData.days==item.lockDays}" v-tap="{methods:()=>{formData.days=item.lockDays}}">{{item.lockDays}}{{$t('天')}}</li>
+                            <li v-for="item in tokenInfo" :class="{active:formData.days==item.lockDays}" v-tap="{methods:()=>{formData.days=item.lockDays}}">{{item.lockDays}}{{$t('exchange.exchange_day')}}<!-- 天 --></li>
                         </ul>
                     </div>
                 </div>
                 <div class="mt120">
-                    <mt-button type="primary" size="large" :disabled="locked" v-tap="{methods:stake}">确定锁仓</mt-button>
+                    <mt-button type="primary" size="large" :disabled="locked" v-tap="{methods:stake}">{{$t('account.confirm_stake')}}<!-- 确定锁仓 --></mt-button>
                 </div>
             </hoc>
         </div>
@@ -95,9 +95,9 @@ import Hoc from '@/components/common/hoc'
             msgs(){
                 return {
                     amount:{
-                        required: this.$t('请输入锁仓数量'),
-                        limitMin: this.$t('锁仓数量不能低于{0}{1}').format(this.toFixed(this.lockMin), this.token),
-                        balance: this.$t('当前余额不足，请您去划转'),
+                        required: this.$t('incubation.input_stake_amount'),//请输入锁仓数量
+                        limitMin: this.$t('incubation.least_stake_amount').format(this.toFixed(this.lockMin), this.token),//锁仓数量不能低于{0}{1}
+                        balance: this.$t('incubation.insufficient_to_transfer'),//当前余额不足，请您去划转
                     }
                 }
             },

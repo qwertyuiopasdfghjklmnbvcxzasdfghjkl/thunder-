@@ -2,14 +2,14 @@
     <div class="page">
         <top-back>
             {{token}}
-            <router-link class="fxlink" :to="{name:'incubation', params:{token:token}}" slot="right" tag="span">孵息加速器</router-link>
+            <router-link class="fxlink" :to="{name:'incubation', params:{token:token}}" slot="right" tag="span">{{$t('incubation.accelerator')}}<!-- 孵息加速器 --></router-link>
         </top-back>
         <div class="assets tc">
-            <p class="f24">{{token}} 总资产</p>
+            <p class="f24">{{token}} {{$t('home.home46')}}<!-- 总资产 --></p>
             <p class="f60 mt20">{{wallet.totalBalance | removeEndZero}}</p>
             <p class="f24 mt15">≈ {{(token=='USDT'?wallet.totalBalance:totalUsdt)|toFixed(8)|removeEndZero}} USDT</p>
         </div>
-        <div class="title mt20 f32 ">交易记录</div>
+        <div class="title mt20 f32 ">{{$t('trade_record.my_trade_record')}}<!-- 交易记录 --></div>
         <div class="page-main">
             <hoc ref="hoc" @getData="getData" :params="params" size="large">
                 <mt-loadmore
@@ -27,14 +27,14 @@
                     <ul class="items full">
                         <li class="ui-flex ui-flex-justify" v-if="kycr">
                             <div>
-                                <p class="f32">认证奖励</p>
+                                <p class="f32">{{$t('incubation.distribute_type_3')}}<!-- 认证奖励 --></p>
                                 <p class="cgray f24">{{kycr.createdAt}}</p>
                             </div>
                             <span class="f32 ui-flex ui-flex-column ui-flex-center">{{kycr.distributeAmount}} {{token}}</span>
                         </li>
                         <li class="ui-flex ui-flex-justify" v-for="item in datas">
                             <div>
-                                <p class="f32">{{item.direction==1?'转入':'转出'}}</p>
+                                <p class="f32">{{item.direction==1?$t('public0.transfer_in'):$t('public0.transfer_out')}}<!-- '转入':'转出' --></p>
                                 <p class="cgray f24">{{item.createdAt}}</p>
                             </div>
                             <span class="f32 ui-flex ui-flex-column ui-flex-center">{{item.quantity}} {{token}}</span>

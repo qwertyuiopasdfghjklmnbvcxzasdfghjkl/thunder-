@@ -1,12 +1,12 @@
 <template>
     <div class="page">
         <top-back>
-            {{$t('锁仓记录')}}
+            {{$t('account.history_staked')}}
         </top-back>
         <div class="tab-bar">
             <mt-navbar v-model="label">
-              <mt-tab-item :id="1"><span>{{$t('进行中')}}<!--进行中--></span></mt-tab-item>
-              <mt-tab-item :id="2"><span>{{$t('已结束')}}<!--已结束--></span></mt-tab-item>
+              <mt-tab-item :id="1"><span>{{$t('ieo.status_processing')}}<!--进行中--></span></mt-tab-item>
+              <mt-tab-item :id="2"><span>{{$t('ieo.status_over')}}<!--已结束--></span></mt-tab-item>
             </mt-navbar>
         </div>
         <div class="page-main">
@@ -27,23 +27,23 @@
                     <ul class="items">
                         <router-link :to="{name:'stakedDetail', query:item}" tag="li" v-for="item in datasOn">
                             <div class="full pl30 pr30 bline ui-flex ui-flex-justify">
-                                <span class="f32">{{$t('{0}天孵息').format(item.lockDays)}}</span>
-                                <span class="green">进行中</span>
+                                <span class="f32">{{$t('incubation.incubation_days').format(item.lockDays)}}<!-- {0}天孵息 --></span>
+                                <span class="green">{{$t('ieo.status_processing')}}<!-- 进行中 --></span>
                             </div>
                             <div class="ui-flex ui-flex-justify">
-                                <span class="f32 cgray">孵息数量</span>
+                                <span class="f32 cgray">{{$t('incubation.incubation_amount')}}<!-- 孵息数量 --></span>
                                 <span class="f32">{{item.lockAmount}} {{item.symbol}}</span>
                             </div>
                             <div class="ui-flex ui-flex-justify">
-                                <span class="f32 cgray">孵息释放</span>
+                                <span class="f32 cgray">{{$t('incubation.incubation_release')}}<!-- 孵息释放 --></span>
                                 <span class="f32">{{item.incomeAmount}} {{item.symbol}}</span>
                             </div>
                             <div class="ui-flex ui-flex-justify">
-                                <span class="f32 cgray">开始时间</span>
+                                <span class="f32 cgray">{{$t('referral.start_date')}}<!-- 开始时间 --></span>
                                 <span class="f32">{{item.createdAt.split(' ')[0]}}</span>
                             </div>
                             <div class="ui-flex ui-flex-justify">
-                                <span class="f32 cgray">结束时间</span>
+                                <span class="f32 cgray">{{$t('referral.end_date')}}<!-- 结束时间 --></span>
                                 <span class="f32">--</span>
                             </div>
                         </router-link>
@@ -70,23 +70,23 @@
                     <ul class="items">
                         <router-link :to="{name:'stakedDetail', query:item}" tag="li" v-for="item in datasOff">
                             <div class="full pl30 pr30 bline ui-flex ui-flex-justify">
-                                <span class="f32">{{$t('{0}天孵息').format(item.lockDays)}}</span>
-                                <span class="red">已完成</span>
+                                <span class="f32">{{$t('incubation.incubation_days').format(item.lockDays)}}<!-- {0}天孵息 --></span>
+                                <span class="red">{{$t('otc_ad.otc_ad_completed')}}<!--已完成--></span>
                             </div>
                             <div class="ui-flex ui-flex-justify">
-                                <span class="f32 cgray">孵息数量</span>
+                                <span class="f32 cgray">{{$t('incubation.incubation_amount')}}<!-- 孵息数量 --></span>
                                 <span class="f32">{{item.lockAmount}} {{item.symbol}}</span>
                             </div>
                             <div class="ui-flex ui-flex-justify">
-                                <span class="f32 cgray">孵息释放</span>
+                                <span class="f32 cgray">{{$t('incubation.incubation_release')}}<!-- 孵息释放 --></span>
                                 <span class="f32">{{item.incomeAmount}} {{item.symbol}}</span>
                             </div>
                             <div class="ui-flex ui-flex-justify">
-                                <span class="f32 cgray">开始时间</span>
+                                <span class="f32 cgray">{{$t('referral.start_date')}}<!-- 开始时间 --></span>
                                 <span class="f32">{{item.createdAt.split(' ')[0]}}</span>
                             </div>
                             <div class="ui-flex ui-flex-justify">
-                                <span class="f32 cgray">结束时间</span>
+                                <span class="f32 cgray">{{$t('referral.end_date')}}<!-- 结束时间 --></span>
                                 <span class="f32">{{item.endDate && item.endDate.split(' ')[0] || '--'}}</span>
                             </div>
                         </router-link>

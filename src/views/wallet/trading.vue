@@ -36,8 +36,8 @@
             </div>
             <div class="tab-bar">
                 <mt-navbar v-model="type">
-                  <mt-tab-item :id="1"><span>{{$t('币币账户')}}<!--币币账户--></span></mt-tab-item>
-                  <mt-tab-item :id="3"><span>{{$t('孵息账户')}}<!--孵息账户--></span></mt-tab-item>
+                  <mt-tab-item :id="1"><span>{{$t('account.currency_account')}}<!--币币账户--></span></mt-tab-item>
+                  <mt-tab-item :id="3"><span>{{$t('incubation.incubation_account')}}<!--孵息账户--></span></mt-tab-item>
                 </mt-navbar>
             </div>
             <div class="list_title">
