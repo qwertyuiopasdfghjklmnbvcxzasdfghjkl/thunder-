@@ -10,7 +10,7 @@
                     <div class="top-view text-center">
                         <p class="f24">{{$t('incubation.expected_profit')}}<!-- 预期收益 -->（{{token}}）</p>
                         <p class="f60 mt20">{{expected|toFixed(fixnumber)}}</p>
-                        <p class="f24 mt20">≈ {{$t('incubation.avg_inc_vol').format(selectedToken.releaseRatio*selectedToken.lockDays)}}<!-- {0}%月均孵化量 --></p>
+                        <p class="f24 mt20">≈ {{$t('incubation.avg_inc_vol').format(toFixed(selectedToken.releaseRatio*selectedToken.lockDays,2))}}<!-- {0}%月均孵化量 --></p>
                     </div>
                 </div>
                 <div class="full bgblock">
