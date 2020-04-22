@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <top-back style="background: #151C2C;"> {{$t('home.home50')}}</top-back>
+        <top-back style="background: #151C2C;"> {{$t('home.home50')}} {{symbol}}</top-back>
         <div class="page-main">
             <!--<div class="symbol">-->
             <!--<img :src="`data:image/png;base64,${symbolInfo.iconBase64}`"/>-->

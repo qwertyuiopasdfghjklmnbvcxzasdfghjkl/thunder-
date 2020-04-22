@@ -16,7 +16,7 @@ axios.interceptors.request.use(function (config) {
   config.headers.common['uuid'] = userApi.uuid
   config.headers.common['lang'] = lang
   // 在发送请求之前做些什么
-
+ 
   return config
 }, function (error) {
   // 对请求错误做些什么
@@ -61,10 +61,10 @@ const get = function (url, data, success, error) {
     params: data
   }).then((res) => {
     if (!res) { return }
-    success && success(res.data)
+    success && success(res.data, res)
   }).catch((res) => {
     console.warn(res)
-    error && error(res.response && res.response.data && res.response.data.length < 500 ? res.response.data : 'Server_Error', res)
+    error && error(res.response && res.response.data && res.response.data.length < 500 ? res.response.data : 'Server_Error', res.response)
   })
 }
 api.get = get
@@ -77,10 +77,10 @@ const post = function (url, data, success, error) {
   }
   axios.post(url, data).then((res) => {
     if (!res) { return }
-    success && success(res.data)
+    success && success(res.data, res)
   }).catch((res) => {
     console.warn(res)
-    error && error(res.response && res.response.data && res.response.data.length < 500 ? res.response.data : 'Server_Error', res)
+    error && error(res.response && res.response.data && res.response.data.length < 500 ? res.response.data : 'Server_Error', res.response)
   })
 }
 api.post = post
@@ -95,10 +95,10 @@ const del = function (url, data, success, error) {
     data: data
   }).then((res) => {
     if (!res) { return }
-    success && success(res.data)
+    success && success(res.data, res)
   }).catch((res) => {
     console.warn(res)
-    error && error(res.response && res.response.data && res.response.data.length < 500 ? res.response.data : 'Server_Error', res)
+    error && error(res.response && res.response.data && res.response.data.length < 500 ? res.response.data : 'Server_Error', res.response)
   })
 }
 api.delete = del
@@ -111,10 +111,10 @@ const put = function (url, data, success, error) {
   }
   axios.put(url, data).then((res) => {
     if (!res) { return }
-    success && success(res.data)
+    success && success(res.data, res)
   }).catch((res) => {
     console.warn(res)
-    error && error(res.response && res.response.data && res.response.data.length < 500 ? res.response.data : 'Server_Error', res)
+    error && error(res.response && res.response.data && res.response.data.length < 500 ? res.response.data : 'Server_Error', res.response)
   })
 }
 api.put = put
@@ -127,10 +127,10 @@ const postForm = function (url, data, success, error) {
   }
   axios.post(url, data).then((res) => {
     if (!res) { return }
-    success && success(res.data)
+    success && success(res.data, res)
   }).catch((res) => {
     console.warn(res)
-    error && error(res.response && res.response.data && res.response.data.length < 500 ? res.response.data : 'Server_Error', res)
+    error && error(res.response && res.response.data && res.response.data.length < 500 ? res.response.data : 'Server_Error', res.response)
   })
 }
 api.postForm = postForm

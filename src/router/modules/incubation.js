@@ -6,21 +6,21 @@ export default [
 		meta:{login:true}
 	},
 	{
-		path: '/incubation/trans/detail',
-		name: 'incubationTransDetail',
-		component: () => import('@/views/incubation/incubation_trans_detail'),
-		meta:{login:true}
-	},
-	{
 		path: '/incubation/staked_history',
 		name: 'stakedHistory',
 		component: () => import('@/views/incubation/staked_history'),
 		meta:{login:true}
 	},
 	{
-		path: '/incubation/staked_detail',
+		path: '/incubation/staked_detail/',
 		name: 'stakedDetail',
 		component: () => import('@/views/incubation/staked_detail'),
+		meta:{login:true}
+	},
+	{
+		path: '/incubation/staked_trans_detail/',
+		name: 'stakedTransDetail',
+		component: () => import('@/views/incubation/staked_trans_detail'),
 		meta:{login:true}
 	},
 	{

@@ -45,7 +45,8 @@
         },
         watch: {
             getApiToken(newVal) {
-                this.loadLoginInfo()
+                this.getInfo()
+                this.getAssets()
                 this.queryMarketList()
                 this.getBtcPrice()
                 this.gws && this.gws.changeLogin()
@@ -56,8 +57,10 @@
             this.queryMarketList()
             this.getSysparams()
             this.getBtcPrice()
-            this.loadLoginInfo()
+            this.getInfo()
+            this.getAssets()
             this.checkDeviceready()
+            window.getAssets = this.getAssets //全局账户数据处理函数
             window.setMarketList = this.queryMarketList //全局市场数据处理函数
             //建立全局推送，初始化数据
             this.gws = new GlobalWebSocket({
@@ -115,7 +118,7 @@
         methods: {
             ...mapActions(['setBTCValuation', 'setUSDCNY', 'setNetworkSignal', 'setBtcValues', 'setMarketList',
                 'setUserWallets', 'setMarketConfig', 'setApiToken', 'setUserInfo', 'setVersion', 'setSysParams',
-                'setInitMarket', 'setBtcPrice']),
+                'setInitMarket', 'setBtcPrice', 'setIncubatedWallets']),
             getSysparams(){
               marketApi.rateSysparams(res=>{
                 let params = {}
@@ -173,31 +176,35 @@
                     fun(data)
                 }
             },
-            loadLoginInfo() {
+            getAssets() {
                 // console.log('getApiToken===', this.getApiToken)
                 if (this.getApiToken) {
-                    this.getInfo()
                     walletApi.myAssets({}, (res) => {
                         if(res.length==0){
                             setTimeout(this.loadLoginInfo,2000)
                             return
                         }
-                        res = res.filter(item => {
-                            return item.type === 1
-                        })
                         res.forEach((item) => {
                             item.frozenBalance = numUtils.add(item.frozenBalance, item.adFrozenBalance).add(item.loanBalance).toString()
                         })
-                        this.setUserWallets(res)
+                        this.setUserWallets(res.filter(item => {
+                            return item.type === 1
+                        }))
+                        this.setIncubatedWallets(res.filter(item => {
+                            return item.type === 3
+                        }))
                     })
                 } else {
                     this.setUserWallets([])
                 }
             },
             getInfo() {
-                userApi.getUserInfo(res => {
-                    this.setUserInfo(res)
-                })
+                if (this.getApiToken) {
+                    userApi.getUserInfo(res => {
+                        this.setUserInfo(res)
+                    })
+                }
+                
             },
             getBtcPrice() {
                 // if (!this.getApiToken) {

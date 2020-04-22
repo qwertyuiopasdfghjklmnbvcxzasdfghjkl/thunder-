@@ -1202,7 +1202,7 @@ export default {
 			"public184": "(2). For the order marked for payment, after the party submits the complaint, both parties can continue to communicate and release the digital currency/cancel the order.",
 			"public187": "Please enter username",
 			"public186": "Please input favorable rate",
-			"ok": "Conform",
+			"ok": "Confirm",
 			"public181": "Vertical line",
 			"public52": "Inactive",
 			"public180": "Horizontal rays",
