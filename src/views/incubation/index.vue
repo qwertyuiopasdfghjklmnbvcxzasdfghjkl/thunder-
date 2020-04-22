@@ -96,7 +96,7 @@ import Hoc from '@/components/common/hoc'
                 return {
                     amount:{
                         required: this.$t('incubation.input_stake_amount'),//请输入锁仓数量
-                        limitMin: this.$t('incubation.least_stake_amount').format(this.toFixed(this.lockMin), this.token),//锁仓数量不能低于{0}{1}
+                        limitMin: this.$t('incubation.least_stake_amount').format(this.toFixed(this.lockMin,2), this.token),//锁仓数量不能低于{0}{1}
                         balance: this.$t('incubation.insufficient_to_transfer'),//当前余额不足，请您去划转
                     }
                 }
