@@ -42,10 +42,6 @@
                                 <span class="f32 cgray">{{$t('referral.start_date')}}<!-- 开始时间 --></span>
                                 <span class="f32">{{item.createdAt.split(' ')[0]}}</span>
                             </div>
-                            <div class="ui-flex ui-flex-justify">
-                                <span class="f32 cgray">{{$t('referral.end_date')}}<!-- 结束时间 --></span>
-                                <span class="f32">--</span>
-                            </div>
                         </router-link>
                     </ul>
                     <noMoreData v-if="allLoadedOn"/>

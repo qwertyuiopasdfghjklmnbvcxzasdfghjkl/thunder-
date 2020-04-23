@@ -24,7 +24,7 @@
                 <div class="bgc mt20 pl30 pr30 pt40 pb20">
                      <div class="cgray">{{$t('business.QUANTITY')}}<!-- 数量 --></div>
                      <div class="mt20 ui-flex ui-flex-justify bline">
-                         <numberbox class="ui-flex-1" name="amount" v-model="formData.amount" v-validate="'required|positiveValue|balance'" :accuracy="fixnumber" :placeholder="$t(`public0.public58`)" v-focus><!-- 请输入划转数量 --></numberbox>
+                         <numberbox class="ui-flex-1" name="amount" v-model="formData.amount" v-validate="'required|positiveValue|limitMin|balance'" :accuracy="fixnumber" :placeholder="$t(`public0.public58`)" v-focus><!-- 请输入划转数量 --></numberbox>
                          <span class="f32 blue lh80" v-tap="{methods:allIn}">{{$t('incubation.transfer_all')}}<!-- 全部划转 --></span>
                      </div>
                      <div class="lh80 cgray">{{$t('incubation.most_transfer')}}<!-- 最多可转 --> {{(wallet.availableBalance?wallet.availableBalance:'0')|removeEndZero}} {{token}}</div>
@@ -72,6 +72,7 @@ import incubationApi from '@/api/incubation'
                 return {
                     amount:{
                         required: this.$t('public0.public58'),//请输入划转数量
+                        limitMin: this.$t('incubation.least_transfer_amount').format(this.wallet.financeWithdrawMin, this.token),//划转数量不能低于{0}{1}
                         balance: this.$t('incubation.insufficient_to_recharge'),//当前余额不足，请您去充值
                     }
                 }
@@ -83,6 +84,12 @@ import incubationApi from '@/api/incubation'
         },
         created() {
             this.token = this.$route.params.token
+            this.$validator.extend('limitMin',{
+                getMessage:(field, args)=>'',
+                validate:(value, args)=>{
+                    return numUtils.BN(value).gte(this.wallet.financeWithdrawMin||0)
+                }
+            })
             this.$validator.extend('balance',{
                 getMessage:(field, args)=>'',
                 validate:(value, args)=>{
