@@ -90,15 +90,15 @@
       </div>
 
       <div class="ui-flex ui-flex-justify btns" v-if="orderState.state==1">
-        <mt-button type="cancel" size="large" v-tap="{methods:()=>{ccShow = true}}">{{$t('qotc.cancel_order')}}<!-- 取消交易 --></mt-button>
+        <mt-button type="primary" size="large" v-tap="{methods:()=>{ccShow = true}}">{{$t('qotc.cancel_order')}}<!-- 取消交易 --></mt-button>
         <mt-button type="primary" size="large" class="ml30" v-tap="{methods: handleZfShowClick}">{{$t('public0.public154')}}<!-- 已付款 --></mt-button>
       </div>
 
       <div class="btns" v-if="orderState.state==2">
-        <mt-button type="cancel" size="large" class="blue" :disabled="canAppeal" v-tap="{methods:$root.routeTo, to:'qotcAppeal', params:{orderNumber:orderInfo.order_number}}">{{canAppeal?$t('qotc.problem_to_appeal').format(appealTime):$t('otc_exchange.otc_exchange_complaint')}}<!--（遇到问题)${0}后发起申诉 || 发起申诉--></mt-button>
+        <mt-button type="primary" size="large" class="blue" :disabled="canAppeal" v-tap="{methods:$root.routeTo, to:'qotcAppeal', params:{orderNumber:orderInfo.order_number}}">{{canAppeal?$t('qotc.problem_to_appeal').format(appealTime):$t('otc_exchange.otc_exchange_complaint')}}<!--（遇到问题)${0}后发起申诉 || 发起申诉--></mt-button>
       </div>
       <div class="btns" v-if="orderState.state==21">
-        <mt-button type="cancel" size="large" disabled>{{$t('qotc.appealed')}}<!-- '已申诉' --></mt-button>
+        <mt-button type="primary" size="large" disabled>{{$t('qotc.appealed')}}<!-- '已申诉' --></mt-button>
       </div>
 
       <div class="btns" v-if="orderState.state==3||orderState.state==31">
@@ -446,7 +446,7 @@ export default {
     getSurplusTime(){
       this.interval = utils.countDown(this.orderInfo.surplus_Time, (time) => {
 
-      console.log(time)
+      // console.log(time)
         if (time === '00:00') {
           this.orderInfo.isExpire = true
         }
