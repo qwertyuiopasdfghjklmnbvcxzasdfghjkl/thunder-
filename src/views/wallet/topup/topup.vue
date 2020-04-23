@@ -180,16 +180,15 @@
         .qrcode {
             width: 3.1rem;
             height: 3.1rem;
-            padding: 0.1rem;
+            padding: 0.17rem;
+            display: flex;
+            align-content: center;
+            justify-content: center;
             background: #ffffff;
             margin: 0.4rem auto;
-
-            /deep/ canvas {
-                max-width: 100%;
-            }
-
             /deep/ img {
-                max-width: 100%;
+                display: block;
+                width: 100%;
             }
         }
 
