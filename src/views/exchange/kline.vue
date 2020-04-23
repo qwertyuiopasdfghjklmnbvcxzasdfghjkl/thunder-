@@ -9,7 +9,7 @@
             </div>
              <!--<i slot="right" class="icon_favorite" :class="{active:curMarket && curMarket.collection}" v-tap="{methods:keep}"></i>-->
         </top-back>
-        <div class="page-main">
+        <div class="page-main" @click="showKlineMask">
             <div class="full info mt20">
                 <div>
                     <p class="f50 price" :class="{down:Number(getLast24h.percent)<0,up:Number(getLast24h.percent)>0}">
@@ -52,8 +52,9 @@
             </ul>
             <div class="kline-panel">
                 <div class="kline-panel-container" :class="{depth:!isKline}">
-                    <div class="kline-container">
+                    <div class="kline-container" v-tap="{methods:()=>klineMask=false}">
                         <iframe ref="klineContainer" id="klineContainer" frameborder="0" height="100%" width="100%" scrolling="no" marginheight="0" marginwidth="0" src="" @load="iframeLoaded"></iframe>
+                        <div class="mask" v-show="klineMask"></div>
                     </div>
                     <div class="kline-container" id="depthContainer"></div>
                 </div>
@@ -181,7 +182,8 @@
                     market: ''
                 },
                 loading:false,
-                hideLoading:false
+                hideLoading:false,
+                klineMask:true
             }
         },
         computed: {
@@ -334,6 +336,9 @@
         },
         methods: {
             ...mapActions(['setLast24h', 'tiggerEvents']),
+            showKlineMask(args){
+                !this.klineMask && (this.klineMask = true)
+            },
             iframeLoaded(){
                 setTimeout(()=>{
                     this.loading = false
@@ -705,6 +710,14 @@
         background-color: transparent;
         position: relative;
         overflow: hidden;
+        .mask {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+        }
     }
     #klineContainer {width: 100vw; height: 7.9rem;}
 

@@ -24,7 +24,7 @@
                 <div class="bgc mt20 pl30 pr30 pt40 pb20">
                      <div class="cgray">{{$t('business.QUANTITY')}}<!-- 数量 --></div>
                      <div class="mt20 ui-flex ui-flex-justify bline">
-                         <numberbox class="ui-flex-1" name="amount" v-model="formData.amount" v-validate="'required|balance'" :accuracy="fixnumber" :placeholder="$t(`public0.public58`)" v-focus><!-- 请输入划转数量 --></numberbox>
+                         <numberbox class="ui-flex-1" name="amount" v-model="formData.amount" v-validate="'required|positiveValue|balance'" :accuracy="fixnumber" :placeholder="$t(`public0.public58`)" v-focus><!-- 请输入划转数量 --></numberbox>
                          <span class="f32 blue lh80" v-tap="{methods:allIn}">{{$t('incubation.transfer_all')}}<!-- 全部划转 --></span>
                      </div>
                      <div class="lh80 cgray">{{$t('incubation.most_transfer')}}<!-- 最多可转 --> {{(wallet.availableBalance?wallet.availableBalance:'0')|removeEndZero}} {{token}}</div>

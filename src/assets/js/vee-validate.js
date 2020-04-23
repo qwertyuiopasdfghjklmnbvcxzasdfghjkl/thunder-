@@ -152,3 +152,13 @@ Validator.extend('maxInputValue', {
     return parseFloat(value) <= parseFloat(args[0])
   }
 })
+
+// 正数
+Validator.extend('positiveValue', {
+  getMessage: (field, args) => {
+    return window.$i18n.t('public0.positive_value')
+  }, // 请输入大于0有效值
+  validate: (value, args) => {
+    return parseFloat(value) > 0
+  }
+})
