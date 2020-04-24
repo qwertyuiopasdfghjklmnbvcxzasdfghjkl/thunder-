@@ -119,9 +119,9 @@
                         name: this.$t('referral.invite_friends'),
                     },
                     {
-                        route: 'stakedHistory',  // 锁仓记录
+                        route: 'incubationHistory',  // 孵息记录
                         icon: require('@/assets/img/icon_fx.png'),
-                        name: this.$t('account.history_staked'),
+                        name: this.$t('incubation.incubation_record'),
                     },
                 ],
                 data3: [

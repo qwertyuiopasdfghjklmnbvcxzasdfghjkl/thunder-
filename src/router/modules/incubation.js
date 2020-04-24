@@ -12,6 +12,12 @@ export default [
 		meta:{login:true}
 	},
 	{
+		path: '/incubation/incubation_history',
+		name: 'incubationHistory',
+		component: () => import('@/views/incubation/incubation_history'),
+		meta:{login:true}
+	},
+	{
 		path: '/incubation/staked_detail/',
 		name: 'stakedDetail',
 		component: () => import('@/views/incubation/staked_detail'),
