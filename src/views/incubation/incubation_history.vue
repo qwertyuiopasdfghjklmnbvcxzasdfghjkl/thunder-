@@ -19,10 +19,12 @@
                 ref="loadmore">
                     <ul class="items mt20">
                         <router-link :to="{name:'stakedTransDetail', query:item}" tag="li" v-for="item in datas">
-                            <p class="cgray f24">{{$t(`incubation.distribute_type_${item.distributeType}`)}} <!-- '1':'孵息收益', '2':'本金释放', '3':'认证奖励', '4':'业绩奖励' --></p>
-                            <div class="ui-flex ui-flex-justify f28">
-                                <span>{{item.createdAt}}</span>
-                                <span>{{item.distributeAmount}} {{item.symbol}}</span>
+                            <div class="ui-flex ui-flex-justify">
+                                <div>
+                                    <p>{{$t(`incubation.distribute_type_${item.distributeType}`)}} <!-- '1':'孵息收益', '2':'本金释放', '3':'认证奖励', '4':'业绩奖励' --></p>
+                                    <p class="cgray f24">{{item.createdAt}}</p>
+                                </div>
+                                <span class="ui-flex ui-flex-column ui-flex-center">{{item.distributeAmount}} {{item.symbol}}</span>
                             </div>
                         </router-link>
                     </ul>

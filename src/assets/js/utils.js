@@ -631,5 +631,5 @@ const encryptStr = function(value, start, end) {
   return `${_s}****${_e}`
 }
 utils.encryptStr = encryptStr
-
+window.utils = utils
 export default utils
