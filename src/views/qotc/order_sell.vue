@@ -106,7 +106,7 @@ export default {
       type: Object,
       default: {}
     },
-    orderInfo: {
+    _orderInfo: {
       type: Object,
       default: {}
     },
@@ -116,6 +116,7 @@ export default {
   },
   data(){
     return {
+      orderInfo: this._orderInfo,
       fbShow: false,
       dialShow:false,
       payInfo:null,

@@ -7,7 +7,7 @@
       <component
         :is="isBuyer"
         :adInfo="adInfo"
-        :orderInfo="orderInfo"
+        :_orderInfo="orderInfo"
         :serveTime="serveTime"
         :pay_type="pay_type"
       ></component>
