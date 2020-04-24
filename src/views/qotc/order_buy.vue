@@ -201,6 +201,7 @@ export default {
       appealTime:'00:00',
       surplusTime: '00:00',
       interval:null,
+      timer: null,
       payList: [],
       QRcodeUrl: '',
       currentPayType: [{}]
@@ -346,15 +347,17 @@ export default {
             icon: 'paypay'
         }]
 
+        // pay_type 广告收款类型
+        // payList 用户支付方式 (全部)
+        // console.log('pay_type', this.pay_type)
+        // console.log('payList', this.payList)
 
-        if (this.pay_type.length === 1) {
-          this.payList.forEach(item => {
-            if (item.type == this.pay_type[0]) {
+          this.payList.forEach((item, index) => {
+            if (item.type == this.orderInfo.pay_type) {
               this.currentPayType = [{...item}]
-              console.log('this.currentPayType', this.currentPayType)
+              // console.log('this.currentPayType', this.currentPayType)
             }
           })
-        }
 
         return this.payList
         // switch (type) {
@@ -454,13 +457,14 @@ export default {
       })
     },
     getAppealTime(){ //缓存付款时间，判断申述按钮2分钟内是否可用
+      clearInterval(this.timer)
       let _duration = 120000, _time = Number(localStorage.getItem('otcOrderPayTime')||'')
       let _diff = _time?(new Date().getTime() - new Date(_time).getTime()):_duration
       _diff = (_diff-_duration) >= 0 ? 0 : Math.abs(_diff-_duration)
       if(_diff){
         this.canAppeal = true
       }
-      utils.countDown(_diff/1000, (time) => {
+      this.timer = utils.countDown(_diff/1000, (time) => {
         this.appealTime = time
         if (time === '00:00') {
           this.canAppeal = false
