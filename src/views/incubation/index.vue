@@ -221,6 +221,7 @@ import Hoc from '@/components/common/hoc'
                     this.locked = false
                     window.getAssets()
                     Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
+                    this.$router.push({name:'stakedHistory'})
                 },msg=>{
                     Indicator.close()
                     this.locked = false
