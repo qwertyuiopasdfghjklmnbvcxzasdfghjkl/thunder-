@@ -200,7 +200,8 @@ import Hoc from '@/components/common/hoc'
                         }
                         return
                     }
-                    this.$refs.confirm.openConfirm()
+                    // this.$refs.confirm.openConfirm()
+                    this.saveStake({})
                 })
                 
             },
