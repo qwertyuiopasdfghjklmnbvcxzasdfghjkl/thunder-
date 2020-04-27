@@ -1,6 +1,6 @@
-// let domain = process.env.NODE_ENV === 'development' ? 'thunder-dev.lab.ssss.so' : location.host.split(':')[0]
+let domain = process.env.NODE_ENV === 'development' ? 'thunder-dev.lab.ssss.so' : location.host.split(':')[0]
 // let domain = process.env.NODE_ENV === 'development' ? 'ltpro-pre.ssss.so' : location.host.split(':')[0]
-let domain = process.env.NODE_ENV === 'development' ? 'ltpro.vip' : location.host.split(':')[0]
+// let domain = process.env.NODE_ENV === 'development' ? 'ltpro.vip' : location.host.split(':')[0]
 
 
 if (process.env.VUE_APP_BASEURL) {
@@ -24,7 +24,7 @@ const config = {
   version:'1.0.0',
   updateInfo:{  //更新日志
   	'zh-CN':`
-    <p class="tl">1. 开发锁仓孵息功能</p>
+    <p class="tl">1. 开放锁仓孵息功能</p>
     <p class="tl">2. 优化部分页面界面显示</p>
     `,
   	'en':`
