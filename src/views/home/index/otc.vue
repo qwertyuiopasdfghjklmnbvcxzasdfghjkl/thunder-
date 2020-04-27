@@ -59,7 +59,7 @@
             }
         }
         img{
-            width: 0.8rem;
+            width: 0.92rem;
         }
     }
 }
