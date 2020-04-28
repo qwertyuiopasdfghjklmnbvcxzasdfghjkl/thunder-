@@ -1,9 +1,9 @@
 <template>
-    <div class="page">
-        <top-back>
+    <div>
+        <!-- <top-back>
             {{$t('incubation.incubation_record')}}
         </top-back>
-        <div class="page-main">
+        <div class="page-main"> -->
             <hoc ref="hoc" @getData="getData" :params="params" size="large">
                 <mt-loadmore
                 :top-method="loadTop"
@@ -17,14 +17,14 @@
                 :bottom-loading-text="$t('home.loading-text')"
                 :autoFill="false"
                 ref="loadmore">
-                    <ul class="items mt20">
+                    <ul class="items mt20 pl30 pr30">
                         <router-link :to="{name:'stakedTransDetail', query:item}" tag="li" v-for="item in datas">
                             <div class="ui-flex ui-flex-justify">
                                 <div>
-                                    <p>{{$t(`incubation.distribute_type_${item.distributeType}`)}} <!-- '1':'孵息收益', '2':'本金释放', '3':'认证奖励', '4':'业绩奖励' --></p>
-                                    <p class="cgray f24">{{item.createdAt}}</p>
+                                    <p>{{$t(`incubation.distribute_type_${item.distributeType}`)}} <!-- '1':'孵息收益', '2':'本金释放', '3':'认证奖励', '4':'业绩奖励' --> &nbsp;</p>
+                                    <p class="cgray f24">{{item.createdAt}}&nbsp;</p>
                                 </div>
-                                <span class="ui-flex ui-flex-column ui-flex-center">{{item.distributeAmount}} {{item.symbol}}</span>
+                                <span class="ui-flex ui-flex-column ui-flex-center">{{item.distributeAmount}} {{item.symbol}}&nbsp;</span>
                             </div>
                         </router-link>
                     </ul>
@@ -32,7 +32,7 @@
                     <noData v-if="!datas.length"/>
                 </mt-loadmore>
             </hoc>
-        </div>
+        <!-- </div> -->
     </div>
 </template>
 

@@ -118,11 +118,6 @@
                         icon: require('@/assets/img/invite.png'),
                         name: this.$t('referral.invite_friends'),
                     },
-                    {
-                        route: 'incubationHistory',  // 孵息记录
-                        icon: require('@/assets/img/icon_fx.png'),
-                        name: this.$t('incubation.incubation_record'),
-                    },
                 ],
                 data3: [
                     {

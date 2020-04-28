@@ -384,11 +384,12 @@ export default function (opts) {
     }
     this._centerPrice = centerPrice
     // console.log('centerPrice=',centerPrice.toString(),JSON.stringify(asks.data),JSON.stringify(bids.data))
-    // console.log('centerPrice=',centerPrice-bids.min, asks.max-centerPrice)
     if(this._centerPrice-bids.min>asks.max-this._centerPrice){
       this.asks.data.push({price:this._centerPrice.mul(2).minus(this.bids.min), amounts:askAmounts})
+      // console.log(JSON.stringify(this.asks.data))
     } else {
-      this.bids.data.unshift({price:this._centerPrice.mul(2).minus(this.asks.max), amounts:bidAmounts})
+      this.bids.data.push({price:this._centerPrice.mul(2).minus(this.asks.max), amounts:bidAmounts})
+      // console.log(JSON.stringify(this.bids.data))
     }
 
     // 计算买单最大没像素的价格
