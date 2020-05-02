@@ -1,12 +1,13 @@
 <template>
     <div class="otc">
-        <router-link :to="{name:'qotc',params:{type:1}}" class="box">
+      <!--  <router-link :to="{name:'qotc',params:{type:1}}" class="box">
             <label>
                 <p>{{$t('market.flash_buy')}}</p>
                 <span>{{$t('market.flash_buy_small')}}</span>
             </label>
             <img src="../../../assets/img/flash_buy.png"/>
         </router-link>
+        -->
         <router-link :to="{name:'incubation'}" class="box">
             <label>
                 <p>{{$t('incubation.accelerator')}}<!-- 孵息加速器 --></p>
