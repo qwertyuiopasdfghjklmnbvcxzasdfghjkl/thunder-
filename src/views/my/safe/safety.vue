@@ -66,7 +66,7 @@
                 } else {
                     this.data1[1].small = `<span style="color:#999">${this.$t('user.noBind')}</span>`
                 }
-                this.data1[3].small = this.getUserInfo.email ? `<span style="color:#999">${this.$t('account.user_center_state_bind')}</span>`:
+                this.data1[3].small = this.getUserInfo.emailAuthEnable==1 ? `<span style="color:#999">${this.$t('account.user_center_state_bind')}</span>`:
                     `<span style="color:#999">${this.$t('user.noBind')}</span>`
             }
         }

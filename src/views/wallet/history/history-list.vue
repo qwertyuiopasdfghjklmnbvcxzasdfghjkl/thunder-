@@ -7,10 +7,11 @@
             <mt-navbar v-model="selected">
                 <mt-tab-item id="tab1"><span>{{$t('home.home54')}}</span></mt-tab-item>
                 <mt-tab-item id="tab2"><span>{{$t('home.home55')}}</span></mt-tab-item>
+                <mt-tab-item id="tab3"><span>{{$t('incubation.incubation_record')}}</span></mt-tab-item>
             </mt-navbar>
         </div>
 
-        <div class="list_box box mt20">
+        <div class="list_box box mt20" v-show="selected!=='tab3'">
             <div class="list" :class="{active:active==='tokens'}">
                 <label @click="active= active==='tokens'?'':'tokens'">{{$t('home.home56')}}<i><img
                         src="../../../assets/img/tc_meus_b@2x.png"/></i></label>
@@ -100,6 +101,11 @@
                     </mt-loadmore>
                 </div>
             </mt-tab-container-item>
+            <mt-tab-container-item id="tab3">
+                <div class="loadmore-wapper fit">
+                    <incubation-history class="mt20" />
+                </div>
+            </mt-tab-container-item>
         </mt-tab-container>
     </div>
 </template>
@@ -109,10 +115,12 @@
     import noMoreData from '@/components/common/noMoreData'
     import wallet from '../../../api/wallet'
     import {mapGetters, mapActions} from 'vuex'
+    import incubationHistory from '@/views/incubation/incubation_history'
 
     export default {
         name: "history-list",
         components: {
+            incubationHistory,
             loading,
             noMoreData
         },
@@ -505,6 +513,9 @@
     .loadmore-wapper {
         height: calc(100vh - 2.7rem);
         overflow-y: auto;
+        &.fit {
+            height: calc(100vh - 1.8rem);
+        }
     }
 
     .tab_list {

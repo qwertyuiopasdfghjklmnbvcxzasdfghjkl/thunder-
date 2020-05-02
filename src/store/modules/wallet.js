@@ -1,6 +1,7 @@
 import JsCookies from 'js-cookie'
 import numUtils from '@/assets/js/numberUtils'
 let userWallets = JSON.parse(localStorage.userWallets || '[]')
+let incubatedWallets = JSON.parse(localStorage.incubatedWallets || '[]')
 let btcPrice = JSON.parse(localStorage.btcPrice || '{}')
 const state = {
   btcValuation: 0,
@@ -8,7 +9,8 @@ const state = {
   btcPrice: btcPrice,
   networkSignal: 0,
   btcValues: {},
-  userWallets: userWallets,
+  userWallets: userWallets, 
+  incubatedWallets:incubatedWallets, //孵息账户
   symbol: localStorage.symbol,
   sysParams:{} //System params
 }
@@ -40,6 +42,9 @@ const getters = {
   },
   getUserWallets (state) {
     return state.userWallets
+  },
+  getIncubatedWallets (state) {
+    return state.incubatedWallets
   },
   getUsdRate (state) {
     if (state.USDCNY && state.USDCNY.USD && state.USDCNY.CNY) {
@@ -76,6 +81,10 @@ const mutations = {
     state.userWallets = userWallets
     localStorage.userWallets = JSON.stringify(userWallets)
   },
+  updateIncubatedWallets (state, incubatedWallets) {
+    state.incubatedWallets = incubatedWallets
+    localStorage.incubatedWallets = JSON.stringify(incubatedWallets)
+  },
   updateSymbol(state, symbol){
     state.symbol = symbol
     localStorage.symbol = symbol
@@ -111,6 +120,9 @@ const actions = {
   },
   setUserWallets (context, userWallets) {
     context.commit('updateUserWallets', userWallets)
+  },
+  setIncubatedWallets (context, incubatedWallets) {
+    context.commit('updateIncubatedWallets', incubatedWallets)
   },
   setSymbol(context, symbol){
     context.commit('updateSymbol',symbol)

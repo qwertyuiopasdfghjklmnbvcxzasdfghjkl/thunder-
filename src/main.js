@@ -31,9 +31,6 @@ import {
 
 import uiInpu from './components/uiInput'
 
-import * as Sentry from '@sentry/browser';
-import * as Integrations from '@sentry/integrations';
-
 require('./assets/js/cordovaUtils') //引入cordova工具集
 require('./assets/js/directive') //引入全局自定义指令集
 require('./assets/js/filter') //引入全局自定义过滤器

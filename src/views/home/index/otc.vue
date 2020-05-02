@@ -9,8 +9,8 @@
         </router-link>
         <router-link :to="{name:'incubation'}" class="box">
             <label>
-                <p>{{$t('market.flash_sell')}}</p>
-                <span>{{$t('market.flash_sell_small')}}</span>
+                <p>{{$t('incubation.accelerator')}}<!-- 孵息加速器 --></p>
+                <span>{{$t('incubation.description')}}<!-- 让资产更有价值 --></span>
             </label>
             <img src="../../../assets/img/flash_sell.png"/>
         </router-link>
@@ -59,7 +59,7 @@
             }
         }
         img{
-            width: 0.8rem;
+            width: 0.92rem;
         }
     }
 }

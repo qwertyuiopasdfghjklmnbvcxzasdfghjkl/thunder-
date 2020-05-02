@@ -90,15 +90,15 @@
       </div>
 
       <div class="ui-flex ui-flex-justify btns" v-if="orderState.state==1">
-        <mt-button type="cancel" size="large" v-tap="{methods:()=>{ccShow = true}}">{{$t('qotc.cancel_order')}}<!-- 取消交易 --></mt-button>
+        <mt-button type="primary" size="large" v-tap="{methods:()=>{ccShow = true}}">{{$t('qotc.cancel_order')}}<!-- 取消交易 --></mt-button>
         <mt-button type="primary" size="large" class="ml30" v-tap="{methods: handleZfShowClick}">{{$t('public0.public154')}}<!-- 已付款 --></mt-button>
       </div>
 
       <div class="btns" v-if="orderState.state==2">
-        <mt-button type="cancel" size="large" class="blue" :disabled="canAppeal" v-tap="{methods:$root.routeTo, to:'qotcAppeal', params:{orderNumber:orderInfo.order_number}}">{{canAppeal?$t('qotc.problem_to_appeal').format(appealTime):$t('otc_exchange.otc_exchange_complaint')}}<!--（遇到问题)${0}后发起申诉 || 发起申诉--></mt-button>
+        <mt-button type="primary" size="large" :disabled="canAppeal" v-tap="{methods:$root.routeTo, to:'qotcAppeal', params:{orderNumber:orderInfo.order_number}}">{{canAppeal?$t('qotc.problem_to_appeal').format(appealTime):$t('otc_exchange.otc_exchange_complaint')}}<!--（遇到问题)${0}后发起申诉 || 发起申诉--></mt-button>
       </div>
       <div class="btns" v-if="orderState.state==21">
-        <mt-button type="cancel" size="large" disabled>{{$t('qotc.appealed')}}<!-- '已申诉' --></mt-button>
+        <mt-button type="primary" size="large" disabled>{{$t('qotc.appealed')}}<!-- '已申诉' --></mt-button>
       </div>
 
       <div class="btns" v-if="orderState.state==3||orderState.state==31">
@@ -179,7 +179,7 @@ export default {
       type: Object,
       default: {}
     },
-    orderInfo: {
+    _orderInfo: {
       type: Object,
       default: {}
     },
@@ -190,6 +190,7 @@ export default {
   },
   data(){
     return {
+      orderInfo: this._orderInfo,
       payTypeShow: true,
       qrShow:false,
       ccShow:false,
@@ -200,6 +201,7 @@ export default {
       appealTime:'00:00',
       surplusTime: '00:00',
       interval:null,
+      timer: null,
       payList: [],
       QRcodeUrl: '',
       currentPayType: [{}]
@@ -215,8 +217,6 @@ export default {
     //     console.log('this.currentPayType' ,this.currentPayType)
     //   }
     // }
-  },
-  mounted() {
   },
   computed:{
     ...mapGetters(['getUserInfo']),
@@ -347,15 +347,17 @@ export default {
             icon: 'paypay'
         }]
 
+        // pay_type 广告收款类型
+        // payList 用户支付方式 (全部)
+        // console.log('pay_type', this.pay_type)
+        // console.log('payList', this.payList)
 
-        if (this.pay_type.length === 1) {
-          this.payList.forEach(item => {
-            if (item.type == this.pay_type[0]) {
+          this.payList.forEach((item, index) => {
+            if (item.type == this.orderInfo.pay_type) {
               this.currentPayType = [{...item}]
-              console.log('this.currentPayType', this.currentPayType)
+              // console.log('this.currentPayType', this.currentPayType)
             }
           })
-        }
 
         return this.payList
         // switch (type) {
@@ -414,7 +416,7 @@ export default {
     this.getSellerPayInfo(this.orderInfo.from_user_id)
   },
   mounted(){
-    this.interval = null
+
   },
   methods:{
     // 显示收款二维码
@@ -444,9 +446,10 @@ export default {
     },
 
     getSurplusTime(){
+      clearInterval(this.interval)
       this.interval = utils.countDown(this.orderInfo.surplus_Time, (time) => {
 
-      console.log(time)
+        // console.log(time)
         if (time === '00:00') {
           this.orderInfo.isExpire = true
         }
@@ -454,13 +457,14 @@ export default {
       })
     },
     getAppealTime(){ //缓存付款时间，判断申述按钮2分钟内是否可用
+      clearInterval(this.timer)
       let _duration = 120000, _time = Number(localStorage.getItem('otcOrderPayTime')||'')
       let _diff = _time?(new Date().getTime() - new Date(_time).getTime()):_duration
       _diff = (_diff-_duration) >= 0 ? 0 : Math.abs(_diff-_duration)
       if(_diff){
         this.canAppeal = true
       }
-      utils.countDown(_diff/1000, (time) => {
+      this.timer = utils.countDown(_diff/1000, (time) => {
         this.appealTime = time
         if (time === '00:00') {
           this.canAppeal = false
@@ -495,6 +499,7 @@ export default {
           Tip({type: 'success', message: this.$t(`error_code.${msg}`)})
           localStorage.setItem('otcOrderPayTime', new Date().getTime())
           this.getAppealTime()
+          this.countDown()
         }, (msg) => {
           Tip({type: 'danger', message: this.$t(`error_code.${msg}`)})
         })
@@ -517,6 +522,26 @@ export default {
     },
     onError: function (e) {
       Toast(this.$t('usercontent.copy-error')) //'复制失败'
+    },
+
+    // 确认支付后重新倒计时
+    countDown() {
+      otcApi.ordersDetail(this.orderInfo.order_id, (data) => {
+        const orderInfo = data.orderInfo
+        const cur_time = data.cur_time
+
+        let date = utils.formatDate(orderInfo.updated_at).getTime()
+        let ndate = utils.formatDate(cur_time).getTime()
+        let diffTime = Math.floor((ndate - date) / 1000)
+        let surplusTime = orderInfo.pay_apply_time * 60 - diffTime
+        this.orderInfo.surplus_Time = surplusTime>0?surplusTime:0
+        this.orderInfo.isExpire = surplusTime <= 0
+
+        this.getSurplusTime()
+      }, (msg) => {
+        Tip({type: 'danger', message: vm.$t(`error_code.${msg}`)})
+      })
+
     }
   }
 }

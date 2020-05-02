@@ -10,7 +10,7 @@
                     <span>{{$t('exchange.exchange_valuation')}}(USDT)</span>
                     <img :src="showMoney ? require('../../assets/img/assets_eye_open.png'): require('../../assets/img/assets_eye_closed.png')"/>
                 </p>
-                <h4 class="">{{(totalUSDT.toFixed(8)) | number}}</h4>
+                <h4 class="">{{(totalUSDT.toFixed(8)) | removeEndZero}}</h4>
                 <span>≈ {{getCoinSign}} {{totalCNY}}</span>
             </div>
 
@@ -36,8 +36,8 @@
             </div>
             <div class="tab-bar">
                 <mt-navbar v-model="type">
-                  <mt-tab-item :id="1"><span>{{$t('币币账户')}}<!--币币账户--></span></mt-tab-item>
-                  <mt-tab-item :id="2"><span>{{$t('孵息账户')}}<!--孵息账户--></span></mt-tab-item>
+                  <mt-tab-item :id="1"><span>{{$t('account.currency_account')}}<!--币币账户--></span></mt-tab-item>
+                  <mt-tab-item :id="3"><span>{{$t('incubation.incubation_account')}}<!--孵息账户--></span></mt-tab-item>
                 </mt-navbar>
             </div>
             <div class="list_title">
@@ -62,21 +62,21 @@
                             <span>{{data.accountName}}</span>
                         </p>
                         <label>
-                            <p>{{data.totalBalance | number}}</p>
+                            <p>{{data.totalBalance | removeEndZero}}</p>
                             <span><img src="../../assets/img/i_rig_c@3x.png"/></span>
                         </label>
                     </li>
                 </ul>
                 </transition>
                 <transition enter-active-class="animated short slideInRight" leave-active-class="animated short slideOutRight">
-                <ul class="box" v-show="type==2">
-                    <li v-for="data in filterSymboltList" v-tap="{methods: toIncubationWallet, item:data}">
+                <ul class="box" v-show="type==3">
+                    <li v-for="data in filterIncubatedSymbolList" v-tap="{methods: toIncubationWallet, item:data}">
                         <p>
                             <img :src="'data:image/png;base64,'+data.iconBase64"/>
                             <span>{{data.accountName}}</span>
                         </p>
                         <label>
-                            <p>{{data.totalBalance | number}}</p>
+                            <p>{{data.totalBalance | removeEndZero}}</p>
                             <span><img src="../../assets/img/i_rig_c@3x.png"/></span>
                         </label>
                     </li>
@@ -111,9 +111,18 @@
             }
         },
         computed: {
-            ...mapGetters(['getUserInfo', 'getUserWallets', 'getBTCValuation', 'getUSDTBTC', 'getBtcPrice', 'getCoinSign']),
+            ...mapGetters(['getUserInfo', 'getUserWallets', 'getIncubatedWallets', 'getBTCValuation', 'getUSDTBTC', 'getBtcPrice', 'getCoinSign']),
             symbolList() { // 获取币种列表
                 return this.getUserWallets.sort((item1, item2) => {
+                    if (item1.symbol === item2.symbol) {
+                        return 0
+                    } else {
+                        return item1.symbol < item2.symbol ? -1 : 1
+                    }
+                })
+            },
+            incubatedSymbolList() { // 获取孵息币种列表
+                return this.getIncubatedWallets.sort((item1, item2) => {
                     if (item1.symbol === item2.symbol) {
                         return 0
                     } else {
@@ -129,6 +138,16 @@
 
                 } else {
                     return this.symbolList
+                }
+            },
+            filterIncubatedSymbolList() {
+                if (this.showZero) {
+                    return this.incubatedSymbolList.filter(item => {
+                        return Number(item.totalBalance) > 0 ? true : false
+                    })
+
+                } else {
+                    return this.incubatedSymbolList
                 }
             },
             currentSymbolInfo() {
@@ -154,7 +173,7 @@
             }
         },
         created() {
-            this.type = this.$route.query.type == 2?2:1
+            this.type = this.$route.query.type == 3?3:1
             this.showMoney = JSON.parse(localStorage.getItem('showAssets') || 'true')
             this.getCNYPrice()
             this.getAssets()

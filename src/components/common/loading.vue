@@ -1,5 +1,5 @@
 <template>
-  <div class="loading" :style="`background-color:${bgColor};`">
+  <div class="loading" :class="{full:maskSize=='large'}" :style="`background-color:${bgColor}; min-width:${size}rem; min-height:${size}rem;`">
     <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
       version="1.0" :width="`${size}rem`" :height="`${size}rem`" viewBox="0 0 128 128" xml:space="preserve">
       <g>
@@ -31,11 +31,32 @@ export default {
     bgColor: {
       type: String,
       default: 'transparent'
+    },
+    maskSize:{
+      type:String,
+      default:'small'
     }
   }
 }
 </script>
 
-<style scoped>
-.loading{padding-top: .1rem;padding-bottom: .1rem;line-height: 0;text-align: center;background-color: transparent;}
+<style lang="less" scoped>
+.loading{
+  position: absolute;
+  left: 0;
+  top: 0;
+  right:0;
+  bottom:0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index:1;
+  &.full {
+    position: fixed;
+  }
+  svg {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
 </style>
