@@ -9,11 +9,13 @@
         </router-link>
         -->
         <router-link :to="{name:'incubation'}" class="box">
-            <label>
-                <p>{{$t('incubation.accelerator')}}<!-- 孵息加速器 --></p>
-                <span>{{$t('incubation.description')}}<!-- 让资产更有价值 --></span>
-            </label>
-            <img src="../../../assets/img/flash_sell.png"/>
+            <article class="article">
+                <label>
+                    <p>{{$t('incubation.accelerator')}}<!-- 孵息加速器 --></p>
+                    <span>{{$t('incubation.description')}}<!-- 让资产更有价值 --></span>
+                </label>
+                <img src="../../../assets/img/flash_sell.png"/>
+            </article>
         </router-link>
     </div>
 </template>
@@ -38,7 +40,11 @@
     justify-content: space-between;
     margin: 0 0.1rem;
     margin-top: 0.2rem;
-    .box{
+    .box {
+        flex: 1;
+    }
+    .article{
+        width: 50%;
         border-radius: 0.1rem;
         margin: 0 0.1rem;
         display: flex;
@@ -47,6 +53,7 @@
         flex: 1;
         padding: 0.2rem;
         height: 1.2rem;
+        margin: 0 auto;
         label{
             p{
                 color: #ffffff;
