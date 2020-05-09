@@ -112,7 +112,7 @@ export default function (opts) {
   return {
     close () {
       isLeavePage = true
-      if (webSocket.readyState === webSocket.OPEN) {
+      if (webSocket) {
         webSocket.close()
       }
     },
