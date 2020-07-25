@@ -1,13 +1,15 @@
 <template>
     <div class="otc">
-      <!--  <router-link :to="{name:'qotc',params:{type:1}}" class="box">
-            <label>
-                <p>{{$t('market.flash_buy')}}</p>
-                <span>{{$t('market.flash_buy_small')}}</span>
-            </label>
-            <img src="../../../assets/img/flash_buy.png"/>
+        <router-link :to="{name:'qotc',params:{type:1}}" class="box">
+            <article class="article">
+                <label>
+                    <p>{{$t('market.flash_buy')}}</p>
+                    <span>{{$t('market.flash_buy_small')}}</span>
+                </label>
+                <img src="../../../assets/img/flash_buy.png"/>
+            </article>
         </router-link>
-        -->
+
         <router-link :to="{name:'incubation'}" class="box">
             <article class="article">
                 <label>
@@ -44,7 +46,6 @@
         flex: 1;
     }
     .article{
-        width: 50%;
         border-radius: 0.1rem;
         margin: 0 0.1rem;
         display: flex;
@@ -53,7 +54,6 @@
         flex: 1;
         padding: 0.2rem;
         height: 1.2rem;
-        margin: 0 auto;
         label{
             p{
                 color: #ffffff;
