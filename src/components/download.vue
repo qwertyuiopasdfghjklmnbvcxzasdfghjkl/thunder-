@@ -59,7 +59,7 @@
         computed: {
             ...mapGetters(['getSysParams']),
             url(){
-                let _obj = {} 
+                let _obj = {}
                 for(let item in this.getSysParams){
                     _obj[item] = this.getSysParams[item].value
                 }

@@ -21,15 +21,17 @@
                 <div class="mt50 amount-container">
                     <transition enter-active-class="animated short slideInLeft" leave-active-class="animated short slideOutLeft">
                         <div class="ui-flex ui-flex-justify" v-show="isToken">
-                            <numberbox :size="15" :accuracy="4" v-model="amount" class="ui-flex-1" :placeholder="type==1?$t('qotc.input_buy_amount'):$t('qotc.input_sell_amount')"/><!-- '请输入购买数量':'请输入卖出数量' -->
+                            <numberbox :size="15" :accuracy="4" v-model="amount" class="ui-flex-1" :placeholder="setPlaceholder"/><!-- '请输入购买数量':'请输入卖出数量' -->
                             <span class="f30 grey">{{token}}</span>
                             <span class="f30 blue ml20" v-show="type==2" v-tap="{methods:allIn}">{{$t('home.home59')}}<!-- 全部 --></span>
                         </div>
                     </transition>
+                    <!-- :placeholder="type==1?$t('qotc.input_buy_amount'):$t('qotc.input_sell_amount')" -->
+                    <!-- :placeholder="type==1?$t('qotc.input_buy_currency'):$t('qotc.input_sell_currency') -->
                     <transition enter-active-class="animated short slideInRight" leave-active-class="animated short slideOutRight">
                         <div class="ui-flex ui-flex-justify" v-show="!isToken">
                             <span class="f52">￥ </span>
-                            <numberbox :size="13" :accuracy="2" v-model="currencyCount" class="ui-flex-1" :placeholder="type==1?$t('qotc.input_buy_currency'):$t('qotc.input_sell_currency')"/> <!-- '请输入购买金额':'请输入卖出金额' -->
+                            <numberbox :size="13" :accuracy="2" v-model="currencyCount" class="ui-flex-1" :placeholder="setPlaceholder"/> <!-- '请输入购买金额':'请输入卖出金额' -->
                             <span class="f30 blue" v-show="type==2" v-tap="{methods:allIn}">{{$t('home.home59')}}<!-- 全部 --></span>
                         </div>
                     </transition>
@@ -117,8 +119,8 @@
         },
         data(){
             return {
-                type:1,
-                token:'USDT',
+                type: 1, // 1-买币 2-卖币
+                token: 'USDT', // 币种类型
                 amount:'',
                 currencyCount:'',
                 currency:'CNY',
@@ -200,6 +202,40 @@
                     }
                 }
                 return _currencyMinLimit
+            },
+
+            // 设置输入框 placeholder
+            setPlaceholder() {
+            // this.buyNumberPlaceholder = ''
+            // this.sellNumberPlaceholder = ''
+
+            // this.buyPricePlaceholder = ''
+            // this.sellPricePlaceholder = ''
+
+            const number = numUtils.div(this.coinMinLimit, this.refPrice).toFixed(6)
+            // const number = (this.coinMinLimit / this.refPrice).toFixed(6)
+
+            if (this.type == 1) {
+              // buy
+              if (this.isToken) {
+                // 数量
+                return '最少购买数量 ' + number
+              } else {
+                // 金额
+                return '最少购买金额 ' + this.coinMinLimit
+              }
+            } else if (this.type == 2) {
+              // sell
+              if (this.isToken) {
+                // 数量
+                return '最少卖出数量 ' + number
+              } else {
+                // 金额
+                return '最少卖出金额 ' + this.coinMinLimit
+              }
+            }
+
+
             }
         },
         watch:{
@@ -413,6 +449,23 @@
                     this.setUserWallets(res)
                 })
             },
+
+          // 设置输入框 placeholder
+          setPlaceholder2() {
+            this.buyNumberPlaceholder = ''
+            this.sellNumberPlaceholder = ''
+
+            this.buyPricePlaceholder = ''
+            this.sellPricePlaceholder = ''
+
+            // const limitItem = this.getSysParams['minLimitBuy' + this.token]
+
+            // this.priceLimit = limitItem && limitItem.value
+            // this.numberLimit = numUtils.div(this.priceLimit, this.refPrice).toFixed(6)
+
+            // this.pricePlaceholder = limitItem ? this.$t('public0.public110').format(this.priceLimit) : ''
+            // this.numbrePlaceholder = limitItem ? this.$t('public0.public110').format(this.numberLimit) : ''
+          }
         }
     }
 </script>

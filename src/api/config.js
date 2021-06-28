@@ -24,11 +24,11 @@ const config = {
   version:'1.0.0',
   updateInfo:{  //更新日志
   	'zh-CN':`
-    <p class="tl">1. 开放锁仓孵息功能</p>
+    <p class="tl">1. 临时关闭快捷买卖功能</p>
     <p class="tl">2. 优化部分页面界面显示</p>
     `,
   	'en':`
-    <p class="tl">1. Develop the function of incubation</p>
+    <p class="tl">1. Temporarily close the quick sale function</p>
     <p class="tl">2. Optimize partial page interface display</p>
     `
   }
